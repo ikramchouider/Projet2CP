@@ -1,0 +1,129 @@
+body {
+    height: 100vh;
+  }
+  
+  #two {
+    background: #1a144e;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: #ebd8d0;
+  }
+  
+  .box {
+    height: 40px;
+    overflow: hidden;
+    position: relative;
+  }
+  .box::before {
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    content: '';
+    height: 10px;
+    position: absolute;
+    background: linear-gradient(180deg, #1a144e, rgba(255, 142, 113, 0));
+  }
+  .box::after {
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 100%;
+    content: '';
+    height: 10px;
+    position: absolute;
+    background: linear-gradient(180deg, rgba(255, 142, 113, 0), #1a144e);
+  }
+  
+  p {
+    float: left;
+  }
+  
+  ul {
+    float: right;
+    margin: 0;
+    padding: 0;
+    -webkit-animation: scrollUp 4s ease-in-out infinite normal;
+            animation: scrollUp 4s ease-in-out infinite normal;
+  }
+  ul li {
+    opacity: 1;
+    height: 20px;
+    padding: 10px;
+    list-style: none;
+  }
+  
+  @-webkit-keyframes scrollUp {
+    from {
+      -webkit-transform: translateY(0);
+              transform: translateY(0);
+    }
+    to {
+      -webkit-transform: translateY(-80%);
+              transform: translateY(-80%);
+    }
+  }
+  
+  @keyframes scrollUp {
+    from {
+      -webkit-transform: translateY(0);
+              transform: translateY(0);
+    }
+    to {
+      -webkit-transform: translateY(-80%);
+              transform: translateY(-80%);
+    }
+  }
+  
+  
+  
+  
+  .container {
+    display: flex; /* or inline-flex */
+    padding: 2rem;
+    align-items: center;
+  }
+  
+  .circle {
+    border-radius: 50%;
+    background-color: #1a144e;
+    width: 2rem;
+    height: 2rem;
+    margin: .5rem;
+    align-items: center;
+    animation-name: circleAnimation;
+    animation-iteration-count: 10;
+    animation-direction: normal;
+    animation-duration: 3s;
+    animation-timing-function: ease-in-out;
+  }
+  
+  .delay-1 {
+    animation-delay: 1s;
+  }
+  
+  .delay-2 {
+    animation-delay: 2s;
+  }
+  
+  /* Standard syntax */
+  @keyframes circleAnimation{
+    0%{
+      margin: .5rem;
+      width: 2rem;
+      height: 2rem;
+    }
+    16.5%{
+      margin: 0rem;
+      width: 3rem;
+      height: 3rem;
+    }        
+    33%{
+      margin: .5rem;
+      width: 2rem;
+      height: 2rem;
+    }
+  }	
