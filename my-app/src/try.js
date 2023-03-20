@@ -7,7 +7,24 @@ class RI {
     reg1 = code.substring(10,12);
     reg2 = code.substring(13,15);
     }
-trouverCOP =(cop) => {
+
+trouverMa =(ma) => {
+  let mode ;
+  switch (ma) {
+    case "00" : mode = 'Direct' ;
+    case "01" : mode = 'Indirect' ;
+    case "10" : mode = 'Basé/Indexé' ;
+    case "11" : mode = 'Direct Indexé' ;
+  }
+  console.log ("Le mode d'adressage est: "+mode) ;
+
+}
+trouverDest (d) => {
+  if (d==0) {
+
+  }
+}
+trouverCop =(cop) => {
     if (cop.substring(0, 0) == '0') { 
   let ins;
   switch (cop.substring(1, 5)) 
