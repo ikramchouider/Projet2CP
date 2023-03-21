@@ -1,5 +1,6 @@
 
 class RI {
+  unSeulOp;
     remplirRI = (code) => {
     cop = code.substring(0, 5);
     ma  = code.substring(6, 7);
@@ -8,6 +9,7 @@ class RI {
     reg1 = code.substring(10,12);
     reg2 = code.substring(13,15);
     }
+    getCOP
 trouverCOP =(cop) => {
     if (cop.substring(0, 0) == '0') { 
   let ins;
@@ -46,10 +48,33 @@ trouverCOP =(cop) => {
   }
     }
     else {
+      switch (cop.substring(1, 5)) 
+    {
+   case "00000" : ins = 'MOVI';
+   case "00001" : ins = 'ADDI';
+   case "00010" : ins = 'ADAI';
+   case "00011" : ins = 'SUBI';
+   case "00100" : ins = 'SBAI';
+   case "00101" : ins = 'CMPI';
+   case "00110" : ins = 'ORI';
+   case "00111" : ins = 'ANDI';
+   case "10110" : ins = 'LOADI';
+  }
+     }
+  
+}     
+trouverQuoiFaire = (ma,f,d) =>{
+  if (f==0){
+    if ()
+  
 
-    }
-    console.log(ins);
+  }else {
+
+  }
+
 }
+// mov ax,bx
+// comme entré un code binaire ( String ex RI = 1000000000000000 ) elle permet de reconaitre l'instruction à exec
  decodage = () => {
 
 }
