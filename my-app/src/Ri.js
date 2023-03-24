@@ -5,7 +5,7 @@ class RI {
     #d;
     #reg1;
     #reg2;
-      remplirRI = (code) => {
+      setRI = (code) => {
       this.#cop = code.substring(0, 5);
       this.#ma  = code.substring(6, 7);
       this.#f  = code.substring(8, 8);
@@ -14,10 +14,21 @@ class RI {
       this.#reg2 = code.substring(13,15);
       }
       getCOP =()=> {
-        return cop;
+        return this.#cop;
       }
       getMA = () =>{
-        
+        return this.#ma;
       }
-    
+      getF = () =>{
+        return this.#f;
+      }
+      getD = () =>{
+        return this.#d;
+      }
+     getReg1 = () =>{
+        return this.#reg1;
+     }
+     getreg2 = () =>{
+        return this.#reg2;
+     }
     }
