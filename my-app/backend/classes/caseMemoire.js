@@ -7,6 +7,5 @@ class CaseMc {
     this.#val=val;
     this.#etiq=etiq;
     }
-    constructor(){}
     
     }
