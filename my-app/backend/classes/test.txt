@@ -1,0 +1,16 @@
+ORG 100
+SET A  45H   
+SET B 0H 
+SET C 0H
+SET D 0H
+START
+In A 
+In B
+Mov Ax , A
+Mov Bx , B
+Cmp Ax , Bx
+Js Fsi
+MOVI c,4H
+FSI: 
+MOVI D,1H
+STOP
