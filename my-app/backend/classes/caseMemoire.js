@@ -12,6 +12,9 @@ class CaseMc {
     setVal(val){
             this.#val= val ; 
     }
+    afficher() {
+        console.log(`adr ${this.#adr}  val ${this.#val}  etiq ${this.#etiq} `); 
+    }
     
     }
-    export { CaseMc } ;
+    export default CaseMc ;
