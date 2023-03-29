@@ -156,9 +156,7 @@ var util = {
     util.regAdrExi((tabIns[2]).slice(1,(tabIns[2]).length-1)) ) && ! util.modeBaseIndx(tabIns) ){ return true ;}
     if ( (tabIns[0])[(tabIns[0]).length-1] == 'I' && 
     (util.regexi(tabIns[1]) || (!(util.regAdrExi((tabIns[1]).slice(1,(tabIns[1]).length-1) )) 
-    && ! util.modeBaseIndx(tabIns)) )) { return true ;} 
-
-      
+    && ! util.modeBaseIndx(tabIns)) )) { return true ;}    
   },
   regAdrExi: function (reg) {
     reg=reg.toUpperCase() ;
@@ -242,49 +240,8 @@ var util = {
       //if (regexi(ligne_str[1]) && regexi(ligne_str[2]))
     } else return "0";
   },
-  getDest: function (str) {
-    if (this.regexi(str[2].toUpperCase())){ return "1" ;}
-    else {return "0" ;}
-  },
 
-  /*CoderInst: function (strLigne) {
-    let c = new CaseMc();
-    for (i = 0; i < strLigne.length; i++) {
-      while (strLigne[i] != " ") {
-        i++;
-      }
-      if (strLigne[i - 1] != ":") {
-      } else {
-      }
-    }
-  },
-
-  codeMov: function(ligne){
-    
-  }
   
-
-  remplirZero: function(str,n) {
-    var s = "";
-    const length = str.length ;
-    if (gd==0) {
-    for (let k = 0; k<n-length;k++){
-      s += '0' ;
-    }
-    return (s+str);
-  }
-    else { 
-      if (gd==1) {
-        for (let k = 0; k<n-length;k++) {
-          str += '0' ;
-        }
-        return (str) ;
-      }
-      else {
-        throw new Error ('Le troisieme parametre doit etre 0 ou 1.') ;
-      }
-    }
-  },
 };
 
 console.log(util.remplirZero("1001",8,2)) ;
