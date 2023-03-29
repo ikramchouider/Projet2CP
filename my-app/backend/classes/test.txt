@@ -1,6 +1,6 @@
-ORG 100
-SET A 45H             
-SET D 0H
-START
-MOV Ax , A
-STOP
+    ORG    100
+SET A   45H             
+   SET D 0H
+  START
+MOV    Ax  ,   A
+ STOP
