@@ -2,5 +2,5 @@
 SET A   45H             
    SET D 0H
   START
-MOV    Ax  ,   A
+MOV AX,[0H] 
  STOP

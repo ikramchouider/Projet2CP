@@ -18,6 +18,7 @@ var main = {
     rl.on("line", (line) => {
       console.log("********************");
       let ligne_str = line.toString().trim();
+      ligne_str=ligne_str.replace(","," ") ; 
       ligne_str = util.removeExtraSpaces(ligne_str);
       ligne_str = ligne_str.split(" ");
       console.log(ligne_str);

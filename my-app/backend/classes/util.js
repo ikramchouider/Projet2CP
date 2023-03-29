@@ -4,13 +4,19 @@ var util = {
     let c;
     let i = 0;
     let str = strLigne[0];
-
+    console.log(strLigne[0]) ; 
     if (str[str.length - 1] == ":") {
       i = 1;
       c = new CaseMc(adr, "", str);
     }
     let valeur = util.getCop(strLigne[i]);
-    console.log(valeur);
+   // console.log(valeur);
+   // console.log(strLigne);
+    //console.log((strLigne[0]).slice((strLigne[0]).length-1,(strLigne[0]).length-1));
+   // console.log((strLigne[0]).length-1);
+    //console.log((strLigne[0])[(strLigne[0]).length-1]);
+    console.log('mode:',util.modeAdr(strLigne)) ; 
+
   },
   getCop: function (str) {
     let ins;
@@ -93,6 +99,49 @@ var util = {
     }
     return ins;
   },
+  regexi: function (reg){
+    reg=reg.toUpperCase() ;
+     if(reg == 'AX' || reg == 'BX' || reg == 'CX' || reg=='DX' || reg=='EX' || reg =='FX' || reg=='DI' || reg=='SI')
+     return true ; 
+     else return false ; 
+  },
+  modeDirect: function (tabIns){
+    if (util.regexi(tabIns[1]) && util.regexi(tabIns[2]))  { return true ;}
+    if (!(util.regAdrExi((tabIns[1]).slice(1,(tabIns[1]).length-1)) ||
+    util.regAdrExi((tabIns[2]).slice(1,(tabIns[2]).length-1)) ) && ! util.modeBaseIndx(tabIns) ){ return true ;}
+    if ( (tabIns[0])[(tabIns[0]).length-1] == 'I' && 
+    (util.regAdrExi(tabIns[1]) || (!(util.regAdrExi((tabIns[1]).slice(1,(tabIns[1]).length-1) )) 
+    && ! util.modeBaseIndx(tabIns)) )) { return true ;} 
+
+      
+  },
+  regAdrExi: function (reg) {
+   if (reg='BX' || reg=='SI' || reg=='DI') return true ; 
+   else return false ; 
+  },
+  modeIndirct: function (tabIns) {
+   if ( (util.regAdrExi((tabIns[1]).slice(1,(tabIns[1]).length-1)) && util.regAdrExi(tabIns[2]) ) || (util.regAdrExi((tabIns[2]).slice(1,(tabIns[2]).length-1)) && util.regAdrExi(tabIns[1])  ) )
+     return true ; 
+     else return false ; 
+  },
+  modeBaseIndx: function () {
+        if(util.regexi(tabIns[1]) && ((tabIns[2]).slice(1,(tabIns[2]).length-1)).length>2 ) return true ; 
+        if(util.regexi(tabIns[2]) && ((tabIns[1]).slice(1,(tabIns[1]).length-1)).length>2 ) return true ;  
+        else return false ; 
+  },
+  modeAdr: function (tabIns){      
+    if (tabIns.length ==3) { 
+       if (util.modeDirect(tabIns)){
+        return '00' ; 
+       }else if(util.modeIndirct(tabIns)){  return '01' ;}
+       else if (util.modeBaseIndx(tabIns) ) { return '10' ; }
+       else return '11' ; 
+    }
+  },
+  getDest: function (str) {
+    if (this.regexi(str[2].toUpperCase())){ return "1" ;}
+    else {return "0" ;}
+  },
 
   removeExtraSpaces: function (str) {
     return str.replace(/\s+/g, " ");
@@ -102,6 +151,15 @@ var util = {
     const incremented = decimal + 1;
     return incremented.toString(16).toUpperCase();
   },
+
+  remplirZero: function(str,n) {
+    var s = "";
+    for (let k = 0; k<n-str.length;k++){
+      s += '0' ;
+    }
+    return (s+str);
+    
+  } , 
   /*CoderInst: function (strLigne) {
     let c = new CaseMc();
     for (i = 0; i < strLigne.length; i++) {
