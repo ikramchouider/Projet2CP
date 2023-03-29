@@ -1,6 +1,8 @@
     ORG    100
 SET A   45H             
-   SET D 0H
+   SET D 0H     
   START
-MOV    Ax  ,   A
+SUB AX,tab[BX+4]
+MOVI [Bx+4H],4H
+MOVI [3H],3H
  STOP
