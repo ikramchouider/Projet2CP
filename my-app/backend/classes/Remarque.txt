@@ -1,0 +1,7 @@
+MOV [AX],BX // a verifie dans la partie syntax 
+à gérer dans la partie des erreurs : 
+
+- enlever les espaces entre les acolades [--BX-]
+- il faut mettre le H de l'hexa
+- il faut mettre les deux points après une etiq(comment le detecter? on compare avec les autres ins si c'est pas une inst donc ca doit etre une étiq sans les deux points. 
+- après une etiq il faut pas avoir un saut de ligne
