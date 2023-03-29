@@ -54,14 +54,62 @@ var util = {
       case "JZ":
         ins = "001100";
         break;
+      case "JNZ":
+        ins = "001101";
+        break ;
+      case "JC":
+        ins = "001110" ;
+        break ;
+      case "JS":
+        ins = "010000" ;
+        break ;
+      case "JNC":
+        ins = "001111" ;
+        break;
+      case "JNS":
+        ins = "010001" ;
+        break ;
+      case "JO" :
+        ins = "010010" ;
+        break ;
+      case "JNO" :
+        ins = "010011" ;
+        break ;
+      case "JE":
+        ins = "010100";
+        break;
+      case "JNE":
+        ins ="010101" ;
+        break ;
+      case "LOAD" :
+        ins ="010110";
+        break ;
+      case "STORE":
+        ins = "010111" ;
+        break ;
+      case "INC":
+        ins = "011000" ;
+        break ;
+      case "DEC":
+        ins = "011001";
+        break ;
+      case "NOT" :
+        ins = "011010";
+        break ;
+      case "JMP":
+        ins = "011011";
+        break ;
       case "IN":
         ins = "011100";
         break;
       case "OUT":
         ins = "011101";
         break;
+      case "START" :
+        ins = "101000"
+        break ;
       case "STOP":
-        ins = "11110";
+        ins = "011110";
         break;
       case "MOVI":
         ins = "100000";
@@ -102,6 +150,16 @@ var util = {
     const incremented = decimal + 1;
     return incremented.toString(16).toUpperCase();
   },
+  getDest: function (str) {
+    if (this.regexi(str[2].toUpperCase())){ return "1" ;}
+    else {return "0" ;}
+  },
+  regexi: function (reg){
+    if(reg == 'AX' || reg == 'BX' || reg == 'CX' || reg=='DX' || reg=='EX' || reg =='FX' || reg=='DI' || reg=='SI')
+    return true ; 
+    else return false ; 
+ },
+  
   /*CoderInst: function (strLigne) {
     let c = new CaseMc();
     for (i = 0; i < strLigne.length; i++) {
@@ -140,15 +198,31 @@ var util = {
     }
   },
 
-  coderSet: function (ligne) {},
-  remplirZero: function(str,n) {
+  coderSet: function (ligne) {},*/
+  
+  remplirZero: function(str,n,gd) { //gd=0 -> des zeros à gauche , gd=1 -> à droite
     var s = "";
-    for (let k = 0; k<n-str.length;k++){
+    const length = str.length ;
+    if (gd==0) {
+    for (let k = 0; k<n-length;k++){
       s += '0' ;
     }
     return (s+str);
-    
-  }*/
+  }
+    else { 
+      if (gd==1) {
+        for (let k = 0; k<n-length;k++) {
+          str += '0' ;
+        }
+        return (str) ;
+      }
+      else {
+        throw new Error ('Le troisieme parametre doit etre 0 ou 1.') ;
+      }
+    }
+  },
 };
+
+console.log(util.remplirZero("1001",8,2)) ;
 
 export default util;
