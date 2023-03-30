@@ -307,6 +307,33 @@ var util = {
   },
 
   
+<<<<<<< HEAD
+=======
+
+  remplirZero: function(str,n) {
+    var s = "";
+    const length = str.length ;
+    if (gd==0) {
+    for (let k = 0; k<n-length;k++){
+      s += '0' ;
+    }
+    return (s+str);
+  }
+    else { 
+      if (gd==1) {
+        for (let k = 0; k<n-length;k++) {
+          str += '0' ;
+        }
+        return (str) ;
+      }
+      else {
+        throw new Error ('Le troisieme parametre doit etre 0 ou 1.') ;
+      }
+    }
+  },
+>>>>>>> c97ffca0dbcf91a3d61c47b8b1da3f1fb8f37f95
 };
+
+console.log(util.remplirZero("1001",8,2)) ;
 
 export default util;

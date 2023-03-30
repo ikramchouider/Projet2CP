@@ -53,7 +53,5 @@ var main = {
   },
 };
 
-/*let x = "ABF" ;
-x = parseInt(x,16) + parseInt(1,16) ;
-console.log(x.toString(16));*/
+
 main.coder();
