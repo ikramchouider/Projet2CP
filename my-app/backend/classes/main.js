@@ -5,6 +5,7 @@ import fs from "fs";
 var main = {
   coder: function () {
     let dataTab = [];
+    let instrTab = [] ; 
     let indice = 0;
     let co = "ABC";
     console.log("********************");
@@ -39,9 +40,9 @@ var main = {
         indice++;
       } else if (ligne_str[0] == "STOP") {
       } else {
-        util.coderInst(ligne_str, parseInt(co, 16), dataTab);
-        co = util.incrementHex(co);
-      }
+        instrTab.concat(util.coderInst(ligne_str, parseInt(co, 16), dataTab)) ; 
+        co = util.incrementHex(co,(util.coderInst(ligne_str, parseInt(co, 16), dataTab)).length) ; 
+      } 
 
       console.log(`Ligne: ${line}`);
     });
