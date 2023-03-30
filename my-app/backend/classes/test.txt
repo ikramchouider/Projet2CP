@@ -1,8 +1,16 @@
-    ORG    100
-SET A   45H             
-   SET D 0H     
-  START
-SUB AX,tab[BX+4]
-MOVI [Bx+4H],4H
-MOVI [3H],3H
- STOP
+ ORG 100H
+SET A  45H   
+SET B 0H 
+SET C 0H
+SET D 0H
+START
+IN A 
+IN B
+MOV Ax , A
+MOV B , BX
+FSI: MOV B , BX
+Cmp Ax , Bx
+JS Fsi
+MOVI c,4H
+MOVI D,1H
+STOP

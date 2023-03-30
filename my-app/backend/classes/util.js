@@ -1,23 +1,41 @@
 import "./caseMemoire.js";
 var util = {
   coderInst: function (strLigne, adr, dataTab) {
-    let c;
-    let i = 0;
-    let str = strLigne[0] ; 
-    console.log(strLigne[0]) ; 
-    if (str[str.length - 1] == ":") {
-      i = 1;
-      c = new CaseMc(adr, "", str);
+    let str = ""; 
+    let instrTab = [] ; 
+    if ((strLigne[0])[(strLigne[0]).length - 1] == ":") {
+      str = strLigne[0] ; 
+      strLigne.shift() ; 
     }
-    let valeur = util.getCop(strLigne[i]);
-
-    console.log('mode:',util.modeAdr(strLigne)) ; 
-    
-
+    let c = new CaseMc(adr,util.getCode(strLigne),str);
+    instrTab.push(c) ; 
+    if(util.getFormat(str) == '0' ) return instrTab ;   
+    else if (((strLigne[0])[(strLigne[0]).length-1]).toUpperCase() == 'I' ) {
+         if (util.modeAdr(strLigne) == '00' && util.getDest(strLigne) == '0') {
+          instrTab.push(new CaseMc(this.incrementHex(adr,1),(strLigne[1]).slice(1,(strLigne[1]).length-1),"")) ;
+          instrTab.push(new CaseMc(this.incrementHex(adr,1),strLigne[2],"")) ;
+         } 
+         if(util.modeAdr(strLigne) == '10' && util.getDest(strLigne) == '0'){
+          instrTab.push(new CaseMc(this.incrementHex(adr,1),parseInt(getSubstringBetweenChars(strLigne[1],'+',']')).toString(16),"")) ;
+         }
+    }
+  },
+  getCode: function (str) {
+    let code ; 
+    if(str.length == 3){
+    if (!util.regexi(str[1]) && util.regexi(str[2]) ){
+      code = (util.getCop(str[0])).concat(util.modeAdr(str),util.getFormat(str),util.getDest(str),
+      util.getReg(str[2]),'000') ; 
+    }
+   else  code = (util.getCop(str[0])).concat(util.modeAdr(str),util.getFormat(str),util.getDest(str),
+                         util.getReg(str[1]),util.getReg(str[2])) ;
+   } else code = (util.getCop(str[0])).concat(util.modeAdr(str),util.getFormat(str),util.getDest(str),
+    util.getReg(str[1]),'000') ;
+    return code ; 
   },
   getCop: function (str) {
     let ins;
-    switch (str) {
+    switch (str.toUpperCase()) {
       case "MOV":
         ins = "000000";
         break;
@@ -144,6 +162,21 @@ var util = {
         }
         return ins;
   },
+  getReg: function (reg) {
+    let code ; 
+    switch(reg.toUpperCase()) {
+      case 'AX' : code='000'  ; break ; 
+      case 'BX' : code ='001' ; break ; 
+      case 'CX' : code='010'  ; break ; 
+      case 'DX' : code ='011' ; break ; 
+      case 'EX' : code='100'  ; break ; 
+      case 'FX' : code ='101' ; break ; 
+      case 'SI' : code='110'  ; break ; 
+      case 'DI' : code ='111' ; break ; 
+      default   : code ='000' ; break ; 
+    }
+    return code ; 
+  },
   regexi: function (reg){
     reg=reg.toUpperCase() ;
      if(reg == 'AX' || reg == 'BX' || reg == 'CX' || reg=='DX' || reg=='EX' || reg =='FX' || reg=='DI' || reg=='SI')
@@ -157,6 +190,7 @@ var util = {
     if ( (tabIns[0])[(tabIns[0]).length-1] == 'I' && 
     (util.regexi(tabIns[1]) || (!(util.regAdrExi((tabIns[1]).slice(1,(tabIns[1]).length-1) )) 
     && ! util.modeBaseIndx(tabIns)) )) { return true ;} 
+    
 
       
   },
@@ -180,13 +214,22 @@ var util = {
   },
   modeAdr: function (tabIns){      
     if (tabIns.length ==3) { 
-      if ((util.getDel(tabIns[1],"[") != ""  &&  tabIns[1].indexOf('[') != -1) || (util.getDel(tabIns[2],"[") != ""  &&  tabIns[2].indexOf('[') != -1) ) {
+      if(tabIns[0]== 'SHR' || tabIns[0]== 'SHL' || tabIns[0]== 'ROL' || tabIns[0]== 'ROR' ) return '00' ; 
+      else if ((util.getDel(tabIns[1],"[") != ""  &&  tabIns[1].indexOf('[') != -1) || (util.getDel(tabIns[2],"[") != ""  &&  tabIns[2].indexOf('[') != -1) ) {
         return'11'
  ;       }else {
       if (util.modeDirect(tabIns)){
         return '00' ; 
        }else if(util.modeIndirct(tabIns)){  return '01' ;}
        else if (util.modeBaseIndx(tabIns) ) { return '10' ; } }
+    }else if (tabIns.length == 2) {
+       if(tabIns[0]== 'LOAD'){
+        if (util.regAdrExi((tabIns[1]).slice(1,(tabIns[1]).length-1)) ) return '01' ;
+        else if (util.getDel(tabIns[1],"[") != ""  &&  tabIns[1].indexOf('[') != -1 ) return '11'  ; 
+        else return '00' ; 
+
+       }
+       else return '00' ; 
     }
   },
   getDest: function (str) {
@@ -197,10 +240,11 @@ var util = {
   removeExtraSpaces: function (str) {
     return str.replace(/\s+/g, " ");
   },
-  incrementHex: function (hex) {
-    const decimal = parseInt(hex, 16);
-    const incremented = decimal + 1;
-    return incremented.toString(16).toUpperCase();
+  incrementHex: function (hex,n) {
+    let decimal = parseInt(hex, 16);
+    for(let i=0;i<n;i++) {
+     decimal = decimal + 1; 
+  } return decimal.toString(16).toUpperCase();
   },
 
   remplirZero: function(str,n,gd) { //gd=0 -> des zeros à gauche , gd=1 -> à droite
@@ -236,42 +280,33 @@ var util = {
   getFormat: function (ligne_str) {
     let taille = ligne_str.length;
     if (taille == 2) {
-      if (regexi(ligne_str[1])) return "0";
+      if (util.regexi(ligne_str[1]) || util.regAdrExi((ligne_str[1]).slice(1,(ligne_str[1]).length-1))) return "0";
       else return "1";
     } else if (taille == 3) {
-      //if (regexi(ligne_str[1]) && regexi(ligne_str[2]))
-    } else return "0";
+      if ((util.regexi(ligne_str[1]) && util.regexi(ligne_str[2])) || 
+      (util.regAdrExi((ligne_str[1]).slice(1,(ligne_str[1]).length-1)) && util.regexi(ligne_str[2]) ) ||
+      (util.regAdrExi((ligne_str[2]).slice(1,(ligne_str[2]).length-1)) && util.regexi(ligne_str[1]) )) return "0"
+      else return "1" ; 
+    } 
   },
   getDest: function (str) {
-    if (this.regexi(str[2].toUpperCase())){ return "1" ;}
+    if (this.regexi(str[1].toUpperCase())){ return "1" ;}
     else {return "0" ;}
   },
-
-  /*CoderInst: function (strLigne) {
-    let c = new CaseMc();
-    for (i = 0; i < strLigne.length; i++) {
-      while (strLigne[i] != " ") {
-        i++;
-      }
-      if (strLigne[i - 1] != ":") {
-      } else {
-      }
+ getSubstringBetweenChars: function (str, startChar, endChar) {
+    let startIndex = str.indexOf(startChar);
+    if (startIndex === -1) {
+      return '';
     }
+    startIndex += 1;
+    const endIndex = str.indexOf(endChar, startIndex);
+    if (endIndex === -1) {
+      return '';
+    }
+    return str.substring(startIndex, endIndex);
   },
 
-  codeMov: function(ligne){
-    
-  }
   
-
-  remplirZero: function(str,n) {
-    var s = "";
-    for (let k = 0; k<n-str.length;k++){
-      s += '0' ;
-    }
-    return (s+str);
-    
-  }*/
 };
 
 export default util;
