@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body{
+    @apply bg-primary text-gray ;
+}
+
+nav{
+    @apply   p-5  shadow md:flex md:items-center md:justify-between;
+}
+.gr{
+    @apply flex justify-between items-center;
+}
+.tap{
+ @apply   md:flex md:items-center z-[-1] md:z-auto md:static absolute  w-full left-0 md:w-auto md:py-0 py-4 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[-400px] transition-all ease-in duration-500;
+}
+.icon{
+    @apply    text-3xl cursor-pointer mx-2 md:hidden block;
+}
+.logo{
+    @apply   text-2xl font-[Poppins] cursor-pointer;
+}
+
+
+.tp{
+   @apply relative ml-10 w-44 h-12 tracking-[1px] hover:text-white ;
+}
+.tp::after{
+    @apply content-[''] bg-buttonhover h-[3px] w-[0%] left-0 -bottom-[5px]  rounded-xl absolute duration-300;
+}
+.tp:hover::after{
+    @apply w-[100%];
+}
+.card-containor{
+    @apply flex flex-row mt-36  justify-center  flex-wrap md:flex-nowrap md:overflow-x-auto md:m-10 md:justify-start;
+}
+.card{
+    @apply  m-10 bg-card p-12 rounded-md w-96 h-72 text-center text-3xl shadow-md hover:shadow-xl hover:text-white hover:rotate-12;
+}
+
+h3{
+    @apply ml-10 text-3xl font-light hover:text-white   ;
+}
+#archimg{
+    @apply bg-card flex mx-10 justify-center rounded-lg shadow-lg md:mx-56 ;
+}
+h4{
+    @apply text-xl font-medium hover:text-white
+}
+.bloc{
+    @apply  rounded-md shadow-md ml-2 mr-2 mt-8 p-2 hover:shadow-xl hover:text-white;
+}
+details{
+    @apply ml-2 mr-2 mt-8 mb-8 shadow-md rounded-md p-2 hover:shadow-lg hover:text-white ;
+}
+.prog, .blocs{
+    @apply bg-card ml-10 mr-10 my-5 rounded-lg p-6;
+}
+.rate{
+    @apply bg-card w-48 ml-10  mt-8 mb-8 rounded-lg shadow-md p-4 hover:shadow-xl hover:text-white;
+}
+.yesno{
+    @apply flex items-stretch gap-x-1 ;
+}
+.yes,.no{
+    @apply rounded-lg shadow-md p-2 hover:shadow-xl hover:bg-buttonhover hover:text-white ;
+}
+.image{
+    @apply  md:basis-1/2 w-96 rounded-md shadow-md m-4 hover:shadow-xl ;
+}
+.content{
+    @apply  md:basis-1/2 m-4;
+}
+.step{
+    @apply  md:flex md:justify-between bg-card rounded-lg shadow-md ml-10 mr-10 mt-8 p-2 hover:shadow-xl hover:text-white ;
+}
+.welcom{
+    @apply  md:justify-between hover:text-white m-24 ;
+}
+.m{
+    @apply ml-10 mr-10 mt-4 ;
+}
