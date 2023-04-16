@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 body{
-    @apply bg-primary text-gray ;
+    @apply  text-gray ;
 }
 
 nav{
