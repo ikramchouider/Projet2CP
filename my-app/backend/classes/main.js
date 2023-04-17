@@ -2,10 +2,11 @@ import CaseMc from "./caseMemoire.js";
 import util from "./util.js";
 import readline from "readline";
 import fs from "fs";
+import { log } from "console";
 var main = {
   coder: function () {
     let dataTab = [];
-    let instrTab = [] ; 
+    let instrTab = [];
     let indice = 0;
     let co = "ABC";
     console.log("********************");
@@ -19,7 +20,7 @@ var main = {
     rl.on("line", (line) => {
       console.log("********************");
       let ligne_str = line.toString().trim();
-      ligne_str=ligne_str.replace(","," ") ; 
+      ligne_str = ligne_str.replace(",", " ");
       ligne_str = util.removeExtraSpaces(ligne_str);
       ligne_str = ligne_str.split(" ");
       console.log(ligne_str);
@@ -40,9 +41,16 @@ var main = {
         indice++;
       } else if (ligne_str[0] == "STOP") {
       } else {
-        instrTab.concat(util.coderInst(ligne_str, parseInt(co, 16), dataTab)) ; 
-        co = util.incrementHex(co,(util.coderInst(ligne_str, parseInt(co, 16), dataTab)).length) ; 
-      } 
+        instrTab = instrTab.concat(
+          util.coderInst(ligne_str, parseInt(co, 16), dataTab)
+        );
+        console.log(instrTab.length);
+        for (let i = 0; i < instrTab.length; i++) instrTab[i].afficher();
+        co = util.incrementHex(
+          co,
+          util.coderInst(ligne_str, parseInt(co, 16), dataTab).length
+        );
+      }
 
       console.log(`Ligne: ${line}`);
     });
@@ -52,6 +60,5 @@ var main = {
     });
   },
 };
-
 
 main.coder();
