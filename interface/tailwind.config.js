@@ -27,7 +27,7 @@ module.exports = {
       'silver': '#ecebff',
       'bubble-gum': '#ff77e9',
       'bermuda': '#78dcca',
-      'card':'#3f1466',
+      'card':'#1e1f47',
       'primary':'#3f1466',
       'buttonhover':'#3f1466',
       'buttonpressed':'#999CF9',
