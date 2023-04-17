@@ -15,21 +15,19 @@ var util = {
         if (strLigne[1].indexOf("[") != -1) {
           adr = this.incrementHex(adr, 1);
           instrTab.push(
-            new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 1), "")
+            new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 1), "") // remplir 0 remplirZero
           );
         } else {
-          // console.log(strLigne[1]);
-          let indice = dataTab.find(function (element) {
-            return element.etiq === strLigne[1];
-          });
+          let indice = util.chercherDansTableau(dataTab, strLigne[1]);
           adr = this.incrementHex(adr, 1);
-          if (indice !== undefined) {
-            instrTab.push(new CaseMc(adr, indice.adr, ""));
-            console.log("hh");
-          }
+          instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
         }
         adr = this.incrementHex(adr, 1);
-        instrTab.push(new CaseMc(adr, strLigne[2], ""));
+        if (strLigne[2].indexOf("H") != -1) {
+          instrTab.push(
+            new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
+          );
+        } else instrTab.push(new CaseMc(adr, strLigne[2], ""));
         return instrTab;
       }
       if (util.modeAdr(strLigne) == "10" && util.getDest(strLigne) == "0") {
@@ -44,6 +42,13 @@ var util = {
         );
       }
     }
+  },
+  chercherDansTableau: function (tableau, valeur) {
+    let i = 0;
+    while (i < tableau.length && tableau[i].getEtiq() != valeur) {
+      i++;
+    }
+    return i;
   },
   getCode: function (str) {
     let code;

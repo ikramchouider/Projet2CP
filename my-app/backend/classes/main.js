@@ -8,7 +8,8 @@ var main = {
     let dataTab = [];
     let instrTab = [];
     let indice = 0;
-    let co = "ABC";
+    let co ;
+    let adr="" ; 
     console.log("********************");
 
     const fileStream = fs.createReadStream("./test.txt");
@@ -25,9 +26,10 @@ var main = {
       ligne_str = ligne_str.split(" ");
       console.log(ligne_str);
       if (ligne_str[0] == "ORG") {
-        const adr = ligne_str[1];
-        let co = adr;
+        if(ligne_str[1].indexOf("H") != -1) {
+        adr = ligne_str[1].slice(0,ligne_str[1].length - 1);} else console.log("ERROR");
         console.log(adr);
+        co = adr;
       } else if (ligne_str[0] == "START") {
       } else if (ligne_str[0] == "SET") {
         dataTab.push(
@@ -41,22 +43,15 @@ var main = {
         indice++;
       } else if (ligne_str[0] == "STOP") {
       } else {
-        instrTab = instrTab.concat(
-          util.coderInst(ligne_str, parseInt(co, 16), dataTab)
-        );
-        console.log(instrTab.length);
-        for (let i = 0; i < instrTab.length; i++) instrTab[i].afficher();
-        co = util.incrementHex(
-          co,
-          util.coderInst(ligne_str, parseInt(co, 16), dataTab).length
-        );
+        let tab=util.coderInst(ligne_str,co, dataTab) ; 
+        instrTab = instrTab.concat(tab);
+      for (let i = 0; i < instrTab.length; i++) instrTab[i].afficher();
+        co = util.incrementHex(co,tab.length);
       }
 
-      console.log(`Ligne: ${line}`);
     });
 
     rl.on("close", () => {
-      console.log("Fin de la lecture du fichier.");
     });
   },
 };
