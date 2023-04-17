@@ -11,6 +11,15 @@ class CaseMc {
   setVal(val) {
     this.#val = val;
   }
+  getVal() {
+    return this.#val ; 
+  }
+  getEtiq() {
+    return this.#etiq ; 
+  }
+  getAdr() {
+    return this.#adr ; 
+  }
   afficher() {
     console.log(`adr ${this.#adr}  val ${this.#val}  etiq ${this.#etiq} `);
   }

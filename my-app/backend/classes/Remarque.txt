@@ -7,3 +7,4 @@ MOV [AX],BX // a verifie dans la partie syntax
 - après une etiq il faut pas avoir un saut de ligne
 - fonction pour initialiser MC 
 - il faut verifier qu'on a écrit dans l'orde ( set ... après start etc ...)
+- il faut initialiser les valeurs toujour 
