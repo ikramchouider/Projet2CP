@@ -14,19 +14,20 @@ var util = {
       if (util.modeAdr(strLigne) == "00" && util.getDest(strLigne) == "0") {
         if (strLigne[1].indexOf("[") != -1) {
           adr = this.incrementHex(adr, 1);
-          instrTab.push( 
-            new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 1), "")// remplir 0 remplirZero
+          instrTab.push(
+            new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 1), "") // remplir 0 remplirZero
           );
         } else {
-          let indice = util.chercherDansTableau(dataTab,strLigne[1]);
-          adr = this.incrementHex(adr, 1) ; 
-            instrTab.push(new CaseMc(adr,dataTab[indice].getVal(), ""));
+          let indice = util.chercherDansTableau(dataTab, strLigne[1]);
+          adr = this.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
         }
         adr = this.incrementHex(adr, 1);
-        if(strLigne[2].indexOf("H") != -1) {
-          instrTab.push(new CaseMc(adr,strLigne[2].slice(0,strLigne[2].length - 1), ""));
-      } 
-        else  instrTab.push(new CaseMc(adr, strLigne[2], ""));;
+        if (strLigne[2].indexOf("H") != -1) {
+          instrTab.push(
+            new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
+          );
+        } else instrTab.push(new CaseMc(adr, strLigne[2], ""));
         return instrTab;
       }
       if (util.modeAdr(strLigne) == "10" && util.getDest(strLigne) == "0") {
@@ -42,13 +43,13 @@ var util = {
       }
     }
   },
- chercherDansTableau: function(tableau,valeur) {
-  let i=0 ; 
-  while ( (i < tableau.length) && (tableau[i].getEtiq() != valeur)) {
-    i++ ; }
-   return i ; 
-
-  } ,
+  chercherDansTableau: function (tableau, valeur) {
+    let i = 0;
+    while (i < tableau.length && tableau[i].getEtiq() != valeur) {
+      i++;
+    }
+    return i;
+  },
   getCode: function (str) {
     let code;
     if (str.length == 3) {
