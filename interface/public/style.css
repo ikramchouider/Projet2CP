@@ -962,3 +962,60 @@ img:hover{
 body{
   background: linear-gradient(to bottom, rgb(18, 18, 19) 0%, #1f1f4e 35%, #3f1466 70%,rgb(19, 11, 34) 100%);
 }
+.containor {
+  width: 250px;
+  height: 350px;
+  perspective: 700px;
+  margin: 48px;
+}
+
+.containor:hover > .cards {
+  cursor: pointer;
+  transform: rotateY(180deg);
+}
+
+.cards {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  transition: transform 1500ms;
+  transform-style: preserve-3d;
+}
+
+.front,
+.back {
+  height: 100%;
+  width: 100%;
+  border-radius: 2rem;
+  box-shadow: 0 0 5px 2px rgba(50, 50, 50, 0.25);
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.front {
+  background-image: url(https://source.unsplash.com/random/350x500);
+}
+
+.back {
+  background-color: #3a3a3a;
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5rem;
+}
+.members{
+  display: table;
+  box-sizing: border-box;
+  margin: 0 100px;
+}
+.row{
+  margin: 40px 0;
+}
+.column{
+  display: table-cell;
+  padding: 20 px;
+  width: 33.33%;
+  vertical-align: middle;
+}
