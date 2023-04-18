@@ -7,7 +7,7 @@ var util = {
       str = strLigne[0];
       strLigne.shift();
     }
-    instrTab.push(new CaseMc(adr, util.getCode(strLigne), str));
+    instrTab.push(new CaseMc(adr, this.binaryToHex(util.getCode(strLigne)), str));
     if (util.getFormat(strLigne) == "0") {
       return instrTab;
     } else if (strLigne[0][strLigne[0].length - 1].toUpperCase() == "I") {
@@ -37,12 +37,44 @@ var util = {
             parseInt(getSubstringBetweenChars(strLigne[1], "+", "]")).toString(
               16
             ),
-            ""
+            
           )
         );
       }
+      return instrTab ;
     }
+    else if ((util.modeAdr(strLigne) == "00")){
+      
+      if((util.getDest(strLigne) == "0")){
+        if (strLigne[1].indexOf("[") != -1){
+        adr = this.incrementHex(adr, 1);
+          instrTab.push(
+            new CaseMc(adr, (strLigne[1].slice(1, strLigne[1].length - 2)), "") // remplir 0 remplirZero
+          );
+          }
+        else {
+          let indice = util.chercherDansTableau(dataTab, strLigne[1]);
+          adr = this.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
+        }   
+      }
+      else {
+        if (strLigne[2].indexOf("[") != -1){
+        adr = this.incrementHex(adr, 1);
+          instrTab.push(
+            new CaseMc(adr, (strLigne[2].slice(1, strLigne[2].length - 2)), "") // remplir 0 remplirZero
+          );
+          }
+        else {
+          let indice = util.chercherDansTableau(dataTab, strLigne[2]);
+          adr = this.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
+        }   }
+    }
+    return instrTab ;
   },
+
+
   chercherDansTableau: function (tableau, valeur) {
     let i = 0;
     while (i < tableau.length && tableau[i].getEtiq() != valeur) {
@@ -435,6 +467,9 @@ var util = {
       return "0";
     }
   },
+  additionHexa: function (x,y) {
+    return ((parseInt(x,16) + parseInt(y,16)).toString(16)).toUpperCase() ;
+  },
   getSubstringBetweenChars: function (str, startChar, endChar) {
     let startIndex = str.indexOf(startChar);
     if (startIndex === -1) {
@@ -446,6 +481,11 @@ var util = {
       return "";
     }
     return str.substring(startIndex, endIndex);
+  },
+  binaryToHex: function(binary) {
+    const decimal = parseInt(binary, 2);
+    const hex = decimal.toString(16);
+    return hex.toUpperCase();
   },
 };
 

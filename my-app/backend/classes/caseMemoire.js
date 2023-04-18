@@ -21,7 +21,7 @@ class CaseMc {
     return this.#adr ; 
   }
   afficher() {
-    console.log(`adr ${this.#adr}  val ${this.#val}  etiq ${this.#etiq} `);
+    console.log(`ETIQ: ${this.#etiq}         @${this.#adr}   ${this.#val}`);
   }
 }
 export default CaseMc;
