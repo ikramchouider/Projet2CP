@@ -7,7 +7,9 @@ var util = {
       str = strLigne[0];
       strLigne.shift();
     }
-    instrTab.push(new CaseMc(adr, this.binaryToHex(util.getCode(strLigne)), str));
+    instrTab.push(
+      new CaseMc(adr, this.binaryToHex(util.getCode(strLigne)), str)
+    );
     if (util.getFormat(strLigne) == "0") {
       return instrTab;
     } else if (strLigne[0][strLigne[0].length - 1].toUpperCase() == "I") {
@@ -36,52 +38,56 @@ var util = {
             this.incrementHex(adr, 1),
             parseInt(getSubstringBetweenChars(strLigne[1], "+", "]")).toString(
               16
-            ),
-            
+            )
           )
         );
       }
-      return instrTab ;
-    }
-    else if ((util.modeAdr(strLigne) == "00")){
-      
-      if((util.getDest(strLigne) == "0")){
-        if (strLigne[1].indexOf("[") != -1){
-        adr = this.incrementHex(adr, 1);
+      return instrTab;
+    } else if (util.modeAdr(strLigne) == "00") {
+      if (util.getDest(strLigne) == "0") {
+        if (strLigne[1].indexOf("[") != -1) {
+          adr = this.incrementHex(adr, 1);
           instrTab.push(
-            new CaseMc(adr, (strLigne[1].slice(1, strLigne[1].length - 2)), "") // remplir 0 remplirZero
+            new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 2), "") // remplir 0 remplirZero
           );
-          }
-        else {
+        } else {
           let indice = util.chercherDansTableau(dataTab, strLigne[1]);
           adr = this.incrementHex(adr, 1);
           instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
-        }   
-      }
-      else {
-        if (strLigne[2].indexOf("[") != -1){
-        adr = this.incrementHex(adr, 1);
+        }
+      } else {
+        if (strLigne[2].indexOf("[") != -1) {
+          adr = this.incrementHex(adr, 1);
           instrTab.push(
-            new CaseMc(adr, (strLigne[2].slice(1, strLigne[2].length - 2)), "") // remplir 0 remplirZero
+            new CaseMc(adr, strLigne[2].slice(1, strLigne[2].length - 2), "") // remplir 0 remplirZero
           );
-          }
-        else {
+        } else {
           let indice = util.chercherDansTableau(dataTab, strLigne[2]);
           adr = this.incrementHex(adr, 1);
           instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
-        }   }
+        }
+      }
     }
-    return instrTab ;
+    return instrTab;
   },
 
-
   chercherDansTableau: function (tableau, valeur) {
+    // change the name to chercherEtiq
     let i = 0;
     while (i < tableau.length && tableau[i].getEtiq() != valeur) {
       i++;
     }
     return i;
   },
+
+  chercherAdr: function (tableau, adr) {
+    let i = 0;
+    while (i < tableau.length && tableau[i].getAdr() != adr) {
+      i++;
+    }
+    return i;
+  },
+
   getCode: function (str) {
     let code;
     if (str.length == 3) {
@@ -244,6 +250,7 @@ var util = {
         ins = "110110";
         break;
     }
+    console.log("COP : ", ins);
     return ins;
   },
   getReg: function (reg) {
@@ -277,6 +284,7 @@ var util = {
         code = "000";
         break;
     }
+    console.log("Reg", code);
     return code;
   },
   regexi: function (reg) {
@@ -362,19 +370,24 @@ var util = {
         tabIns[0] == "SHL" ||
         tabIns[0] == "ROL" ||
         tabIns[0] == "ROR"
-      )
+      ) {
+        console.log("Mode d'Adressage : 00 (direct) ");
         return "00";
-      else if (
+      } else if (
         (util.getDel(tabIns[1], "[") != "" && tabIns[1].indexOf("[") != -1) ||
         (util.getDel(tabIns[2], "[") != "" && tabIns[2].indexOf("[") != -1)
       ) {
+        console.log("Mode d'Adressage : 11 (Direct Indexé) ");
         return "11";
       } else {
         if (util.modeDirect(tabIns)) {
+          console.log("Mode d'Adressage : 00 (direct) ");
           return "00";
         } else if (util.modeIndirct(tabIns)) {
+          console.log("Mode d'Adressage : 01 (Indirect) ");
           return "01";
         } else if (util.modeBaseIndx(tabIns)) {
+          console.log("Mode d'Adressage : 10 (Basé Indexé) ");
           return "10";
         }
       }
@@ -467,8 +480,8 @@ var util = {
       return "0";
     }
   },
-  additionHexa: function (x,y) {
-    return ((parseInt(x,16) + parseInt(y,16)).toString(16)).toUpperCase() ;
+  additionHexa: function (x, y) {
+    return (parseInt(x, 16) + parseInt(y, 16)).toString(16).toUpperCase();
   },
   getSubstringBetweenChars: function (str, startChar, endChar) {
     let startIndex = str.indexOf(startChar);
@@ -482,7 +495,7 @@ var util = {
     }
     return str.substring(startIndex, endIndex);
   },
-  binaryToHex: function(binary) {
+  binaryToHex: function (binary) {
     const decimal = parseInt(binary, 2);
     const hex = decimal.toString(16);
     return hex.toUpperCase();

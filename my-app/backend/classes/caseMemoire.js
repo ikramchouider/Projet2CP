@@ -12,16 +12,24 @@ class CaseMc {
     this.#val = val;
   }
   getVal() {
-    return this.#val ; 
+    return this.#val;
   }
   getEtiq() {
-    return this.#etiq ; 
+    return this.#etiq;
   }
   getAdr() {
-    return this.#adr ; 
+    return this.#adr;
   }
   afficher() {
     console.log(`ETIQ: ${this.#etiq}         @${this.#adr}   ${this.#val}`);
+  }
+  /*getCOP() {
+    let val = this.hexToBinary(this.getVal());
+    return code.substring(0, 6);
+  }*/
+  
+  hexToBinary(hex) {
+    return parseInt(hex, 16).toString(2);
   }
 }
 export default CaseMc;

@@ -8,3 +8,4 @@ MOV [AX],BX // a verifie dans la partie syntax
 - fonction pour initialiser MC 
 - il faut verifier qu'on a écrit dans l'orde ( set ... après start etc ...)
 - il faut initialiser les valeurs toujour 
+- chager le nom de la fontion chercher dans tableau etiq
