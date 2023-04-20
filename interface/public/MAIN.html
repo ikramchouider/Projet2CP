@@ -1,49 +1,159 @@
 <!DOCTYPE html>
-<html>
-	<head>
-    <title>
-      LOADING...
-    </title>
-    <link rel="icon" type="image/x-icon" href="logo.ico">
-    <meta http-equiv="refresh" content="5; URL=file:///C:/Users/DELL/OneDrive/Bureau/2CP/S4/PROJET%202CP%20MACHINE%20PEDAGOGIQUE/Site_startup/mm.html" />
-		<link rel="stylesheet" href="AboutUs.css">
-	</head>
-	<body>
-<div class="container_row">
-  <div class="layer1">
-    <h1 class="jt --debug">
-      <span class="jt__row">
-        <span class="jt__text">PASSE</span>
-      </span>
-      <span class="jt__row jt__row--sibling" aria-hidden="true">
-        <span class="jt__text">PASSE</span>
-      </span>
-      <span class="jt__row jt__row--sibling" aria-hidden="true">
-        <span class="jt__text">PASSE</span>
-      </span>
-      <span class="jt__row jt__row--sibling" aria-hidden="true">
-        <span class="jt__text">PASSE</span>
-      </span>
-    </h1>
-</div>
-<div class="layer2">
-<!--text-->
-<div id ="two">
-  <p> Votre endroit pour </p>
-<div class="box">
-<ul>
-  
-  <li class="item-1">a Processor</li>
-  <li class="item-2">and Architecture</li>
-  <li class="item-3">Simple</li>
-  <li class="item-4">Simulator</li>
-  <li class="item-5">and Emulator</li>
-</ul>  
-</div>
-</div>
-</div>
-<span class="loader"></span>
-</div>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="./img/logo.png">
+    <link href="https://fonts.googleapis.com/css2family=Actor&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <title>PASSE</title>
+</head>
+<body >        
+    <main>
+        <nav>
+            <div class="gr">
+              <span class="icon" >
+                <ion-icon name="menu" onclick="Menu(this)" ></ion-icon>
+              </span>
 
-	</body>
+               <span class="logo">
+                  <img src="./img/logo.png" alt="#">
+              </span>
+            </div>
+            <ul class="tap">
+              <li>
+                <a class="tp" href="./Main.html">Accueil</a>
+              </li>
+              <li>
+                <a class="tp" href="./Docs.html">Docs</a>
+              </li>
+              <li>
+                <a class="tp" href="./Aide.html">Aide</a>
+              </li>
+              <li>
+                <a class="tp" href="./About.html">Appropos de nous</a>
+              </li>
+            </ul>
+        </nav>
+         <div class="welcom">
+                <div class="message">
+                  <h3>Familiarisez-vous avec simulator</h3>
+                  <p class="m"> Ce site vous permettera de simuler un ensemble <br>
+                       d’instructions ecrites en langage bas niveau et suivre <br>
+                        le flus de l’information sur une architecture conçue pour <br>
+                       but pédagogique</p>
+                </div>
+                <div class="cpu">
+                  <img src="./img/cpu.png" alt="">
+                </div>
+         </div>
+         <section class="contain">
+          <div class="carte">
+            <div class="card-image car-1"> </div>
+<h4>Architecture de la machine</h4>
+<a href="#archimg" class="btn">Go!</a>
+          </div>
+
+          <div class="carte">
+            <div class="card-image car-2"> </div>
+<h4>Programmes</h4>
+<a href="#prg" class="btn">Go!</a>
+          </div>
+
+          <div class="carte">
+            <div class="card-image car-3"> </div>
+<h4>Simulation</h4>
+<a href="#sml" class="btn">Go!</a>
+          </div>
+         </section>
+         <h3>Architecture de la machine</h3>
+         <br>
+         <div id="archimg">
+             <img  src="img/archimd.png" alt="#">
+         </div>  
+         <a href="#" class="learnmore">Learn more</a>
+         <br>
+         <br>
+         <br>
+         <section class="contain" id="prg">
+          <div class="carte pgm">
+<h3>Title</h3>
+<a href="#" class="btn">learn more</a>
+          </div>
+
+          <div class="carte pgm">
+<h3>Title</h3>
+<a href="#" class="btn">learn more</a>
+          </div>
+
+          <div class="carte pgm">
+<h3>Title</h3>
+<a href="#" class="btn">learn more</a>
+          </div>
+          <div class="carte pgm">
+            <h3>Title</h3>
+            <a href="#" class="btn">learn more</a>
+                      </div>
+            
+                      <div class="carte pgm">
+            <h3>Title</h3>
+            <a href="#" class="btn">learn more</a>
+                      </div>
+            
+                      <div class="carte pgm">
+            <h3>Title</h3>
+            <a href="#" class="btn">learn more</a>
+                      </div>
+         </section>
+         <br>
+         <br>
+         <br>
+         <h3>Simulation</h3>
+         <section class="emulator" id="sml">
+          <div class="option">
+            <select name="file" id="file">
+              <option selected disabled>file</option>
+            <option value="program_1"> program_1 </option>
+            <option value="program_2"> program_2 </option>
+            <option value="program_3"> program_3 </option>
+            <option value="program_4"> program_4 </option>
+            <option value="program_5"> program_5 </option>
+            <option value="program_6"> program_6 </option>
+            </select>
+            <button id="compile_id">Compile</button>
+            <button id="run_id">Run</button>
+            <button id="simulate_id">Simulate</button>
+            <button id="help_id">Help</button>
+
+          </div>
+          <div class="bas">
+            <div class="upload">
+              <div class="upload_img">
+                <img src="./img/upload.png" alt="#">
+              </div>
+              <div>
+                <button type = "button" class = "btn-warning">
+                  <i class = "fa fa-upload"></i> Upload File
+                  <input type="file">
+                  <ion-icon name="cloud-upload-outline"></ion-icon>
+              </div>
+
+            </div>
+            
+              <textarea class="textzone" name="code" id="code" > |</textarea>
+            
+          </div>
+
+         </section>
+    </main>   
+    <script>
+      function Menu(e){
+        let list = document.querySelector('ul');
+        e.name === 'menu' ? (e.name = "close",list.classList.add('top-[80px]') , list.classList.add('opacity-100')) :( e.name = "menu" ,list.classList.remove('top-[80px]') , list.classList.remove('opacity-100'))
+      }
+    </script>
+</body>
 </html>
