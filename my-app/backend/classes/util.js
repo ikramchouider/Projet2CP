@@ -1,4 +1,6 @@
 import CaseMc from "./caseMemoire.js";
+import readline from "readline";
+import fs from "fs";
 var util = {
   coderInst: function (strLigne, adr, dataTab) {
     let str = "";
@@ -7,6 +9,7 @@ var util = {
       str = strLigne[0];
       strLigne.shift();
     }
+    console.log("code",util.getCode(strLigne));
     instrTab.push(
       new CaseMc(adr, this.binaryToHex(util.getCode(strLigne)), str)
     );
@@ -500,7 +503,46 @@ var util = {
     const hex = decimal.toString(16);
     return hex.toUpperCase();
   },
-};
+  errorFunction: function (fichier){
+    const fileStream = fs.createReadStream(fichier);
+    const rl = readline.createInterface({
+      input: fileStream,
+      crlfDelay: Infinity,
+    });
+    let i=0 ; 
+    let trouvOrg= false ; 
+    let trouvStart= false ; 
+    let trouvStop= false ; 
+
+    rl.on("line", (line) => {
+      let ligne_str = line.toString().trim();
+      if (ligne_str[0] == 'ORG') {
+        if(trouvOrg== true){
+          throw new Error("Il faut ecrire une seule fois ORG ") ; 
+        }
+        if( i != 0){throw new Error("Il faut commencer par ORG ") }
+        trouvOrg = true ; 
+      }
+      else if(ligne_str[0] == 'START'){
+        if (trouvOrg == false) throw new Error("Il faut commencer par ORG ") ; 
+        if (trouvStop == true ) throw new Error("Il faut commencer par START") ; 
+      }
+      else if (ligne_str[0] == 'SET') {
+        if (trouvOrg == false) throw new Error("Il faut commencer par ORG ") ; 
+        if (trouvStart == true) throw new Error("Il faut commencer par SET ") ; 
+      }
+      i++ ; 
+    });
+  rl.on("close", () => { if (trouvStop == false) throw new Error("Il faut terminer par stop ") ; }) ;
+  console.log('i:',i);
+},
+removeEmptyLines: function (file) {
+  let lines = file.split('\n');
+  lines = lines.filter(line => line.trim() !== '');
+  let newFile = lines.join('\n');
+  return newFile;
+},
+}
 
 //console.log(util.remplirZero("1001",8,)) ;
 

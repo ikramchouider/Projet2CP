@@ -66,12 +66,18 @@ var main = {
     let indice = 0;
     let co;
     let adr = "";
-    const fileStream = fs.createReadStream("./test.txt");
+
+    const fs = require("fs");
+    const filePath = "./text.txt";
+    const fileContent = fs.readFileSync(filePath, "utf-8");
+    const newFileContent = removeEmptyLines(fileContent);
+    fs.writeFileSync(filePath, newFileContent);
+    const fileStream = fs.createReadStream(filePath);
     const rl = readline.createInterface({
       input: fileStream,
       crlfDelay: Infinity,
     });
-
+    let file = util.removeEmptyLines("./test.txt");
     rl.on("line", (line) => {
       console.log("********************");
       let ligne_str = line.toString().trim();
