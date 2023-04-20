@@ -48,10 +48,10 @@ h4{
     @apply text-xl font-medium hover:text-white
 }
 .bloc{
-    @apply  rounded-md shadow-md ml-2 mr-2 mt-8 p-2 hover:shadow-xl hover:text-white bg-cardhover;
+    @apply  rounded-md shadow-md ml-2 mr-2 mt-8 p-2 hover:shadow-xl hover:text-white ;
 }
 details{
-    @apply ml-2 mr-2 mt-8 mb-8 shadow-md rounded-md p-2 hover:shadow-lg hover:text-white bg-cardhover ;
+    @apply ml-2 mr-2 mt-8 mb-8 shadow-md rounded-md p-2 hover:shadow-lg hover:text-white  ;
 }
 .prog, .blocs{
     @apply bg-card ml-10 mr-10 my-5 rounded-lg p-6;
@@ -75,8 +75,11 @@ details{
     @apply  md:flex md:justify-between bg-card rounded-lg shadow-md ml-10 mr-10 mt-8 p-2 hover:shadow-xl hover:text-white ;
 }
 .welcom{
-    @apply  md:justify-between hover:text-white m-24 ;
+    @apply md:flex md:justify-between hover:text-white m-24 ;
 }
 .m{
     @apply ml-10 mr-10 mt-4 ;
+}
+.cpu{
+    @apply h-72 w-72 mr-36 ;
 }
