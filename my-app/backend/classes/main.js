@@ -10,8 +10,8 @@ import { INSPECT_MAX_BYTES } from "buffer";
 var main = {
   dataTab: [],
   ual: new UAL("0", "0"),
-  AX: new registre("AX", "A"),
-  BX: new registre("BX", "1"),
+  AX: new registre("AX", "0"),
+  BX: new registre("BX", "0"),
   CX: new registre("CX", "0"),
   DX: new registre("DX", "0"),
   EX: new registre("EX", "0"),
@@ -19,20 +19,14 @@ var main = {
   SI: new registre("SI", "0"),
   DI: new registre("DI", "0"),
   CO: new registre("CO", "0"),
-  RI: new RI(),
-  afficherRegistres: function () {
-    console.log("AX: ", this.getAX().getContenu());
-    console.log("BX: ", this.getBX().getContenu());
-    console.log("CX: ", this.getCX().getContenu());
-    console.log("DX: ", this.getDX().getContenu());
-    console.log("EX: ", this.getEX().getContenu());
-    console.log("FX: ", this.getFX().getContenu());
-  },
+  ri: new RI(),
+
+  
   getDataTab: function () {
     return this.dataTab;
   },
   getRI: function () {
-    return this.RI;
+    return this.ri;
   },
   getCO: function () {
     return this.CO;
@@ -41,7 +35,7 @@ var main = {
     this.CO = this.CO;
   },
   setRI: function (val) {
-    this.RI = val;
+    this.ri.setRI(val);
   },
   getAX: function () {
     return this.AX;
@@ -66,6 +60,7 @@ var main = {
     let indice = 0;
     let co;
     let adr = "";
+    
     const fileStream = fs.createReadStream("./test.txt");
     const rl = readline.createInterface({
       input: fileStream,
@@ -89,7 +84,7 @@ var main = {
       } else if (ligne_str[0] == "SET") {
         this.getDataTab().push(
           new CaseMc(
-            indice.toString(16),
+            util.remplirZero(indice.toString(16),3,0),
             ligne_str[2].slice(0, ligne_str[2].length - 1),
             ligne_str[1]
           )
@@ -112,34 +107,54 @@ var main = {
       console.log("***  Code Segment *** ");
       for (let i = 0; i < instrTab.length; i++) instrTab[i].afficher();
       console.log("********************** ");
+      this.Execute(instrTab);
+      main.afficherRegistres() ;
+      console.log("***  Data Segment *** ");
+      for (let i = 0; i < this.getDataTab().length; i++)
+        this.getDataTab()[i].afficher();
+      console.log("********************** ");
+      console.log("");
+
     });
+    //return instrTab ;
   },
   Execute: function (instrTab) {
-    for (let j = 0; j < instrTab.length; j++) {
-      this.setRI(instrTab[j].getVal());
-      switch (caseMem.getCOP()) {
+    let j = 0 ;
+    let i = 0 ;
+    while (j < instrTab.length) {
+      console.log(j);
+      let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
+      this.setRI(instrBin) ;
+      console.log(this.getRI().getCOP()) ;
+      switch (this.getRI().getCOP()) {
+        case "000000": i = this.ual.mov(this.getDataTab(),instrTab,j,this.getRI().getMA(),this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j = i ; break ;
         case "000001":
-          this.ual.add(
-            this.getDataTab(),
-            this.getRI().getMA(),
-            this.getRI().getD(),
-            this.getRI().getF,
-            this.getRI().getReg1,
-            this.getRI().getreg2
-          );
-          break;
+          i = this.ual.add(this.getDataTab(),this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+          j=i ; break ;
       }
+      //j++ ;
     }
-    let caseMem = instrTab[i];
+    
   },
+  afficherRegistres: function () {
+    console.log("AX: ", this.getAX().getContenu());
+    console.log("BX: ", this.getBX().getContenu());
+    console.log("CX: ", this.getCX().getContenu());
+    console.log("DX: ", this.getDX().getContenu());
+    console.log("EX: ", this.getEX().getContenu());
+    console.log("FX: ", this.getFX().getContenu());
+
+  },
+  
+ 
 };
+
+main.coder() ;
 
 export default main;
 
-main.coder();
-//main.Execute(instrTab);
 
-//main.ual.add(main.dataTab,"0","1","000","001");
-//main.afficherRegistres();
 
-//dataTab.afficher() ;
+
+

@@ -11,6 +11,7 @@ var util = {
       new CaseMc(adr, this.binaryToHex(util.getCode(strLigne)), str)
     );
     if (util.getFormat(strLigne) == "0") {
+      for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
       return instrTab;
     } else if (strLigne[0][strLigne[0].length - 1].toUpperCase() == "I") {
       if (util.modeAdr(strLigne) == "00" && util.getDest(strLigne) == "0") {
@@ -30,6 +31,7 @@ var util = {
             new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
           );
         } else instrTab.push(new CaseMc(adr, strLigne[2], ""));
+        for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
         return instrTab;
       }
       if (util.modeAdr(strLigne) == "10" && util.getDest(strLigne) == "0") {
@@ -42,6 +44,7 @@ var util = {
           )
         );
       }
+      for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
       return instrTab;
     } else if (util.modeAdr(strLigne) == "00") {
       if (util.getDest(strLigne) == "0") {
@@ -50,10 +53,12 @@ var util = {
           instrTab.push(
             new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 2), "") // remplir 0 remplirZero
           );
-        } else {
+        } else { 
           let indice = util.chercherDansTableau(dataTab, strLigne[1]);
           adr = this.incrementHex(adr, 1);
-          instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
+          //instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
+          instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
+          
         }
       } else {
         if (strLigne[2].indexOf("[") != -1) {
@@ -64,10 +69,13 @@ var util = {
         } else {
           let indice = util.chercherDansTableau(dataTab, strLigne[2]);
           adr = this.incrementHex(adr, 1);
-          instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
+          instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
         }
       }
     }
+    
+    //parcourir instTab et mettre le champ Val sur 4 caractere hexa
+    for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
     return instrTab;
   },
 

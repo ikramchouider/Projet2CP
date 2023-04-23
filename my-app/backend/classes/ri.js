@@ -5,6 +5,9 @@ class RI {
   #d;
   #reg1;
   #reg2;
+  constructor() {
+    
+  }
   setRI = (code) => {
     this.#cop = code.substring(0, 6); // capable de changer le 5 à 6 etc ..
     this.#ma = code.substring(6, 8);
@@ -13,7 +16,7 @@ class RI {
     this.#reg1 = code.substring(10, 13);
     this.#reg2 = code.substring(13, 16);
   };
-  getCOP = () => {
+  getCOP() {
     return this.#cop;
   };
   getMA = () => {
