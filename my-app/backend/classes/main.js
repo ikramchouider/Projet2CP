@@ -7,6 +7,7 @@ import registre from "./registre.js";
 import RI from "./ri.js";
 import { log } from "console";
 import { INSPECT_MAX_BYTES } from "buffer";
+import coding from "./coding.js";
 var main = {
   dataTab: [],
   ual: new UAL("0", "0"),
@@ -67,18 +68,15 @@ var main = {
     let co;
     let adr = "";
 
-    const fs = require("fs");
-    const filePath = "./text.txt";
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    const newFileContent = removeEmptyLines(fileContent);
-    fs.writeFileSync(filePath, newFileContent);
-    const fileStream = fs.createReadStream(filePath);
+   
+
+    const fileStream = fs.createReadStream("./test.txt");
     const rl = readline.createInterface({
       input: fileStream,
       crlfDelay: Infinity,
     });
-    let file = util.removeEmptyLines("./test.txt");
     rl.on("line", (line) => {
+      if(line != "") {
       console.log("********************");
       let ligne_str = line.toString().trim();
       ligne_str = ligne_str.replace(",", " ");
@@ -103,10 +101,11 @@ var main = {
         indice++;
       } else if (ligne_str[0] == "STOP") {
       } else {
-        let tab = util.coderInst(ligne_str, co, this.getDataTab());
+        let tab = coding.coderInst(ligne_str, co, this.getDataTab());
         instrTab = instrTab.concat(tab);
         co = util.incrementHex(co, tab.length);
-      }
+      } 
+    }
     });
 
     rl.on("close", () => {
@@ -120,7 +119,7 @@ var main = {
       console.log("********************** ");
     });
   },
-  Execute: function (instrTab) {
+ /* Execute: function (instrTab) {
     for (let j = 0; j < instrTab.length; j++) {
       this.setRI(instrTab[j].getVal());
       switch (caseMem.getCOP()) {
@@ -137,8 +136,8 @@ var main = {
       }
     }
     let caseMem = instrTab[i];
-  },
-};
+  }, */
+}; 
 
 export default main;
 

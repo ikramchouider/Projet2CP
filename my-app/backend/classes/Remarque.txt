@@ -6,6 +6,6 @@ MOV [AX],BX // a verifie dans la partie syntax
 - il faut mettre les deux points après une etiq(comment le detecter? on compare avec les autres ins si c'est pas une inst donc ca doit etre une étiq sans les deux points). 
 - après une etiq il faut pas avoir un saut de ligne
 - fonction pour initialiser MC 
-- il faut verifier qu'on a écrit dans l'orde ( set ... après start etc ...)
+- il faut verifier qu'on a écrit dans l'orde ( set ... après start etc ...) ***
 - il faut initialiser les valeurs toujour 
 - chager le nom de la fontion chercher dans tableau etiq
