@@ -83,25 +83,28 @@ var util = {
   }, // fin estHexadecimal
 
   
- isVariableNameValid: function (str) {
-  if (!str) {throw new Error("Il faut que le nom de la variable soit valide  ")} // Vérifier si la chaîne est vide ou null
+ isVariableNameValid: function (str,nbLigne) {
+  let messageError= [] ; 
+  if (!str) {  messageError.push(nbLigne+" Il faut que le nom de la variable soit valide  ") ;  } // Vérifier si la chaîne est vide ou null
 
   // Vérifier si le premier caractère est une lettre, un underscore ou un dollar
   let firstChar = str.charAt(0);
-  if (!/^[a-zA-Z_$]/.test(firstChar)) { throw new Error("Il faut que le nom de la variable soit valide ") ;  }
+  if (!/^[a-zA-Z_$]/.test(firstChar)) { messageError.push(nbLigne+" Il faut que le nom de la variable soit valide ");  }
 
   // Vérifier si les autres caractères sont des lettres, des chiffres, des underscores ou des dollars
   for (let i = 1; i < str.length; i++) {
     let char = str.charAt(i);
-    if (!/^[a-zA-Z0-9_$]/.test(char)) {throw new Error("Il faut que le nom de la variable soit valide ") ; } }
-  if ( coding.regexi(str)) { throw new Error("Il faut que le nom de la variable soit valide , il faut pas que ça soit un nom de registre ") ; }
-  /* La chaîne est valide */   },
+    if (!/^[a-zA-Z0-9_$]/.test(char)) {  messageError.push(nbLigne+" Il faut que le nom de la variable soit valide ");  } }
+  if ( coding.regexi(str)) {   messageError.push(nbLigne+" Il faut que le nom de la variable soit valide , il faut pas que ça soit un nom de registre ");  ; }
+  /* La chaîne est valide */
+  return messageError ;    },
 
-checkNumber: function(ligne_str) {
-  if (ligne_str.indexOf("H") ==  -1 ) { throw new Error("Il faut ecrire 'H' qui signifie la base hexadecimal  ") } 
+checkNumber: function(ligne_str,nbLigne) {
+  let messageError= [] ; 
+  if (ligne_str.indexOf("H") ==  -1 ) {  messageError.push(nbLigne+" Il faut ecrire 'H' qui signifie la base hexadecimal ");    } 
          else { ligne_str = ligne_str.slice(0,ligne_str.length-1) ; 
-          if (! this.estHexadecimal(ligne_str)) {throw new Error("Il faut donner une valeur hexadecimal")} }
-
+          if (! this.estHexadecimal(ligne_str)) {  messageError.push(nbLigne+" Il faut donner une valeur hexadecimal"); } }
+     return messageError ; 
 },
 instUnSeulOp: function(str) {
      str = str.toUpperCase() ; 
