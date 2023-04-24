@@ -8,6 +8,7 @@ import RI from "./ri.js";
 import { log } from "console";
 import { INSPECT_MAX_BYTES } from "buffer";
 import coding from "./coding.js";
+import assembler from "./assembler.js";
 var main = {
   dataTab: [],
   ual: new UAL("0", "0"),
@@ -61,8 +62,10 @@ var main = {
     let indice = 0;
     let co;
     let adr = "";
-    
-    const fileStream = fs.createReadStream("./test.txt");
+
+   
+    assembler.errorFunction("./test.txt") ; 
+  /*  const fileStream = fs.createReadStream("./test.txt");
     const rl = readline.createInterface({
       input: fileStream,
       crlfDelay: Infinity,
@@ -119,6 +122,7 @@ var main = {
 
     });
     //return instrTab ;
+    }); */
   },
   Execute: function (instrTab) {
     let j = 0 ;

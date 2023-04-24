@@ -61,7 +61,7 @@ var coding = {
       }, // fin coder instruction 
 
 
-      // return code binaire de linstruction 
+      // return code binaire de l'instruction 
       getCode: function (str) {
         let code;
         if (str.length == 3) {
@@ -118,6 +118,7 @@ var coding = {
           case "ORI": ins = "100110"; break;
           case "ANDI": ins = "100111"; break;
           case "LOADI": ins = "110110"; break;
+          default: ins= "-1"; break;
         }
         return ins;
       }, // fin get code operation 
