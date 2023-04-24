@@ -1,6 +1,8 @@
 
 import coding from "./coding.js";
 var util = {
+  
+
 
   chercherDansTableau: function (tableau, valeur) {
     // change the name to chercherEtiq
@@ -112,6 +114,9 @@ instUnSeulOp: function(str) {
      str=='NOT' || str=='DEC' || str=='INC' || str=='STORE' || str=='LOAD' || str=='LOADI' || str=='JNE' || str=='JE' ||
      str== 'JNO' || str == 'JO' || str=='JNS' || str=='JS' || str=='JNC' || str=='JC' || str=='JNZ' || str== 'JZ' ) return true ; 
      else return false ; 
+},
+getCodeASCIIHex: function(caractere) {
+  return caractere.charCodeAt(0).toString(16);
 },
 }
 

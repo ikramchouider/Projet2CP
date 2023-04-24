@@ -94,6 +94,8 @@ class UAL {
             m = main.FX.getContenu();
             break;
         }
+       
+      
         dataTab[i].setVal(m) ;
        }
        else {

@@ -4,61 +4,85 @@ import util from "./util.js";
 var coding = {
     // debut coderInst "codage des instructions " return tableau des mots memoir apres codage de l'instruction 
     coderInst: function (strLigne, adr, dataTab) {
-        let str = "";
-        let instrTab = new Array();
-        if (strLigne[0][strLigne[0].length - 1] == ":") {
-          str = strLigne[0];
-          strLigne.shift();
-        }
-        console.log(this.getDest(strLigne));
-        instrTab.push(new CaseMc(adr,util.binaryToHex(this.getCode(strLigne)), str)  );
-        if (this.getFormat(strLigne) == "0") {
-          return instrTab;
-        } else if (strLigne[0][strLigne[0].length - 1].toUpperCase() == "I") {
-          if (this.modeAdr(strLigne) == "00" && this.getDest(strLigne) == "0") {
-            if (strLigne[1].indexOf("[") != -1) {
-              adr = this.incrementHex(adr, 1);
-              instrTab.push(
-                new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 1), "") // remplir 0 remplirZero
-              );
-            } else {
-              let indice = util.chercherDansTableau(dataTab, strLigne[1]);
-              adr = this.incrementHex(adr, 1);
-              instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
-            }
-            adr = this.incrementHex(adr, 1);
-            if (strLigne[2].indexOf("H") != -1) {
-              instrTab.push(  new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "") );
-            } else instrTab.push(new CaseMc(adr, strLigne[2], ""));
-            return instrTab;
-          }
-          if (this.modeAdr(strLigne) == "10" && this.getDest(strLigne) == "0") {
-            instrTab.push( new CaseMc(util.incrementHex(adr, 1), parseInt(util.getSubstringBetweenChars(strLigne[1], "+", "]")).toString(16))    );
-          }
-          return instrTab;
-        } else if (this.modeAdr(strLigne) == "00") {
-          if (this.getDest(strLigne) == "0") {
-            if (strLigne[1].indexOf("[") != -1) {
-              adr = util.incrementHex(adr, 1);
-              instrTab.push(new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 2), "")    ); // remplir 0 remplirZero
-            } else {
-              let indice = util.chercherDansTableau(dataTab, strLigne[1]);
-              adr = util.incrementHex(adr, 1);
-              instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
-            }
-          } else {
-            if (strLigne[2].indexOf("[") != -1) {
-              adr = util.incrementHex(adr, 1);
-              instrTab.push(  new CaseMc(adr, strLigne[2].slice(1, strLigne[2].length - 2), "")   ); // remplir 0 remplirZero 
-            } else {
-              let indice = util.chercherDansTableau(dataTab, strLigne[2]);
-              adr = util.incrementHex(adr, 1);
-              instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
-            }
-          }
-        }
+      let str = "";
+      let instrTab = new Array();
+      if (strLigne[0][strLigne[0].length - 1] == ":") {
+        str = strLigne[0];
+        strLigne.shift();
+      }
+      instrTab.push(
+        new CaseMc(adr,util.binaryToHex(coding.getCode(strLigne)), str)
+      );
+      if (coding.getFormat(strLigne) == "0") {
+        for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
         return instrTab;
-      }, // fin coder instruction 
+      } else if (strLigne[0][strLigne[0].length - 1].toUpperCase() == "I") {
+        if (coding.modeAdr(strLigne) == "00" && coding.getDest(strLigne) == "0") {
+          if (strLigne[1].indexOf("[") != -1) {
+            adr = this.incrementHex(adr, 1);
+            instrTab.push(
+              new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 1), "") // remplir 0 remplirZero
+            );
+          } else {
+            let indice = util.chercherDansTableau(dataTab, strLigne[1]);
+            adr = this.incrementHex(adr, 1);
+            instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
+          }
+          adr = this.incrementHex(adr, 1);
+          if (strLigne[2].indexOf("H") != -1) {
+            instrTab.push(
+              new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
+            );
+          } else instrTab.push(new CaseMc(adr, strLigne[2], ""));
+          for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
+          return instrTab;
+        }
+        if (coding.modeAdr(strLigne) == "10" && coding.getDest(strLigne) == "0") {
+          instrTab.push(
+            new CaseMc(
+              this.incrementHex(adr, 1),
+              parseInt(getSubstringBetweenChars(strLigne[1], "+", "]")).toString(
+                16
+              )
+            )
+          );
+        }
+        for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
+        return instrTab;
+      } else if (coding.modeAdr(strLigne) == "00") {
+        if (coding.getDest(strLigne) == "0") {
+          if (strLigne[1].indexOf("[") != -1) {
+            adr = this.incrementHex(adr, 1);
+            instrTab.push(
+              new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 2), "") // remplir 0 remplirZero
+            );
+          } else { 
+            let indice = util.chercherDansTableau(dataTab, strLigne[1]);
+            adr = util.incrementHex(adr, 1);
+            //instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
+            instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
+            
+          }
+        } else {
+          if (strLigne[2].indexOf("[") != -1) {
+            adr = this.incrementHex(adr, 1);
+            instrTab.push(
+              new CaseMc(adr, strLigne[2].slice(1, strLigne[2].length - 2), "") // remplir 0 remplirZero
+            );
+          } else {
+            let indice = util.chercherDansTableau(dataTab, strLigne[2]);
+            adr = util.incrementHex(adr, 1);
+            instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
+          }
+        }
+      }
+      
+      //parcourir instTab et mettre le champ Val sur 4 caractere hexa
+      for (let j=0; j<instrTab.length;j++){
+      instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0))  ;
+    }
+      return instrTab;
+    }, // fin coder instruction 
 
 
       // return code binaire de l'instruction 

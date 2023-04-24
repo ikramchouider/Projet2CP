@@ -82,21 +82,8 @@ errorFunction: function (fichier){
       i++ ;  }});
   rl.on("close", () => { 
      if (trouvStop == false) {  messageError.push(nbLigne+" Il faut terminer par 'STOP' " ) ; }
-   /*  for(let j=0;j<messageError.length;j++) console.log(j+1,':',messageError[j]);
+     for(let j=0;j<messageError.length;j++) console.log(j+1,':',messageError[j]);
     console.log("Nombre d'erreur : ",messageError.length);
-   let messageElement=document.getElementById("message")  ;
-   let listitems =""
-    for( let i=0 ; i< messageError.length ; i++){
-
-  
-        listitems +=
-         `<li> 
-              ${messageError[i]}
-         </li>`
-
-     } 
-    messageElement.innerHTML = listitems ; */
-    return messageError ; 
      }  ) ;
 
     },// fin fonction error 
