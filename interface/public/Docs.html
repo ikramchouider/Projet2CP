@@ -48,46 +48,95 @@
         <h3>Architecture de la machine</h3>
         <br>
         <div id="archimg">
-            <img  src="img/archimd.png" alt="#">
+            <img  src="img/newarchi.png" alt="#">
         </div>
         <br>
         <br>
         <div  >
             <div class="bloc" id="Arch">
                <h4>Architecture de base</h4>
-                 <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis veritatis neque repellat 
-                     nulla, obcaecati earum illo alias architecto corrupti similique harum excepturi voluptas quod 
-                    magni. Perferendis quisquam quasi molestias, laborum magni odit eveniet placeat totam sequi 
-                    atque magnam distinctio a sit ipsam dignissimos aliquam aut praesentium exercitationem nam 
-                    deleniti dolores.
+                 <p> 
+                  l'architecture proposée a été conçue pour un but pédagogique ce qui est de permettre aux étudiants des premières année en informatique 
+                  de comprendre le fonctionnement interne d'une machine et l'utilité de chaque composante. 
+                  </p>
+                  <p>
+                 - UAL : unité arithmétique et logique de la machine . Elle s’occupe de l’exécution des
+                  Toutes les opérations logiques et arithmétiques  décrites dans le jeu d’instructions . 
+                </p>
+                <p>
+                  - IND : les registres flags qui mémorisent certaines informations après l’exécution des opérations. 
+                  </p>
+                        <p> Bit 1 : si à 1 : le résultat de l’opération effectuée est zéro. Si à 0 : le résultat est différent de zéro.</p>
+                        <p> Bit 2 : pour le signe du résultat  . Si le résultat est positif il est à 0 . si il est négatif le bit est à 1.</p>         
+                        <p> Bit 3 : pour la retenue . si à 1 , il y a une retenue avec le résultat . si à 0 , il y a pas de retenue .</p>
+                         <p>Bit 4 : pour le débordement (overflow) . 1 : i l y débordement 0 : non.</p> 
+              <p>
+                  - MC : c’est la mémoire centrale ; l’organe qui s’occupe de stockage de toutes les données et les instructions  manipulées par le processeur  . 
+                         Elle est de capacité 2048 bits ( 2 kilos octets ) .</p>
+                  <p>-RAM : registre adresse mémoire . c’est le registre qui stocke l’adresse de mot mémoire à adresser . c’est à 11 bits ( la même taille de bus adresse). </p>
+                  <p>-RIM : Registre information mémoire . c’est le registre qui stocke les informations lues à partir de la MC ( données / instructions)  .Sur 16 bits.</p>
+                  <p>-CO : compteur ordinal . Un  registre de 11 bits qui stocke l’adresse de la prochaine instruction à d’exécuter. Et est initialisé avec l’adresse de la première instruction d’un programme .</p>
+                  <p>-RI :  Registre instruction sur 16 bits qui contient l’instruction au cours d’exécution. Chaque instruction est décodé par son code opération avec un décodeur ( Séquenceur) .</p>
+                </p>
+                  -Les autres registres :
+                  un registre est la composante qui s’occupe de stockage des informations , généralement pour une petite période de temps ( le temps de traitement  , le temps de passage des données entre deux organes ) . 
+              </p> 
+                <p>  Acc :  contient le résultat de l’opération exécutée dans l’UAL. </p>
+                 <p> Ax , Bx,Cx,Dx,Ex,Fx : utilisées comme des registres normaux à utilisation général </p>
+                 <p> Note : Bx est utilisé dans les instructions de branchements . </p>
+                 <p> SI,DI : des registres d’index . utilisées dans les opérations d’indexation ( les tableaux) . </p>
+              
+              <p>
+                  -Les bus :   
+                  assurent le flux de toutes les données nécessaires
+                  </p>
+                 <p> Bus des données : sur 16 bits. </p>
+                  <p> Bus d’adresse : sur 11 bits .  
                  </p>
             </div>
             <div class="bloc" id="mode">
                 <h4>Mode d'adressage</h4>
-                  <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis veritatis neque repellat 
-                      nulla, obcaecati earum illo alias architecto corrupti similique harum excepturi voluptas quod 
-                     magni. Perferendis quisquam quasi molestias, laborum magni odit eveniet placeat totam sequi 
-                     atque magnam distinctio a sit ipsam dignissimos aliquam aut praesentium exercitationem nam 
-                     deleniti dolores.
+                  <p> Les modes d'addressage utilisés sont :  </p>
+                  <p> 1/  mode direct </p>
+                  <p> Ce mode veut dire que l'opérande est le contenu de l'addresse dans le champs opérande/addresse.
+                    on fait une lecture de la case mémoire adressé par cet adresse  </p>
+                  <p> 2/ mode indirect </p>
+                  <p> ce mode veut dire que l'opérande ce trouve dans le contenu du contenu de l'addresse mémoire .
+                    on fait 2 lecture d'après la mémoire centrale . une pour obtenir encors une adresse et l'autre pour obtenit l'opérande .
+                  </p>
+                  <p> 3/ mode basé/indexé</p>
+                  <p> ce mode veut dire que l'adressse mémoire est calculer par ajouter valeur qui se trouve dans le champs opérande/adresse 
+                    au contenu d'un registre dite soit de base (BX) soit d'index (SI/DI) se mode est utilisé dans les tablaux . </p>
+                  <p> 4/ mode direct indexé </p>
+                  <p> ce mode veut dire la meme chose que le mode basé/indexé sauf que la valeur à ajouter au contenu des registres de base/d'index 
+                    se trouve dans le contenu de l'adresse dans le chmaps adresse/opérande de l'instruction . il faut donc une lecture de la MC pour l'obtenir
                   </p>
              </div>
              <div class="bloc" id="format">
                 <h4>Format d'instruction</h4>
-                  <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis veritatis neque repellat 
-                      nulla, obcaecati earum illo alias architecto corrupti similique harum excepturi voluptas quod 
-                     magni. Perferendis quisquam quasi molestias, laborum magni odit eveniet placeat totam sequi 
-                     atque magnam distinctio a sit ipsam dignissimos aliquam aut praesentium exercitationem nam 
-                     deleniti dolores.
-                  </p>
+                  <p>  COP | MA | Format | D | Reg1 | Reg2   </p>
+                  <p>COP: Code opération :  sur 6 bits .</p>
+                  <p>MA: mode d'addressage sur 2 bits ( 4 combinaisons) </p>
+                  <p> 00 : mode direct </p>
+                  <p> 01: mode indirect </p>
+                  <p> 10: mode basé/indexé</p>
+                  <p> 11: mode direct indexé </p>
+                  <p> Format :sur un bit </p>
+                  <p> Format=0 🡪 format court de l’instruction sur 1 mot . </p>
+                  <p> Format=1 🡪 format long de l’instruction sur 2 ou 3 mots . </p>
+                  <p> D: destination sur 1 bit</p>
+                  <p>   D=0 🡪 REG1 est source.</p>
+                  <p> D=1 🡪 REG1 est destination . </p>
+                  <p> les registres : sur 3 bits ( 9 registres )</p>
+                  <p> 000 : Ax | 001: Bx | 010: Cx | 011: Dx | 100: Ex | 101: Fx | 110: SI | 111: DI </p>
+                  <p> les autres octects sont utilisés pour contenir les opérandes/addresses </p>
              </div>  
              <div class="bloc" id="jeu">
                 <h4>Jeu d'instruction</h4>
-                  <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis veritatis neque repellat 
-                      nulla, obcaecati earum illo alias architecto corrupti similique harum excepturi voluptas quod 
-                     magni. Perferendis quisquam quasi molestias, laborum magni odit eveniet placeat totam sequi 
-                     atque magnam distinctio a sit ipsam dignissimos aliquam aut praesentium exercitationem nam 
-                     deleniti dolores.
+                  <p> Le but de ce site est de bien comprendre le déroulement des instructions dans la machine et dans ce but des instructions bien précises 
+                    ont été choisises pour le jeu d'instructions .
                   </p>
+                  <p> Veuillez les consultez à travers ce lien : <a href="https://docs.google.com/document/d/1-vhodiJgfBAhaFVApDvy_gbnUn8YwRBt/edit"> Jeu d'instructions</a></p>
              </div>     
         </div>
         <br>
@@ -96,7 +145,7 @@
         <div  id="program">
             <details>
              <summary> Programme 1</summary>
-            <div>
+            <div id="prg1">
              <p> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda cupiditate amet repellat 
                  reprehenderit, earum voluptate atque adipisci laboriosam doloribus quisquam eaque velit facilis 
                 minima ex laudantium dolorem, eum corporis soluta.</p>
@@ -104,7 +153,7 @@
             </details>
             <details>
                 <summary> Programme 2</summary>
-               <div>
+               <div id="prg2">
                 <p> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda cupiditate amet repellat 
                     reprehenderit, earum voluptate atque adipisci laboriosam doloribus quisquam eaque velit facilis 
                    minima ex laudantium dolorem, eum corporis soluta.</p>
@@ -112,7 +161,7 @@
                </details>
                <details>
                 <summary> Programme 3</summary>
-               <div>
+               <div id="prg3">
                 <p> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda cupiditate amet repellat 
                     reprehenderit, earum voluptate atque adipisci laboriosam doloribus quisquam eaque velit facilis 
                    minima ex laudantium dolorem, eum corporis soluta.</p>
@@ -120,7 +169,7 @@
                </details>
                <details>
                 <summary> Programme 4</summary>
-               <div>
+               <div id="prg4">
                 <p> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda cupiditate amet repellat 
                     reprehenderit, earum voluptate atque adipisci laboriosam doloribus quisquam eaque velit facilis 
                    minima ex laudantium dolorem, eum corporis soluta.</p>
@@ -128,7 +177,7 @@
                </details>
                <details>
                 <summary> Programme 5</summary>
-               <div>
+               <div id ="prg5">
                 <p> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda cupiditate amet repellat 
                     reprehenderit, earum voluptate atque adipisci laboriosam doloribus quisquam eaque velit facilis 
                    minima ex laudantium dolorem, eum corporis soluta.</p>
@@ -136,7 +185,7 @@
                </details>
                <details>
                 <summary> Programme 6</summary>
-               <div>
+               <div id="prg6">
                 <p> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda cupiditate amet repellat 
                     reprehenderit, earum voluptate atque adipisci laboriosam doloribus quisquam eaque velit facilis 
                    minima ex laudantium dolorem, eum corporis soluta.</p>
