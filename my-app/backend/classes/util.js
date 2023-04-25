@@ -1,85 +1,8 @@
-import CaseMc from "./caseMemoire.js";
-import readline from "readline";
-import fs from "fs";
+
+import coding from "./coding.js";
 var util = {
-  coderInst: function (strLigne, adr, dataTab) {
-    let str = "";
-    let instrTab = new Array();
-    if (strLigne[0][strLigne[0].length - 1] == ":") {
-      str = strLigne[0];
-      strLigne.shift();
-    }
-    instrTab.push(
-      new CaseMc(adr, this.binaryToHex(util.getCode(strLigne)), str)
-    );
-    if (util.getFormat(strLigne) == "0") {
-      for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
-      return instrTab;
-    } else if (strLigne[0][strLigne[0].length - 1].toUpperCase() == "I") {
-      if (util.modeAdr(strLigne) == "00" && util.getDest(strLigne) == "0") {
-        if (strLigne[1].indexOf("[") != -1) {
-          adr = this.incrementHex(adr, 1);
-          instrTab.push(
-            new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 1), "") // remplir 0 remplirZero
-          );
-        } else {
-          let indice = util.chercherDansTableau(dataTab, strLigne[1]);
-          adr = this.incrementHex(adr, 1);
-          instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
-        }
-        adr = this.incrementHex(adr, 1);
-        if (strLigne[2].indexOf("H") != -1) {
-          instrTab.push(
-            new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
-          );
-        } else instrTab.push(new CaseMc(adr, strLigne[2], ""));
-        for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
-        return instrTab;
-      }
-      if (util.modeAdr(strLigne) == "10" && util.getDest(strLigne) == "0") {
-        instrTab.push(
-          new CaseMc(
-            this.incrementHex(adr, 1),
-            parseInt(getSubstringBetweenChars(strLigne[1], "+", "]")).toString(
-              16
-            )
-          )
-        );
-      }
-      for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
-      return instrTab;
-    } else if (util.modeAdr(strLigne) == "00") {
-      if (util.getDest(strLigne) == "0") {
-        if (strLigne[1].indexOf("[") != -1) {
-          adr = this.incrementHex(adr, 1);
-          instrTab.push(
-            new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 2), "") // remplir 0 remplirZero
-          );
-        } else { 
-          let indice = util.chercherDansTableau(dataTab, strLigne[1]);
-          adr = this.incrementHex(adr, 1);
-          //instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
-          instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
-          
-        }
-      } else {
-        if (strLigne[2].indexOf("[") != -1) {
-          adr = this.incrementHex(adr, 1);
-          instrTab.push(
-            new CaseMc(adr, strLigne[2].slice(1, strLigne[2].length - 2), "") // remplir 0 remplirZero
-          );
-        } else {
-          let indice = util.chercherDansTableau(dataTab, strLigne[2]);
-          adr = this.incrementHex(adr, 1);
-          instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
-        }
-      }
-    }
-    
-    //parcourir instTab et mettre le champ Val sur 4 caractere hexa
-    for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
-    return instrTab;
-  },
+  
+
 
   chercherDansTableau: function (tableau, valeur) {
     // change the name to chercherEtiq
@@ -156,48 +79,44 @@ var util = {
     return hex.toUpperCase();
   }, // fin  binaryToHex
 
+   // verifie si un nombre est en hexadecimal 
+   estHexadecimal: function (chaine) {
+    return !isNaN(parseInt(chaine, 16));
+  }, // fin estHexadecimal
 
-  errorFunction: function (fichier){
-    const fileStream = fs.createReadStream(fichier);
-    const rl = readline.createInterface({
-      input: fileStream,
-      crlfDelay: Infinity,
-    });
-    let i=0 ; 
-    let trouvOrg= false ; 
-    let trouvStart= false ; 
-    let trouvStop= false ; 
+  
+ isVariableNameValid: function (str,nbLigne) {
+  let messageError= [] ; 
+  if (!str) {  messageError.push(nbLigne+" Il faut que le nom de la variable soit valide  ") ;  } // Vérifier si la chaîne est vide ou null
 
-    rl.on("line", (line) => {
-      let ligne_str = line.toString().trim();
-      if (ligne_str[0] == 'ORG') {
-        if(trouvOrg== true){
-          throw new Error("Il faut ecrire une seule fois ORG ") ; 
-        }
-        if( i != 0){throw new Error("Il faut commencer par ORG ") }
-        trouvOrg = true ; 
-      }
-      else if(ligne_str[0] == 'START'){
-        if (trouvOrg == false) throw new Error("Il faut commencer par ORG ") ; 
-        if (trouvStop == true ) throw new Error("Il faut commencer par START") ; 
-      }
-      else if (ligne_str[0] == 'SET') {
-        if (trouvOrg == false) throw new Error("Il faut commencer par ORG ") ; 
-        if (trouvStart == true) throw new Error("Il faut commencer par SET ") ; 
-      }
-      else {
+  // Vérifier si le premier caractère est une lettre, un underscore ou un dollar
+  let firstChar = str.charAt(0);
+  if (!/^[a-zA-Z_$]/.test(firstChar)) { messageError.push(nbLigne+" Il faut que le nom de la variable soit valide ");  }
 
-      }
-      i++ ; 
-    });
-  rl.on("close", () => { if (trouvStop == false) throw new Error("Il faut terminer par stop ") ; }) ;
-  console.log('i:',i);
+  // Vérifier si les autres caractères sont des lettres, des chiffres, des underscores ou des dollars
+  for (let i = 1; i < str.length; i++) {
+    let char = str.charAt(i);
+    if (!/^[a-zA-Z0-9_$]/.test(char)) {  messageError.push(nbLigne+" Il faut que le nom de la variable soit valide ");  } }
+  if ( coding.regexi(str)) {   messageError.push(nbLigne+" Il faut que le nom de la variable soit valide , il faut pas que ça soit un nom de registre ");  ; }
+  /* La chaîne est valide */
+  return messageError ;    },
+
+checkNumber: function(ligne_str,nbLigne) {
+  let messageError= [] ; 
+  if (ligne_str.indexOf("H") ==  -1 ) {  messageError.push(nbLigne+" Il faut ecrire 'H' qui signifie la base hexadecimal ");    } 
+         else { ligne_str = ligne_str.slice(0,ligne_str.length-1) ; 
+          if (! this.estHexadecimal(ligne_str)) {  messageError.push(nbLigne+" Il faut donner une valeur hexadecimal"); } }
+     return messageError ; 
 },
-removeEmptyLines: function (file) {
-  let lines = file.split('\n');
-  lines = lines.filter(line => line.trim() !== '');
-  let newFile = lines.join('\n');
-  return newFile;
+instUnSeulOp: function(str) {
+     str = str.toUpperCase() ; 
+     if (str== 'ADA' || str == 'ADAI' ||str=="SBA" || str=="SBAI" || str=='STOP' || str=='START' || str=='IN' || str=='OUT' || str=='JMP' || 
+     str=='NOT' || str=='DEC' || str=='INC' || str=='STORE' || str=='LOAD' || str=='LOADI' || str=='JNE' || str=='JE' ||
+     str== 'JNO' || str == 'JO' || str=='JNS' || str=='JS' || str=='JNC' || str=='JC' || str=='JNZ' || str== 'JZ' ) return true ; 
+     else return false ; 
+},
+getCodeASCIIHex: function(caractere) {
+  return caractere.charCodeAt(0).toString(16);
 },
 }
 

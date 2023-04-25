@@ -94,9 +94,11 @@ class UAL {
             m = main.FX.getContenu();
             break;
         }
-        dataTab[i].setVal(m);
-      }
-      else {
+       
+      
+        dataTab[i].setVal(m) ;
+       }
+       else {
         m = dataTab[i].getVal();
         switch (param1) {
           case "000":

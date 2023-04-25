@@ -1,11 +1,14 @@
-MOV [AX],BX // a verifie dans la partie syntax 
-à gérer dans la partie des erreurs : 
 
-- enlever les espaces entre les acolades [--BX-]
-- il faut mettre le H de l'hexa
-- il faut mettre les deux points après une etiq(comment le detecter? on compare avec les autres ins si c'est pas une inst donc ca doit etre une étiq sans les deux points). 
-- après une etiq il faut pas avoir un saut de ligne
-- fonction pour initialiser MC 
+- MOV [AX],BX //on peut pas mettre un registre sauf d'adressage entre [ ]  *** 
+- enlever les espaces entre les acolades [--BX-] ***
+- il faut mettre le H de l'hexa *** 
+- il faut mettre les deux points après une etiq(comment le detecter? on compare avec les autres ins si c'est pas une inst donc ca doit etre une étiq sans les deux points). ***
+- après une etiq il faut pas avoir un saut de ligne ***
 - il faut verifier qu'on a écrit dans l'orde ( set ... après start etc ...) ***
-- il faut initialiser les valeurs toujour 
-- chager le nom de la fontion chercher dans tableau etiq
+- il faut initialiser les valeurs toujour  *** 
+- il faut pas declarer la meme variable deux fois *** 
+- il faut verfie l'existence de la ',' dans les instructions à 2 operandes  ***
+- changer le nom de la fontion chercher dans tableau etiq *** 
+
+autre remarque : 
+- fonction pour initialiser MC 

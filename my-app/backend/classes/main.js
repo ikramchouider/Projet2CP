@@ -8,6 +8,7 @@ import RI from "./ri.js";
 import { log } from "console";
 import { INSPECT_MAX_BYTES } from "buffer";
 import coding from "./coding.js";
+import assembler from "./assembler.js";
 var main = {
   dataTab: [],
   ual: new UAL("0", "0"),
@@ -61,8 +62,10 @@ var main = {
     let indice = 0;
     let co;
     let adr = "";
-    
-    const fileStream = fs.createReadStream("./test.txt");
+
+   
+   // assembler.errorFunction("./test.txt") ; 
+   const fileStream = fs.createReadStream("./test.txt");
     const rl = readline.createInterface({
       input: fileStream,
       crlfDelay: Infinity,
@@ -86,7 +89,7 @@ var main = {
         this.getDataTab().push(
           new CaseMc(
             util.remplirZero(indice.toString(16),3,0),
-            ligne_str[2].slice(0, ligne_str[2].length - 1),
+            util.remplirZero( ligne_str[2].slice(0, ligne_str[2].length - 1),4,0),
             ligne_str[1]
           )
         );
@@ -118,16 +121,14 @@ var main = {
       console.log("");
 
     });
-    //return instrTab ;
+   
   },
   Execute: function (instrTab) {
     let j = 0 ;
     let i = 0 ;
     while (j < instrTab.length) {
-      console.log(j);
       let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
       this.setRI(instrBin) ;
-      console.log(this.getRI().getCOP()) ;
       switch (this.getRI().getCOP()) {
         case "000000": i = this.ual.mov(this.getDataTab(),instrTab,j,this.getRI().getMA(),this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
         j = i ; break ;
