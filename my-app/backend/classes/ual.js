@@ -96,7 +96,7 @@ class UAL {
         }
        
       
-        dataTab[i].setVal(m) ;
+        dataTab[i].setVal(util.remplirZero(m,4,0)) ;
        }
        else {
         m = dataTab[i].getVal();

@@ -52,7 +52,7 @@ var coding = {
       } else if (coding.modeAdr(strLigne) == "00") {
         if (coding.getDest(strLigne) == "0") {
           if (strLigne[1].indexOf("[") != -1) {
-            adr = this.incrementHex(adr, 1);
+            adr = util.incrementHex(adr, 1);
             instrTab.push(
               new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 2), "") // remplir 0 remplirZero
             );
@@ -65,7 +65,7 @@ var coding = {
           }
         } else {
           if (strLigne[2].indexOf("[") != -1) {
-            adr = this.incrementHex(adr, 1);
+            adr = util.incrementHex(adr, 1);
             instrTab.push(
               new CaseMc(adr, strLigne[2].slice(1, strLigne[2].length - 2), "") // remplir 0 remplirZero
             );
@@ -75,26 +75,72 @@ var coding = {
             instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
           }
         }
-      }
+      } else if (util.modeAdr(strLigne) == "10") {
+        if (util.getDest(strLigne) == "0"){ //MOV [BX+3], AX
+          let regEtDepl = strLigne[1].slice(1, strLigne[1].length - 1) ;
+          let depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);
+          instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+        }
+        else {  
+          let regEtDepl = strLigne[2].slice(1, strLigne[2].length - 1) ;
+          let depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);
+          instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+        }
       
       //parcourir instTab et mettre le champ Val sur 4 caractere hexa
       for (let j=0; j<instrTab.length;j++){
       instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0))  ;
     }
       return instrTab;
-    }, // fin coder instruction 
+    }}, // fin coder instruction 
 
 
       // return code binaire de l'instruction 
       getCode: function (str) {
         let code;
         if (str.length == 3) {
-          if (!this.regexi(str[1]) && this.regexi(str[2])) {
-            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[2]),"000");
-          } else code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(str[2]));
-        } else
-          code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),"000");
-        return code;
+          if (this.regexi(str[1]) && this.regexi(str[2])){
+            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(str[2]));
+          }
+          if (!this.regexi(str[1]) && this.regexi(str[2]) ) {
+            if(this.regexi(str[1].slice(1,str[1].length-1))) 
+            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),this.getReg(str[2]));
+            else if ((str[1].indexOf("[") != -1 ) && (str[1].indexOf("+") != -1)) {
+              let regEtDepl = str[1].slice(1, str[1].length - 1) ;
+              if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2); }
+              else {reg = regEtDepl.slice(-2);}
+              code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),str[2]);
+            }
+            else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[2]),"000");}
+          }
+          if(this.regexi(str[1]) && !this.regexi(str[2]))
+          {
+            if(this.regexi(str[2].slice(1,str[2].length-1))) 
+            {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(str[2].slice(1,str[2].length-1)));}
+            else if(this.regexi(str[1].slice(1,str[1].length-1))) 
+            {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),this.getReg(str[2]));}
+            else if ((str[2].indexOf("[") != -1 ) && (str[2].indexOf("+") != -1)) {
+              let regEtDepl = str[2].slice(1, str[2].length - 1) ;
+              if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2); }
+              else {reg = regEtDepl.slice(-2);}
+              code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),str[1],this.getReg(reg));
+            }
+            else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),"000");}
+      
+          }
+          } 
+        else {
+          if(this.regexi(str[1]))
+          { 
+            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),"000");
+          }
+          else if (this.regexi(str[1].slice(1,str[1].length-1)))
+          {
+            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),"000");
+          } else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),"000","000");
+        }
+        }
+          return code;
       }, // fin getcode 
 
       // return code operation de l'instruction 
