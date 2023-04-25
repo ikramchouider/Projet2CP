@@ -64,7 +64,7 @@ var main = {
     let adr = "";
 
    
-   // assembler.errorFunction("./test.txt") ; 
+    //assembler.errorFunction("./test.txt") ; 
    const fileStream = fs.createReadStream("./test.txt");
     const rl = readline.createInterface({
       input: fileStream,
@@ -141,12 +141,12 @@ var main = {
     
   },
   afficherRegistres: function () {
-    console.log("AX: ", this.getAX().getContenu());
-    console.log("BX: ", this.getBX().getContenu());
-    console.log("CX: ", this.getCX().getContenu());
-    console.log("DX: ", this.getDX().getContenu());
-    console.log("EX: ", this.getEX().getContenu());
-    console.log("FX: ", this.getFX().getContenu());
+    console.log("AX: ", util.remplirZero(this.getAX().getContenu(),4,0));
+    console.log("BX: ", util.remplirZero(this.getBX().getContenu(),4,0));
+    console.log("CX: ", util.remplirZero(this.getCX().getContenu(),4,0));
+    console.log("DX: ", util.remplirZero(this.getDX().getContenu(),4,0));
+    console.log("EX: ", util.remplirZero(this.getEX().getContenu(),4,0));
+    console.log("FX: ", util.remplirZero(this.getFX().getContenu(),4,0));
 
   },
   
