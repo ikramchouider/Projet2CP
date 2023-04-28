@@ -118,6 +118,34 @@ instUnSeulOp: function(str) {
 getCodeASCIIHex: function(caractere) {
   return caractere.charCodeAt(0).toString(16);
 },
+SoustractionHex: function(n,m) {
+    const decimalA = parseInt(n, 16);
+    const decimalB = parseInt(m, 16);
+    let decimalResult = decimalA - decimalB;
+    if (decimalResult < 0) {
+      decimalResult += 4294967296; // 2^32
+    }
+    decimalResult &= 0xFFFF;
+    const hexResult = decimalResult.toString(16);
+    return hexResult;
+},
+
+AndHex: function(n, m) {
+  const decimalN = parseInt(n, 16);
+  const decimalM = parseInt(m, 16);
+  const result = decimalN & decimalM;
+  const hexResult = result.toString(16).toUpperCase();
+  return hexResult;
+},
+
+OrHex: function(n, m) {
+  const decimalN = parseInt(n, 16);
+  const decimalM = parseInt(m, 16);
+  const result = decimalN | decimalM;
+  const hexResult = result.toString(16).toUpperCase();
+  return hexResult;
+}
+
 }
 
 
