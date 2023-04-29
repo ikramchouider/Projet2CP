@@ -6,12 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="./img/logo.png">
-    <link href="https://fonts.googleapis.com/css2family=Actor&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <!--<link href="https://fonts.googleapis.com/css2family=Actor&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    -->
+      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <title>PASSE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <!--pour les icons-->
-</head>
+
+  </head>
 <body >        
     <main>
         <nav>
@@ -92,7 +94,7 @@
 
           <div class="carte pgm">
 <h3>Title</h3>
-<a href="./Docs.html#prg3" class="btn">Savoir plus</a>
+<a href="./Docs.html#prg3" class="btn" >Savoir plus</a>
           </div>
           <div class="carte pgm">
             <h3>Title</h3>
@@ -114,7 +116,7 @@
          <br>
          <h3>Simulation</h3>
          <section class="emulator" id="sml">
-          <div class="option">
+          <div class="option" >
             <select name="file" id="file">
               <option selected disabled>fichier</option>
             <option value="program_1"> program_1 </option>
@@ -124,10 +126,13 @@
             <option value="program_5"> program_5 </option>
             <option value="program_6"> program_6 </option>
             </select>
-            <button id="compile_id">Assembler</button>
+            <button type="button" id="compile_id">Assembler</button>
             <button id="run_id">Exécuter</button>
             <button id="simulate_id">Simuler</button>
             <button id="help_id">Aide</button>
+
+
+
 
           </div>
           <div class="bas">
@@ -136,20 +141,24 @@
                 <img src="./img/upload.png" alt="#">
               </div>
               <div>
-                <button type = "button" class = "btn-warning">
+                <button type = "button" class = "btn-warning"> 
                   <i class = "fa fa-upload"></i> Importer un fichier
-                  <input type="file">
+                  <input type="file" id="fileInput" name="fileInput"  title="titre">
                   <ion-icon name="cloud-upload-outline"></ion-icon>
               </div>
 
             </div>
             
               <textarea class="textzone" name="code" id="code" > |</textarea>
-            
+              <br>
+              <div class="messagediv" id="messageDiv"> 
+              </div>
           </div>
 
          </section>
-    </main>   
+              
+    </main> 
+   
     <script>
       function Menu(e){
         let list = document.querySelector('ul');
@@ -158,7 +167,8 @@
     </script>
     <div class="con">
     <div id="links"> <p> Site de l'école : <a href="https://www.esi.dz/"> www.esi.dz </a></p></div>
-    <p><i class="fa fa-envelope" style="font-size:36px" href="#"></i> feedback: passefeedback@gmail.com</p>
+    <p><i class="fa fa-envelope" style="font-size:36px" ></i> feedback: passefeedback@gmail.com</p>
   </div>
+  <script type="module" src="./index.js" ></script>
 </body>
 </html>

@@ -521,6 +521,7 @@ body {
   color: rgb(148 163 184 / var(--tw-text-opacity));
 }
 
+
 nav {
   padding: 1.25rem;
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -1132,14 +1133,26 @@ select{
   border: 4px dashed rgba(255, 255, 255, 0.1);
  justify-content: space-between;
 }
+
 .textzone{
   box-shadow:  var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   grid-column: span 7 ;
   border-radius: 25px;
   background:none;
-  border: 4px dashed rgba(255, 255, 255, 0.1);
+  border: 4px dashed rgba(255, 255, 255, 0.103);
   
 }
+
+.messagediv {
+  resize: vertical;
+  box-shadow:  var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  border: 4px dashed rgba(255, 255, 255, 0.1);
+  grid-column: span 10 ;
+  color: #333;
+  background:none;
+  border-radius: 25px;
+}
+
 .btn-warning{
   position: relative;
   padding: 10px ;
