@@ -10,14 +10,54 @@ class UAL {
     this.#eUal2 = eUal2;
   }
   
-  opeRation = function (codeIns,dataTab,instrTab,modeAdr,cpt, dest, format, param1, param2) {
+  opeRation = function (codeIns,dataTab,indicateurTab,instrTab,modeAdr,cpt, dest, format, param1, param2) {
     //addition registre registre et le resultat sera dans reg1 000000 00 0 1 REG1   REG2
     let somme = 0;
     let n = 0;
     let m = 0;
     let i=0 ; 
-    if ((modeAdr == "00") && dest == "1" && format == "0") {
-      this.directCourtDist(codeIns,param1,param2)
+    if(codeIns[0]== "J") {
+      return this.jmp(code,indicateurTab,cpt)  ; 
+    }
+    else if(codeIns== "SHR" || codeIns== "SHL" ) {
+      this.decalageRotationLogique(code,param1,instrTab,cpt) ;  
+      return cpt+2 ; 
+    }
+    else if(codeIns== "ADA" || codeIns== "SBA" ) {
+      if((modeAdr == "00") && dest == "1" && format == "0" ){
+        this.immediaAccDirectCourt(code,param1) ; 
+        return cpt+1 ; 
+  
+      }
+      else if((modeAdr == "00") && dest == "0" && format == "1"){
+        this.immediaAccDirectLong(codeIns,dataTab,instrTab,cpt) ; 
+        return cpt+2 ; 
+      }
+    }
+    else if(codeIns== "ADAI" || codeIns== "SBAI"){
+  main.ACC.setContenu(this.operation(codeIns,main.ACC.getContenu(),instrTab[cpt+1].getVal())) ; 
+    }
+    else if(codeIns[codeIns.length-1] == "I" ){
+    if((modeAdr == "00") && dest == "1" && format == "1" ){
+      this.immediaDirectLongDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt)
+      return cpt+2 ; 
+
+    }
+    else if((modeAdr == "00") && dest == "0" && format == "1"){
+      this.immediaDirectLongNonDest(codeIns[codeIns.length-1 == "I"],instrTab,cpt)
+      return cpt+3 ; 
+    }
+    else if((modeAdr == "01") && dest == "0" && format == "1") {
+      this.immediaInDirectLongNonDest(code,param1,instrTab,cpt) ; 
+      return cpt+2
+    }
+    else if((modeAdr == "10") && dest == "0" && format == "1") {
+      this.immediaBaseIndexeLongNonDest(code,param1,instrTab,cpt) ; 
+      return cpt+3 ; 
+    }
+    }
+    else if ((modeAdr == "00") && dest == "1" && format == "0") {
+      this.directCourtDist(codeIns,param1,param2) ; 
       return cpt+1 ;
 
     } 
@@ -37,7 +77,14 @@ class UAL {
         return cpt+1
     
     }
-       
+    else if(modeAdr == "10" && format == "1"){
+    if(dest == "1") {
+      this.BaseIndexeLongDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
+   }else{
+    this.BaseIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ;
+   }
+   return cpt+2 ; 
+  }
   }; 
 
   mov = function (dataTab,instrTab,cpt ,modeAdr, dest, format, param1, param2) {
@@ -185,41 +232,49 @@ class UAL {
       switch (param1) {
         case "000":
           n = main.AX.getContenu();
+          main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.AX.setContenu(main.ACC.getContenu());
           break;
         case "001":
           n = main.BX.getContenu();
+          main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.BX.setContenu(main.ACC.getContenu());
           break;
         case "010":
           n = main.CX.getContenu();
+          main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.CX.setContenu(main.ACC.getContenu());
           break;
         case "011":
           n = main.DX.getContenu();
+          main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.DX.setContenu(main.ACC.getContenu());
           break;
         case "100":
           n = main.EX.getContenu();
+          main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.EX.setContenu(main.ACC.getContenu());
           break;
         case "101":
           n = main.FX.getContenu();
+          main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.FX.setContenu(main.ACC.getContenu());
           break;
         case "110":
           n = main.SI.getContenu();
+          main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.SI.setContenu(main.ACC.getContenu());
           break;
         case "111":
           n = main.DI.getContenu();
+          main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.DI.setContenu(main.ACC.getContenu());
           break;
@@ -237,14 +292,14 @@ class UAL {
              m = dataTab[i].getVal() ; 
            if(dest == "0"){
             switch (param1) {
-              case "000": m = main.AX.getContenu(); break;
-              case "001": m = main.BX.getContenu(); break;
-              case "010": m = main.CX.getContenu(); break;
-              case "011": m = main.DX.getContenu(); break;
-              case "100": m = main.EX.getContenu(); break;
-              case "101": m = main.FX.getContenu(); break;
-              case "110": m = main.SI.getContenu(); break;
-              case "111": m = main.DI.getContenu(); break;
+              case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); break;
+              case "001": m = main.BX.getContenu(); main.ACC.setContenu(m); break;
+              case "010": m = main.CX.getContenu(); main.ACC.setContenu(m); break;
+              case "011": m = main.DX.getContenu(); main.ACC.setContenu(m); break;
+              case "100": m = main.EX.getContenu(); main.ACC.setContenu(m); break;
+              case "101": m = main.FX.getContenu(); main.ACC.setContenu(m); break;
+              case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); break;
+              case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); break;
             }
             main.ACC.setContenu(this.operation(code,m,dataTab[i].getVal()));
             dataTab[i].setVal(main.ACC.getContenu()) ; 
@@ -253,41 +308,48 @@ class UAL {
               switch (param1) {
                 case "000":
                   n = main.AX.getContenu();
+                  main.ACC.setContenu(n);
                   main.ACC.setContenu(this.operation(code,n,m));
                   main.AX.setContenu(main.ACC.getContenu());
                   break;
                 case "001":
                   n = main.BX.getContenu();
+                  main.ACC.setContenu(n);
                   main.ACC.setContenu(this.operation(code,n,m));
                   main.BX.setContenu(main.ACC.getContenu());
                   break;
                 case "010":
-                  n = main.CX.getContenu();
+                  n = main.CX.getContenu();main.ACC.setContenu(n);
                   main.ACC.setContenu(this.operation(code,n,m));
                   main.CX.setContenu(main.ACC.getContenu());
                   break;
                 case "011":
                   n = main.DX.getContenu();
+                  main.ACC.setContenu(n);
                   main.ACC.setContenu(this.operation(code,n,m));
                   main.DX.setContenu(main.ACC.getContenu());
                   break;
                 case "100":
                   n = main.EX.getContenu();
+                  main.ACC.setContenu(n);
                   main.ACC.setContenu(this.operation(code,n,m));
                   main.EX.setContenu(main.ACC.getContenu());
                   break;
                 case "101":
                   n = main.FX.getContenu();
+                  main.ACC.setContenu(n);
                   main.ACC.setContenu(this.operation(code,n,m));
                   main.FX.setContenu(main.ACC.getContenu());
                   break;
                 case "110":
                   n = main.SI.getContenu();
+                  main.ACC.setContenu(n);
                   main.ACC.setContenu(this.operation(code,n,m));
                   main.SI.setContenu(main.ACC.getContenu());
                   break;
                 case "111":
                   n = main.DI.getContenu();
+                  main.ACC.setContenu(n);
                   main.ACC.setContenu(this.operation(code,n,m));
                   main.DI.setContenu(main.ACC.getContenu());
                   break;
@@ -299,14 +361,14 @@ class UAL {
       let m = 0 ; 
       let n = 0; 
       switch (param2) {
-        case "000": m = main.AX.getContenu(); break;
-        case "001": m = main.BX.getContenu(); break;
-        case "010": m = main.CX.getContenu(); break;
-        case "011": m = main.DX.getContenu(); break;
-        case "100": m = main.EX.getContenu(); break;
-        case "101": m = main.FX.getContenu(); break;
-        case "110": m = main.SI.getContenu(); break;
-        case "111": m = main.DI.getContenu(); break;
+        case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); break;
+        case "001": m = main.BX.getContenu(); main.ACC.setContenu(m); break;
+        case "010": m = main.CX.getContenu(); main.ACC.setContenu(m); break;
+        case "011": m = main.DX.getContenu(); main.ACC.setContenu(m); break;
+        case "100": m = main.EX.getContenu(); main.ACC.setContenu(m); break;
+        case "101": m = main.FX.getContenu(); main.ACC.setContenu(m); break;
+        case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); break;
+        case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); break;
 
     }
     let i  ; 
@@ -314,20 +376,18 @@ class UAL {
       case "001":
         i = util.chercherAdr(dataTab,(main.BX.getContenu()).slice(1)) ; 
         main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
-        main.BX.setContenu(main.ACC.getContenu());
         break;
       
       case "110":
         i = util.chercherAdr(dataTab,main.SI.getContenu()) ;
         main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
-        main.SI.setContenu(main.ACC.getContenu());
         break;
       case "111":
         i = util.chercherAdr(dataTab,main.DI.getContenu()) ;
         main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
-        main.DI.setContenu(main.ACC.getContenu());
         break;
     }
+    dataTab[i].setVal(main.ACC.getContenu()) ; 
     }
     indirectCourtDest = function(code,param1,param2,dataTab) {
       let n=0 ; 
@@ -351,62 +411,466 @@ class UAL {
 
       switch (param1) {
         case "000":
-          n = main.AX.getContenu();
+          n = main.AX.getContenu(); main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.AX.setContenu(main.ACC.getContenu());
           break;
         case "001":
-          n = main.BX.getContenu();
+          n = main.BX.getContenu(); main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.BX.setContenu(main.ACC.getContenu());
           break;
         case "010":
-          n = main.CX.getContenu();
+          n = main.CX.getContenu(); main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.CX.setContenu(main.ACC.getContenu());
           break;
         case "011":
-          n = main.DX.getContenu();
+          n = main.DX.getContenu(); main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.DX.setContenu(main.ACC.getContenu());
           break;
         case "100":
-          n = main.EX.getContenu();
+          n = main.EX.getContenu(); main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.EX.setContenu(main.ACC.getContenu());
           break;
         case "101":
-          n = main.FX.getContenu();
+          n = main.FX.getContenu(); main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.FX.setContenu(main.ACC.getContenu());
           break;
         case "110":
-          n = main.SI.getContenu();
+          n = main.SI.getContenu(); main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.SI.setContenu(main.ACC.getContenu());
           break;
         case "111":
-          n = main.DI.getContenu();
+          n = main.DI.getContenu(); main.ACC.setContenu(n);
           main.ACC.setContenu(this.operation(code,n,m));
           main.DI.setContenu(main.ACC.getContenu());
           break;
       }
 
     }
+
+    BaseIndexeLongDest = function(code,param1,param2,dataTab,instrTab,cpt) {
+      let n = instrTab[cpt+1].getVal() ; 
+      let m=0 ; 
+      let i=0 ; 
+      switch (param2) {
+        case "001":
+          main.ACC.setContenu(main.BX.getContenu());  m=util.additionHexa(n,main.BX.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+        case "110":
+          main.ACC.setContenu(main.SI.getContenu());  m=util.additionHexa(n,main.SI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+        case "111":
+          main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+      }
+      
+      i = util.chercherAdr(dataTab,util.remplirZero(m,3,0)) ;
+      m=dataTab[i].getVal() ; 
+      switch (param1) {
+        case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
+          break;
+        case "001": n = main.BX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.BX.setContenu(main.ACC.getContenu());
+          break;
+        case "010": n = main.CX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.CX.setContenu(main.ACC.getContenu());
+          break;
+        case "011": n = main.DX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DX.setContenu(main.ACC.getContenu());
+          break;
+        case "100": n = main.EX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.EX.setContenu(main.ACC.getContenu());
+          break;
+        case "101": n = main.FX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.FX.setContenu(main.ACC.getContenu());
+          break;
+        case "110": n = main.SI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.SI.setContenu(main.ACC.getContenu());
+          break;
+        case "111": n = main.DI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DI.setContenu(main.ACC.getContenu());
+          break;
+      }
+
+    }
+
+    BaseIndexeLongNonDest = function(code,param1,param2,dataTab,instrTab,cpt) {
+      let m = instrTab[cpt+1].getVal() ; 
+      let n=0 ;
+      
+      switch (param2) {
+        case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m,main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m,main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m,main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
+      }
+      let i = util.chercherAdr(dataTab,util.remplirZero(m,3,0)) ;
+      m=dataTab[i].getVal() ;  
+
+      switch (param1) {
+        case "000": n = main.AX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,n,m));
+          break;
+        case "001": n = main.BX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,n,m));
+          break;
+        case "010": n = main.CX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,n,m));
+          break;
+        case "011": n = main.DX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,n,m));
+          break;
+        case "100": n = main.EX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,n,m));
+          break;
+        case "101": n = main.FX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,n,m));
+          break;
+        case "110": n = main.SI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,n,m));
+          break;
+        case "111": n = main.DI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,n,m));
+          break;
+      }
+      dataTab[i].setVal(main.ACC.getContenu()) ; 
+    }
+
+    immediaDirectLongDest = function(code,param1,instrTab,cpt) {
+      let m = instrTab[cpt+1].getVal() ;
+      let n=0 ;
+      switch (param1) {
+        case "000":
+          n = main.AX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.AX.setContenu(main.ACC.getContenu());
+          break;
+        case "001":
+          n = main.BX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.BX.setContenu(main.ACC.getContenu());
+          break;
+        case "010":
+          n = main.CX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.CX.setContenu(main.ACC.getContenu());
+          break;
+        case "011":
+          n = main.DX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.DX.setContenu(main.ACC.getContenu());
+          break;
+        case "100":
+          n = main.EX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.EX.setContenu(main.ACC.getContenu());
+          break;
+        case "101":
+          n = main.FX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.FX.setContenu(main.ACC.getContenu());
+          break;
+        case "110":
+          n = main.SI.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.SI.setContenu(main.ACC.getContenu());
+          break;
+        case "111":
+          n = main.DI.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.DI.setContenu(main.ACC.getContenu());
+          break;
+      }
+ 
+
+    }
+    immediaDirectLongNonDest = function(code,instrTab,cpt) {
+      let m = instrTab[cpt+1].getVal() ;
+      let i = util.chercherAdr(dataTab,m) ;
+      m=dataTab[i].getVal() ;
+      main.ACC.setContenu(m);
+      let n= instrTab[cpt+2].getVal() ; ; 
+      main.ACC.setContenu(this.operation(code,n,m)); 
+      dataTab[i].setVal() ;
+    }
+
+
+    immediaInDirectLongNonDest = function(code,param1,instrTab,cpt) {
+      let n = instrTab[cpt+1].getVal() ;
+      let i
+      switch (param1) {
+        case "001":
+          i = util.chercherAdr(dataTab,main.BX.getContenu().slice(1)) ;
+           m=dataTab[i].getVal() ; main.ACC.setContenu(m); 
+           m=this.operation(code,m,n) ; main.ACC.setContenu(m); dataTab[i].setVal(m);
+         break;
+        case "110": 
+        i = util.chercherAdr(dataTab,main.SI.getContenu().slice(1)) ;
+        m=dataTab[i].getVal() ; main.ACC.setContenu(m); 
+        m=this.operation(code,m,n) ; main.ACC.setContenu(m); dataTab[i].setVal(m);
+        break ; 
+        case "111": i = util.chercherAdr(dataTab,main.DI.getContenu().slice(1)) ;
+        m=dataTab[i].getVal() ; main.ACC.setContenu(m); 
+        m=this.operation(code,m,n) ; main.ACC.setContenu(m); dataTab[i].setVal(m); break ; 
+      } 
+ 
+
+    }
+
+    immediaBaseIndexeLongNonDest = function(code,param1,instrTab,cpt) {
+      
+      switch (param1) {
+        case "001": main.ACC.setContenu(main.BX.getContenu().slice(1));
+          m = util.additionHexa(main.BX.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
+          i = util.chercherAdr(dataTab,util.remplirZero(m,3,0)) ;
+           m=dataTab[i].getVal() ; main.ACC.setContenu(m); 
+           m=this.operation(code,m,n) ; main.ACC.setContenu(m); dataTab[i].setVal(m);
+         break;
+        case "110": 
+        main.ACC.setContenu(main.SI.getContenu().slice(1));
+        m = util.additionHexa(main.SI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
+        i = util.chercherAdr(dataTab,util.remplirZero(m,3,0)) ;
+         m=dataTab[i].getVal() ; main.ACC.setContenu(m); 
+         m=this.operation(code,m,n) ; main.ACC.setContenu(m); dataTab[i].setVal(m);
+        break ; 
+        case "111": main.ACC.setContenu(main.DI.getContenu().slice(1));
+        m = util.additionHexa(main.DI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
+        i = util.chercherAdr(dataTab,util.remplirZero(m,3,0)) ;
+         m=dataTab[i].getVal() ; main.ACC.setContenu(m); 
+         m=this.operation(code,m,n) ; main.ACC.setContenu(m); dataTab[i].setVal(m);
+      } 
+ 
+
+    }
+
+    immediaAccDirectCourt = function(code,param1) {
+      switch (param1) {
+        case "000": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.AX.getContenu()));
+         break;
+        case "001": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.BX.getContenu()));
+         break;
+         case "010": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.CX.getContenu()));
+         break; 
+         case "011": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.DX.getContenu()));
+         break;
+         case "100": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.EX.getContenu()));
+         break;
+         case "101": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.FX.getContenu()));
+         break ; 
+        case "110": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.SI.getContenu()));
+        break;
+        case "111": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.DI.getContenu()));
+         break;
+        
+      } 
+
+    }
+    immediaAccDirectLong = function(code,dataTab,instrTab,cpt) {
+      let n = instrTab[cpt+1].getVal() ;
+      i = util.chercherAdr(dataTab,n) ;
+      n=dataTab[i].getVal() ; main.ACC.setContenu(this.operation(code,n,main.ACC.getContenu())); 
+
+    }
+    decalageRotationLogique= function(code,param1,instrTab,cpt) {
+      switch (param1) {
+        case "000": main.ACC.setContenu(main.AX.getContenu()) ; 
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
+        main.AX.getContenu(main.ACC.setContenu() ) ; 
+         break;
+        case "001": main.ACC.setContenu(main.BX.getContenu()) ; 
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
+        main.BX.getContenu(main.ACC.setContenu() ) ;
+         break;
+         case "010": main.ACC.setContenu(main.CX.getContenu()) ; 
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
+         main.CX.getContenu(main.ACC.setContenu() ) ;
+         break; 
+         case "011":main.ACC.setContenu(main.DX.getContenu()) ; 
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
+         main.DX.getContenu(main.ACC.setContenu() ) ;
+         break;
+         case "100": main.ACC.setContenu(main.EX.getContenu()) ; 
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
+         main.EX.getContenu(main.ACC.setContenu() ) ;
+         break;
+         case "101": main.ACC.setContenu(main.FX.getContenu()) ; 
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
+         main.FX.getContenu(main.ACC.setContenu() ) ;
+         break ; 
+        case "110": main.ACC.setContenu(main.SI.getContenu()) ; 
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
+        main.SI.getContenu(main.ACC.setContenu() ) ;
+        break;
+        case "111": main.ACC.setContenu(main.DI.getContenu()) ; 
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
+        main.DI.getContenu(main.ACC.setContenu() ) ;
+         break;
+        
+      } 
+    }
+
+    jmp = function (code,indicateurTab,cpt) {
+      let i = util.chercherAdr(dataTab,(instrTab[cpt+1].getVal()).slice(1)) ;
+      switch ( code.toUpperCase())  {
+      case "JMP": return dataTab[i].getVal() ; 
+      case "JZ": if(indicateurTab[0] == 1)
+          return dataTab[i].getVal() ; else return cpt+2 ; 
+      case "JNZ": if(indicateurTab[0] != 1)
+      return dataTab[i].getVal() ; else return cpt+2 ;
+      case "JC": if(indicateurTab[2] == 1)
+      return dataTab[i].getVal() ; else return cpt+2 ; 
+      case "JNC": if(indicateurTab[2] == 1) 
+      return dataTab[i].getVal() ; else return cpt+2 ; 
+
+      case "JS": if(indicateurTab[1] == 1) return dataTab[i].getVal() ; else return cpt+2 ;
+      case "JNS": if(indicateurTab[1] != 1)  return dataTab[i].getVal() ; else return cpt+2 ;
+      case "JO": if(indicateurTab[3] == 1)  return dataTab[i].getVal() ; else return cpt+2 ;
+      case "JNO": if(indicateurTab[3] != 1)  return dataTab[i].getVal() ; else return cpt+2 ;
+      case "JE":   break;
+      case "JNE":  break;
+    }
+  }
+  cmpDirect = function (code,param1,param2,indicateurTab,cpt) {
+   let m=0 ;
+    switch (param2) {
+      case "000":
+        m = main.AX.getContenu();
+        break;
+      case "001":
+        m = main.BX.getContenu();
+        break;
+      case "010":
+        m = main.CX.getContenu();
+        break;
+      case "011":
+        m = main.DX.getContenu();
+        break;
+      case "100":
+        m = main.EX.getContenu();
+        break;
+      case "101":
+        m = main.FX.getContenu();
+        break;
+      case "110":
+       m = main.SI.getContenu();
+         break;
+        case "111":
+        m = main.DI.getContenu();
+        break;
+    }
+    switch (param1) {
+      case "000":
+        n = main.AX.getContenu();
+        main.ACC.setContenu(n);
+        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        break;
+      case "001":
+        n = main.BX.getContenu();
+        main.ACC.setContenu(n);
+        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        break;
+      case "010":
+        n = main.CX.getContenu();
+        main.ACC.setContenu(n);
+        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        break;
+      case "011":
+        n = main.DX.getContenu();
+        main.ACC.setContenu(n);
+        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        break;
+      case "100":
+        n = main.EX.getContenu();
+        main.ACC.setContenu(n);
+        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        break;
+      case "101":
+        n = main.FX.getContenu();
+        main.ACC.setContenu(n);
+        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        break;
+      case "110":
+        n = main.SI.getContenu();
+        main.ACC.setContenu(n);
+        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        break;
+      case "111":
+        n = main.DI.getContenu();
+        main.ACC.setContenu(n);
+        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        break;
+    }
+      
+  }
+  cmpImm = function (code,param1,instrTab,cpt) {
+    let m= instrTab[cpt+1].getVal() ; 
+     switch(param1) {
+       case "000":
+         n = main.AX.getContenu();
+         main.ACC.setContenu(n);
+         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         break;
+       case "001":
+         n = main.BX.getContenu();
+         main.ACC.setContenu(n);
+         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         break;
+       case "010":
+         n = main.CX.getContenu();
+         main.ACC.setContenu(n);
+         this.mettreAjourIndicateur(this.operation(code,n,m),code) ; 
+         break;
+       case "011":
+         n = main.DX.getContenu();
+         main.ACC.setContenu(n);
+         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         break;
+       case "100":
+         n = main.EX.getContenu();
+         main.ACC.setContenu(n);
+         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         break;
+       case "101":
+         n = main.FX.getContenu();
+         main.ACC.setContenu(n);
+         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         break;
+       case "110":
+         n = main.SI.getContenu();
+         main.ACC.setContenu(n);
+         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         break;
+       case "111":
+         n = main.DI.getContenu();
+         main.ACC.setContenu(n);
+         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         break;
+     }
+       
+   }
+
+   mettreAjourIndicateur = function(val) {
+      if (val >0) {
+        main.setIndicateurZero(0) ;
+        main.setIndicateurSigne(0) ; 
+        main.setIndicateurRetenue(0) ; 
+        main.setIndicateurDebord(0) ;  
+
+      } else if(val < 0) {
+        main.setIndicateurZero(0) ;
+        main.setIndicateurSigne(1) ; 
+        main.setIndicateurRetenue(1) ; 
+        main.setIndicateurDebord(0) ;
+      }else {
+
+        main.setIndicateurZero(1) ;
+        main.setIndicateurSigne(0) ; 
+        main.setIndicateurRetenue(0) ; 
+        main.setIndicateurDebord(0) ;
+
+      }
+   }
     operation = function(code,n,m ) {
       let res=0 ; 
       switch (code.toUpperCase()) {
         case "MOV": res=n ;break;
         case "ADD": res=util.remplirZero(util.additionHexa(n,m),4,0) ; break;
         case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
-        case "SUBA": ins = "000100"; break;
+        case "SUBA": ins = "000100"; break; 
         case "CMP": ins = "000101"; break;
         case "OR": res=util.remplirZero(util.OrHex(n,m),4,0) ; break;
         case "AND": res=util.remplirZero(util.AndHex(n,m),4,0) ; break; 
-        case "SHR": ins = "001000"; break;
-        case "SHL": ins = "001001"; break;
-        case "ROL": ins = "001010"; break;
-        case "ROR": ins = "001011"; break;
+        case "SHR": res=decalageLogiqueHexadecDroit(n,m); break;
+        case "SHL": res=decalageLogiqueHexadecGauche(n,m); break;
+        case "ROL": res=rotationHexadecimal("ROL",n,m); break;
+        case "ROR": res=rotationHexadecimal("ROR",n,m); break;
         case "JZ": ins = "001100"; break;
         case "JNZ": ins = "001101"; break;
         case "JC": ins = "001110"; break;
@@ -428,10 +892,12 @@ class UAL {
         case "START": ins = "011111"; break;
         case "STOP": ins = "011110"; break;
         case "MOVI": ins = "100000"; break;
-        case "ADDI": ins = "100001";break;
-        case "ADAI": ins = "100010"; break;
-        case "SUBI": ins = "100011"; break;
-        case "SBAI": ins = "100100"; break;
+        case "ADDI": res=util.remplirZero(util.additionHexa(n,m),4,0);break;
+        case "ADAI": res=util.remplirZero(util.additionHexa(n,m),4,0); break;
+        case "ADA": res=util.remplirZero(util.additionHexa(n,m),4,0) ; break ; 
+        case "SUBI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
+        case "SBA": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ;
+        case "SBAI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
         case "CMPI": ins = "100101"; break;
         case "ORI": ins = "100110"; break;
         case "ANDI": ins = "100111"; break;

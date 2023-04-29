@@ -7,6 +7,7 @@ var util = {
   chercherDansTableau: function (tableau, valeur) {
     // change the name to chercherEtiq
     let i = 0;
+    console.log(tableau[i].getAdr());
     while (i < tableau.length && tableau[i].getEtiq() != valeur) {
       i++;
     }
@@ -144,7 +145,54 @@ OrHex: function(n, m) {
   const result = decimalN | decimalM;
   const hexResult = result.toString(16).toUpperCase();
   return hexResult;
+},
+
+NotHex: function(n) {
+const decimalN = parseInt(n, 16);
+const result = ~decimalN;
+const hexResult = result.toString(16).toUpperCase();
+return hexResult;
+},
+
+decalageLogiqueHexadecDroit: function(hexa, n) {
+let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
+let resultat = decimal >>> n; // décalage logique de n positions vers la droite
+return resultat.toString(16); // conversion du résultat en hexadécimal
+},
+
+decalageLogiqueHexadecGauche: function(hexa, n) {
+let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
+let resultat = decimal << n; // décalage logique de n positions vers la gauche
+return resultat.toString(16); // conversion du résultat en hexadécimal
+},
+
+rotationHexadecimal: function (code,hexa, n) {
+let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
+let resultat;
+if (code == "ROL") {
+  resultat = (decimal << n) | (decimal >>> (32 - n)); // rotation à gauche de n positions
+} else {
+  resultat = (decimal >>> -n) | (decimal << (32 + n)); // rotation à droite de n positions
 }
+return resultat.toString(16); // conversion du résultat en hexadécimal
+},
+
+compareHexValues: function (x, y) {
+let decimalX = parseInt(x, 16); // conversion hexadécimale en décimal
+let decimalY = parseInt(y, 16); // conversion hexadécimale en décimal
+
+if (decimalX < decimalY) {
+  return -1
+} else if (decimalX > decimalY) {
+  return 1
+} else {
+  return 0
+}
+
+
+
+}
+
 
 }
 

@@ -11,6 +11,8 @@ import coding from "./coding.js";
 import assembler from "./assembler.js";
 var main = {
   dataTab: [],
+  instrTab :[],
+  indicateurTab: [],
   ual: new UAL("0", "0"),
   AX: new registre("AX", "0"),
   BX: new registre("BX", "0"),
@@ -25,8 +27,14 @@ var main = {
   ri: new RI(),
 
   
+  getinstrTab: function () {
+    return this.instrTab;
+  },
   getDataTab: function () {
     return this.dataTab;
+  },
+  getindicateurTab: function () {
+    return this.indicateurTab;
   },
   getRI: function () {
     return this.ri;
@@ -61,8 +69,31 @@ var main = {
   getACC: function () {
     return this.ACC;
   },
+  getIndicateurZero: function () {
+    return this.indicateurTab[0];
+  },
+  getIndicateurSigne: function () {
+    return this.indicateurTab[1];
+  },
+  getIndicateurRetenue: function () {
+    return this.indicateurTab[2];
+  },
+  getIndicateurDebord: function () {
+    return this.dataTab[3];
+  },
+  setIndicateurZero: function (val) {
+    this.indicateurTab[0]=val ;
+  },
+  setIndicateurSigne: function (val) {
+    this.indicateurTab[1]= val;
+  },
+  setIndicateurRetenue: function (val) {
+    this.indicateurTab[2] = val;
+  },
+  setIndicateurDebord: function (val) {
+    this.dataTab[3] = val ;
+  },
   coder: function () {
-    let instrTab = [];
     let indice = 0;
     let co;
     let adr = "";
@@ -103,7 +134,8 @@ var main = {
       } else if (ligne_str[0] == "STOP") {
       } else {
         let tab = coding.coderInst(ligne_str, co, this.getDataTab());
-        instrTab = instrTab.concat(tab);
+       // instrTab = instrTab.concat(tab);
+        main.instrTab=main.getinstrTab().concat(tab) ;
         co = util.incrementHex(co, tab.length);
       } 
     }
@@ -116,15 +148,15 @@ var main = {
       console.log("********************** ");
       console.log("");
       console.log("***  Code Segment *** ");
-      for (let i = 0; i < instrTab.length; i++) instrTab[i].afficher();
+      for (let i = 0; i < main.getinstrTab().length; i++) main.getinstrTab()[i].afficher();
       console.log("********************** ");
-      this.Execute(instrTab);
+      this.Execute(main.getinstrTab());
       main.afficherRegistres() ;
       console.log("***  Data Segment *** ");
       for (let i = 0; i < this.getDataTab().length; i++)
         this.getDataTab()[i].afficher();
       console.log("********************** ");
-      console.log("");
+      console.log(""); 
 
     }); 
    
@@ -139,17 +171,31 @@ var main = {
         case "000000": i = this.ual.mov(this.getDataTab(),instrTab,j,this.getRI().getMA(),this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
         j = i ; break ;
         case "000001":
-          i = this.ual.opeRation("ADD",this.getDataTab(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+          i = this.ual.opeRation("ADD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
           j=i ; break ;
           case "000011":
-            i = this.ual.opeRation("SUB",this.getDataTab(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            i = this.ual.opeRation("SUB",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
             j=i ; break ;
           case "000111":
-            i = this.ual.opeRation("AND",this.getDataTab(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            i = this.ual.opeRation("AND",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
             j=i ; break ;
           case "000110":
-            i = this.ual.opeRation("OR",this.getDataTab(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            i = this.ual.opeRation("OR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
             j=i ; break ;
+          case "100001":
+            i = this.ual.opeRation("ADDI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+          case "100011":
+            i = this.ual.opeRation("SUBI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+            case "001001":
+              i = this.ual.opeRation("SHL",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "100100":
+              i = this.ual.opeRation("SBAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            default:
+              break ; 
 
       }
       //j++ ;
