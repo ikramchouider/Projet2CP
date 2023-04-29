@@ -21,6 +21,7 @@ var main = {
   SI: new registre("SI", "0"),
   DI: new registre("DI", "0"),
   CO: new registre("CO", "0"),
+  ACC: new registre("ACC", "0"),
   ri: new RI(),
 
   
@@ -57,6 +58,9 @@ var main = {
   getFX: function () {
     return this.FX;
   },
+  getACC: function () {
+    return this.ACC;
+  },
   coder: function () {
     let instrTab = [];
     let indice = 0;
@@ -64,7 +68,9 @@ var main = {
     let adr = "";
 
    
-    //assembler.errorFunction("./test.txt") ; 
+   /* assembler.errorFunction("./test.txt") ; 
+    console.log(console.log(assembler.getMessageError().length));
+    for(let j=0;j<assembler.getMessageError().length;j++) console.log(assembler.getMessageError()[j]);*/
    const fileStream = fs.createReadStream("./test.txt");
     const rl = readline.createInterface({
       input: fileStream,
@@ -120,7 +126,7 @@ var main = {
       console.log("********************** ");
       console.log("");
 
-    });
+    }); 
    
   },
   Execute: function (instrTab) {
@@ -133,8 +139,18 @@ var main = {
         case "000000": i = this.ual.mov(this.getDataTab(),instrTab,j,this.getRI().getMA(),this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
         j = i ; break ;
         case "000001":
-          i = this.ual.add(this.getDataTab(),this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+          i = this.ual.opeRation("ADD",this.getDataTab(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
           j=i ; break ;
+          case "000011":
+            i = this.ual.opeRation("SUB",this.getDataTab(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+          case "000111":
+            i = this.ual.opeRation("AND",this.getDataTab(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+          case "000110":
+            i = this.ual.opeRation("OR",this.getDataTab(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+
       }
       //j++ ;
     }
@@ -147,6 +163,7 @@ var main = {
     console.log("DX: ", util.remplirZero(this.getDX().getContenu(),4,0));
     console.log("EX: ", util.remplirZero(this.getEX().getContenu(),4,0));
     console.log("FX: ", util.remplirZero(this.getFX().getContenu(),4,0));
+    console.log("ACC: ", util.remplirZero(this.getACC().getContenu(),4,0));
 
   },
   
