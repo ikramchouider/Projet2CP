@@ -12,7 +12,7 @@
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <title>PASSE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <!--pour les icons-->
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   </head>
 <body >        
     <main>
@@ -137,19 +137,35 @@
           </div>
           <div class="bas">
             <div class="upload">
-              <div class="upload_img">
+              <!--<div class="upload_img">
                 <img src="./img/upload.png" alt="#">
-              </div>
+              </div>-->
               <div>
                 <button type = "button" class = "btn-warning"> 
                   <i class = "fa fa-upload"></i> Importer un fichier
                   <input type="file" id="fileInput" name="fileInput"  title="titre">
-                  <ion-icon name="cloud-upload-outline"></ion-icon>
+                  <button type = "button" id="Load" class="loadButton">
+                    <i class="fa fa-file-text-o"></i> Afficher Contenu
+                  </button>
+                  <button type = "button" id="save" class="saveButton">
+                    <i class="fa fa-save"></i> Sauvegarder
+                  </button>
+                  <!--<ion-icon name="cloud-upload-outline"></ion-icon>-->
               </div>
-
             </div>
             
-              <textarea class="textzone" name="code" id="code" > |</textarea>
+              <textarea class="textzone" name="code" id="code" placeholder=" 
+              Exemple: 
+
+          1      ORG  100H 
+          2      SET A 4H
+          3      SET C 0H
+          4      START
+          5      MOV AX , A
+          6      MOV [BX+4], AX
+          7      ADD AX,BX
+          8      MOV C,3H
+          9      STOP "></textarea>
               <br>
               <div class="messagediv" id="messageDiv"> 
               </div>
