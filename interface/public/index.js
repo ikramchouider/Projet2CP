@@ -146,7 +146,12 @@ export var assembler = {
 
           else // on est dans le cas d'une instruction  
           {
-
+            if (trouvStart==false){
+              console.log("edkhol hna !!!");
+              messageDiv.innerHTML += "<p><span style='color: red;'> Ligne " + nbLigne + "</span><span style='color: #9ca3af; '> :  Il faut mettre START dans votre programme après la déclaration des variables   </span></p>";
+              nbError++;
+    
+             }
             // traitement des étiquettes 
             if (line.indexOf(":") != -1)    // On a trouvé les ':'
             {
@@ -290,7 +295,7 @@ export var assembler = {
 
             }
           }  // fin traitement instructions
-
+         
           i++;
         } 
       };
@@ -306,7 +311,7 @@ export var assembler = {
 
   },// fin fonction error
 
-  fromFileInputToTextZone: function  (fileId , textZoneId) {
+  fromFileInputToTextZone: function (fileId, textZoneId) {
     const fileInput = document.getElementById(fileId);
     const file = fileInput.files[0];
     const reader = new FileReader();
@@ -314,12 +319,13 @@ export var assembler = {
     reader.onload = (event) => {
       const contents = event.target.result;
       let lines = contents.split('\n');
-      lines = lines.filter(line => line.trim() !== '');    // remove the empty lines from my filecontents : the table lines which represents the lines of the file 
-      const fileLength = lines.length;                     // file length without  the empty lines 
+      lines = lines.filter(line => line.trim() !== '');    
+      const fileLength = lines.length;                     
+      let textContent = "";
       for (const line of lines) {
-        console.log("here inside (for (const line of lines) ) ");
-        textDiv.innerHTML += line;
+        textContent += line + "\n";
       }
+      textDiv.textContent = textContent;
     };
     reader.readAsText(file);
   },
