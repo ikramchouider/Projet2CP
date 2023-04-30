@@ -88,147 +88,21 @@ class UAL {
   }
   }; 
 
-  mov = function (dataTab,instrTab,cpt ,modeAdr, dest, format, param1, param2) {
-    let m = "" ; 
-    if (modeAdr == "00" && format == "1") {
-        let i = util.chercherAdr(dataTab,(instrTab[cpt+1].getVal()).slice(1)) ;
-        if(i==dataTab.length) {dataTab.push(new CaseMc((instrTab[cpt+1].getVal()).slice(1),0,""));
-             } 
-      if (dest == "0") {
-        switch (param1) {
-          case "000":
-            m = main.AX.getContenu();
-            break;
-          case "001":
-            m = main.BX.getContenu();
-            break;
-          case "010":
-            m = main.CX.getContenu();
-            break;
-          case "011":
-            m = main.DX.getContenu();
-            break;
-          case "100":
-            m = main.EX.getContenu();
-            break;
-          case "101":
-            m = main.FX.getContenu();
-            break;
-        }
-       
-      
-        dataTab[i].setVal(util.remplirZero(m,4,0)) ;
-       }
-       else {
-        m = dataTab[i].getVal();
-        switch (param1) {
-            case "000":
-              m = main.AX.setContenu(m);
-              break;
-            case "001":
-              m = main.BX.setContenu(m);
-              break;
-            case "010":
-              m = main.CX.setContenu(m);
-              break;
-            case "011":
-              m = main.DX.setContenu(m);
-              break;
-            case "100":
-              m = main.EX.setContenu(m);
-              break;
-            case "101":
-              m = main.FX.setContenu(m);
-              break;
-          }
-       }
-       return cpt+2 ;
-    }
-    else if (modeAdr == "00" && format == "0") {
-      switch (param2) {
-        case "000":
-          m = main.AX.getContenu();
-          break;
-        case "001":
-          m = main.BX.getContenu();
-          break;
-        case "010":
-          m = main.CX.getContenu();
-          break;
-        case "011":
-          m = main.DX.getContenu();
-          break;
-        case "100":
-          m = main.EX.getContenu();
-          break;
-        case "101":
-          m = main.FX.getContenu();
-          break;
-        case "110":
-          m = main.SI.getContenu();
-          break;
-        case "111":
-          m = main.DI.getContenu();
-          break;
-      }
-      switch (param1) {
-        case "000":
-          main.AX.setContenu(m);
-          break;
-        case "001":
-          main.BX.setContenu(m);
-          break;
-        case "010":
-          main.CX.setContenu(m);
-          break;
-        case "011":
-          main.DX.setContenu(m);
-          break;
-        case "100":
-          main.EX.setContenu(m);
-          break;
-        case "101":
-          main.FX.setContenu(m);
-          break;
-        case "110":
-          main.SI.setContenu(m);
-              break;
-        case "111":
-          main.DI.setContenu(m);
-             break;
-      }
-    }
-  };
+  
   // Mode direct format court distination =1 
   directCourtDist = function(code,param1,param2) {
     let n = 0;
     let m = 0;
     let i=0 ; 
     switch (param2) {
-        case "000":
-          m = main.AX.getContenu();
-          break;
-        case "001":
-          m = main.BX.getContenu();
-          break;
-        case "010":
-          m = main.CX.getContenu();
-          break;
-        case "011":
-          m = main.DX.getContenu();
-          break;
-        case "100":
-          m = main.EX.getContenu();
-          break;
-        case "101":
-          m = main.FX.getContenu();
-          break;
-        case "110":
-         m = main.SI.getContenu();
-           break;
-          case "111":
-          m = main.DI.getContenu();
-          break;
+        case "000":  m = main.AX.getContenu(); break;
+        case "001":  m = main.BX.getContenu(); break;
+        case "010":  m = main.CX.getContenu(); break;
+        case "011":  m = main.DX.getContenu(); break;
+        case "100":  m = main.EX.getContenu(); break;
+        case "101":  m = main.FX.getContenu(); break;
+        case "110":  m = main.SI.getContenu(); break;
+        case "111": m = main.DI.getContenu();  break;
       }
       switch (param1) {
         case "000":
@@ -290,7 +164,7 @@ class UAL {
       let i = util.chercherAdr(dataTab,(instrTab[cpt+1].getVal()).slice(1)) ;
              if(i==dataTab.length) {dataTab.push(new CaseMc((instrTab[cpt+1].getVal()).slice(1),0,""));
              } 
-             m = dataTab[i].getVal() ; 
+       m = dataTab[i].getVal() ; 
            if(dest == "0"){
             switch (param1) {
               case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); break;
@@ -302,7 +176,7 @@ class UAL {
               case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); break;
               case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); break;
             }
-            main.ACC.setContenu(this.operation(code,m,dataTab[i].getVal()));
+            main.ACC.setContenu(this.operation(code,dataTab[i].getVal(),m));
             dataTab[i].setVal(main.ACC.getContenu()) ; 
            } 
             else { 
@@ -358,10 +232,12 @@ class UAL {
                
            }
     }
+
+    // Mode indirect format Court distination =0 
     indirectCourtNonDest = function(code,param1,param2,dataTab) {
       let m = 0 ; 
       let n = 0; 
-      switch (param2) {
+      switch (param1) {
         case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); break;
         case "001": m = main.BX.getContenu(); main.ACC.setContenu(m); break;
         case "010": m = main.CX.getContenu(); main.ACC.setContenu(m); break;
@@ -373,7 +249,7 @@ class UAL {
 
     }
     let i  ; 
-    switch (param1) {
+    switch (param2) {
       case "001":
         i = util.chercherAdr(dataTab,(main.BX.getContenu()).slice(1)) ; 
         main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
@@ -389,7 +265,9 @@ class UAL {
         break;
     }
     dataTab[i].setVal(main.ACC.getContenu()) ; 
-    }
+    } //Fin Mode indirect format Court distination =0 
+
+    //Mode indirect format Court distination =1
     indirectCourtDest = function(code,param1,param2,dataTab) {
       let n=0 ; 
       let m=0 ; 
@@ -453,8 +331,9 @@ class UAL {
           break;
       }
 
-    }
+    } // fin Mode indirect format Court distination =1
 
+    //Mode BaseIndexe format Long  distination =1
     BaseIndexeLongDest = function(code,param1,param2,dataTab,instrTab,cpt) {
       let n = instrTab[cpt+1].getVal() ; 
       let m=0 ; 
@@ -489,8 +368,8 @@ class UAL {
           break;
       }
 
-    }
-
+    } // FinMode BaseIndexe format Long  distination =1
+    //Mode BaseIndexe format Long  distination =0
     BaseIndexeLongNonDest = function(code,param1,param2,dataTab,instrTab,cpt) {
       let m = instrTab[cpt+1].getVal() ; 
       let n=0 ;
@@ -522,8 +401,8 @@ class UAL {
           break;
       }
       dataTab[i].setVal(main.ACC.getContenu()) ; 
-    }
-
+    } // Fin Mode BaseIndexe format Long  distination =0
+    //Mode immediate direct  format Long  distination =1
     immediaDirectLongDest = function(code,param1,instrTab,cpt) {
       let m = instrTab[cpt+1].getVal() ;
       let n=0 ;
@@ -571,7 +450,8 @@ class UAL {
       }
  
 
-    }
+    }  //Mode immediate direct  format Long  distination =1
+     //Mode immediate direct  format Long  distination =0
     immediaDirectLongNonDest = function(code,instrTab,cpt) {
       let m = instrTab[cpt+1].getVal() ;
       let i = util.chercherAdr(main.getDataTab(),m.slice(0,m.length-1)) ;
@@ -580,9 +460,9 @@ class UAL {
       let n= instrTab[cpt+2].getVal() ; ; 
       main.ACC.setContenu(this.operation(code,n,m)); 
       main.getDataTab()[i].setVal(main.ACC.getContenu()) ;
-    }
+    }  // Fin Mode immediate direct  format Long  distination =0 
 
-
+      //Mode immediate indirect  format Long  distination =0 
     immediaInDirectLongNonDest = function(code,param1,instrTab,cpt) {
       let n = instrTab[cpt+1].getVal() ;
       let i ; 
@@ -602,10 +482,9 @@ class UAL {
         m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
         m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m); break ; 
       } 
- 
+    } // FIN Mode immediate indirect  format Long  distination =0 
 
-    }
-
+    //  Mode immediate BaseIndexe  format Long  distination =0 
     immediaBaseIndexeLongNonDest = function(code,param1,instrTab,cpt) {
       let m=0 ; 
       let i=0 ;
@@ -630,10 +509,9 @@ class UAL {
          m=dataTab[i].getVal() ; main.ACC.setContenu(m); 
          m=this.operation(code,m,n) ; main.ACC.setContenu(m); dataTab[i].setVal(m);
       } 
- 
+    }  // Fin Mode immediate BaseIndexe  format Long  distination =0 
 
-    }
-
+    //  Mode immediate AccDirect  format COURT  
     immediaAccDirectCourt = function(code,param1) {
       switch (param1) {
         case "000": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.AX.getContenu()));
@@ -654,14 +532,16 @@ class UAL {
          break;
         
       } 
+    } // FIN  Mode immediate AccDirect  format COURT  
 
-    }
+    //  Mode immediate AccDirect  format Long  
     immediaAccDirectLong = function(code,dataTab,instrTab,cpt) {
       let n = instrTab[cpt+1].getVal() ;
       i = util.chercherAdr(dataTab,n) ;
       n=dataTab[i].getVal() ; main.ACC.setContenu(this.operation(code,n,main.ACC.getContenu())); 
 
-    }
+    } //  FIN Mode immediate AccDirect  format Long  
+    //  decalage / Rotation Logique
     decalageRotationLogique= function(code,param1,instrTab,cpt) {
       switch (param1) {
         case "000": main.ACC.setContenu(main.AX.getContenu()) ;
@@ -699,8 +579,8 @@ class UAL {
          break;
         
       } 
-    }
-
+    }   //  FIN decalage / Rotation Logique
+     // KMP 
     jmp = function (code,indicateurTab,cpt) {
       let i = util.chercherAdr(dataTab,(instrTab[cpt+1].getVal()).slice(1)) ;
       switch ( code.toUpperCase())  {
@@ -721,7 +601,8 @@ class UAL {
       case "JE":   break;
       case "JNE":  break;
     }
-  }
+  } //JMP 
+   //  comparaison direct 
   cmpDirect = function (code,param1,param2,indicateurTab,cpt) {
    let m=0 ;
     switch (param2) {
@@ -793,7 +674,9 @@ class UAL {
         break;
     }
       
-  }
+  }  // FIN   comparaison direct
+
+   //  comparaison Imm
   cmpImm = function (code,param1,instrTab,cpt) {
     let m= instrTab[cpt+1].getVal() ; 
      switch(param1) {
@@ -839,8 +722,8 @@ class UAL {
          break;
      }
        
-   }
-
+   } //  DIN comparaison Imm
+   // mettre a jour les indicateurs 
    mettreAjourIndicateur = function(val) {
       if (val >0) {
         main.setIndicateurZero(0) ;
@@ -861,11 +744,11 @@ class UAL {
         main.setIndicateurDebord(0) ;
 
       }
-   }
+   } // FIN mettre a jour les indicateurs 
     operation = function(code,n,m ) {
       let res=0 ; 
       switch (code.toUpperCase()) {
-        case "MOV": res=n ;break;
+        case "MOV": res=util.remplirZero(m,4,0);break; 
         case "ADD": res=util.remplirZero(util.additionHexa(n,m),4,0) ; break;
         case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
         case "SUBA": ins = "000100"; break; 
@@ -896,7 +779,7 @@ class UAL {
         case "OUT": ins = "011101"; break;
         case "START": ins = "011111"; break;
         case "STOP": ins = "011110"; break;
-        case "MOVI": ins = "100000"; break;
+        case "MOVI": res=util.remplirZero(m,4,0); break;
         case "ADDI": res=util.remplirZero(util.additionHexa(n,m),4,0);break;
         case "ADAI": res=util.remplirZero(util.additionHexa(n,m),4,0); break;
         case "ADA": res=util.remplirZero(util.additionHexa(n,m),4,0) ; break ; 

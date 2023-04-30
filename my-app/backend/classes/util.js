@@ -188,9 +188,20 @@ if (decimalX < decimalY) {
 } else {
   return 0
 }
+},
+/*
+convertToAscii: function(string) {
+  let asciiCode = [];
+  let str ; 
+  for (let i = 0; i < string.length; i++) {
+    asciiCode.push((string.charCodeAt(i)).toString(16));
+    str=str+asciiCode[i]
+  }
+  return asciiCode;
+} */
 
-
-
+test: function (x) {
+  x.concat("nour")
 }
 
 

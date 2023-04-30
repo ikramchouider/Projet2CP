@@ -168,7 +168,9 @@ var main = {
       let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
       this.setRI(instrBin) ;
       switch (this.getRI().getCOP()) {
-        case "000000": i = this.ual.mov(this.getDataTab(),instrTab,j,this.getRI().getMA(),this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        case "000000": i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j = i ; break ;
+        case "100000": i = this.ual.opeRation("MOVI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
         j = i ; break ;
         case "000001":
           i = this.ual.opeRation("ADD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
@@ -201,7 +203,7 @@ var main = {
       //j++ ;
     }
     
-  },
+  }, 
   afficherRegistres: function () {
     console.log("AX: ", util.remplirZero(this.getAX().getContenu(),4,0));
     console.log("BX: ", util.remplirZero(this.getBX().getContenu(),4,0));
