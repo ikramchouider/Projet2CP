@@ -20,7 +20,7 @@ class UAL {
       return this.jmp(code,indicateurTab,cpt)  ; 
     }
     else if(codeIns== "SHR" || codeIns== "SHL" ) {
-      this.decalageRotationLogique(code,param1,instrTab,cpt) ;  
+      this.decalageRotationLogique(codeIns,param1,instrTab,cpt) ; 
       return cpt+2 ; 
     }
     else if(codeIns== "ADA" || codeIns== "SBA" ) {
@@ -44,15 +44,16 @@ class UAL {
 
     }
     else if((modeAdr == "00") && dest == "0" && format == "1"){
-      this.immediaDirectLongNonDest(codeIns[codeIns.length-1 == "I"],instrTab,cpt)
+      this.immediaDirectLongNonDest(codeIns.slice(0,codeIns.length-1),instrTab,cpt)
       return cpt+3 ; 
     }
     else if((modeAdr == "01") && dest == "0" && format == "1") {
-      this.immediaInDirectLongNonDest(code,param1,instrTab,cpt) ; 
+      this.immediaInDirectLongNonDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt) ; 
       return cpt+2
     }
     else if((modeAdr == "10") && dest == "0" && format == "1") {
-      this.immediaBaseIndexeLongNonDest(code,param1,instrTab,cpt) ; 
+      console.log(param1);
+      this.immediaBaseIndexeLongNonDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt) ; 
       return cpt+3 ; 
     }
     }
@@ -467,8 +468,8 @@ class UAL {
           main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
       }
       
-      i = util.chercherAdr(dataTab,util.remplirZero(m,3,0)) ;
-      m=dataTab[i].getVal() ; 
+      i = util.chercherAdr(main.getDataTab(),util.remplirZero(m,3,0)) ;
+      m=main.getDataTab()[i].getVal() ; 
       switch (param1) {
         case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
           break;
@@ -573,39 +574,42 @@ class UAL {
     }
     immediaDirectLongNonDest = function(code,instrTab,cpt) {
       let m = instrTab[cpt+1].getVal() ;
-      let i = util.chercherAdr(dataTab,m) ;
-      m=dataTab[i].getVal() ;
+      let i = util.chercherAdr(main.getDataTab(),m.slice(0,m.length-1)) ;
+      m=main.getDataTab()[i].getVal() ;
       main.ACC.setContenu(m);
       let n= instrTab[cpt+2].getVal() ; ; 
       main.ACC.setContenu(this.operation(code,n,m)); 
-      dataTab[i].setVal() ;
+      main.getDataTab()[i].setVal(main.ACC.getContenu()) ;
     }
 
 
     immediaInDirectLongNonDest = function(code,param1,instrTab,cpt) {
       let n = instrTab[cpt+1].getVal() ;
-      let i
+      let i ; 
+      let m=0 ; 
       switch (param1) {
         case "001":
-          i = util.chercherAdr(dataTab,main.BX.getContenu().slice(1)) ;
-           m=dataTab[i].getVal() ; main.ACC.setContenu(m); 
-           m=this.operation(code,m,n) ; main.ACC.setContenu(m); dataTab[i].setVal(m);
+          i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+           m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+           m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
          break;
         case "110": 
-        i = util.chercherAdr(dataTab,main.SI.getContenu().slice(1)) ;
-        m=dataTab[i].getVal() ; main.ACC.setContenu(m); 
-        m=this.operation(code,m,n) ; main.ACC.setContenu(m); dataTab[i].setVal(m);
+        i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+        m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
         break ; 
-        case "111": i = util.chercherAdr(dataTab,main.DI.getContenu().slice(1)) ;
-        m=dataTab[i].getVal() ; main.ACC.setContenu(m); 
-        m=this.operation(code,m,n) ; main.ACC.setContenu(m); dataTab[i].setVal(m); break ; 
+        case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+        m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m); break ; 
       } 
  
 
     }
 
     immediaBaseIndexeLongNonDest = function(code,param1,instrTab,cpt) {
-      
+      let m=0 ; 
+      let i=0 ;
+      let n=instrTab[cpt+2].getVal() ;
       switch (param1) {
         case "001": main.ACC.setContenu(main.BX.getContenu().slice(1));
           m = util.additionHexa(main.BX.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
@@ -660,37 +664,38 @@ class UAL {
     }
     decalageRotationLogique= function(code,param1,instrTab,cpt) {
       switch (param1) {
-        case "000": main.ACC.setContenu(main.AX.getContenu()) ; 
-        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
-        main.AX.getContenu(main.ACC.setContenu() ) ; 
+        case "000": main.ACC.setContenu(main.AX.getContenu()) ;
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+        main.AX.setContenu(main.ACC.getContenu() ) ; 
+        
          break;
         case "001": main.ACC.setContenu(main.BX.getContenu()) ; 
-        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
-        main.BX.getContenu(main.ACC.setContenu() ) ;
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+        main.BX.setContenu(main.ACC.getContenu() ) ;
          break;
          case "010": main.ACC.setContenu(main.CX.getContenu()) ; 
-         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
-         main.CX.getContenu(main.ACC.setContenu() ) ;
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+         main.CX.setContenu(main.ACC.getContenu() ) ;
          break; 
          case "011":main.ACC.setContenu(main.DX.getContenu()) ; 
-         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
-         main.DX.getContenu(main.ACC.setContenu() ) ;
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+         main.DX.setContenu(main.ACC.getContenu() ) ;
          break;
          case "100": main.ACC.setContenu(main.EX.getContenu()) ; 
-         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
-         main.EX.getContenu(main.ACC.setContenu() ) ;
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+         main.EX.setContenu(main.ACC.getContenu() ) ;
          break;
          case "101": main.ACC.setContenu(main.FX.getContenu()) ; 
-         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
-         main.FX.getContenu(main.ACC.setContenu() ) ;
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+         main.FX.setContenu(main.ACC.getContenu() ) ;
          break ; 
         case "110": main.ACC.setContenu(main.SI.getContenu()) ; 
-        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
-        main.SI.getContenu(main.ACC.setContenu() ) ;
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+        main.SI.setContenu(main.ACC.getContenu() ) ;
         break;
         case "111": main.ACC.setContenu(main.DI.getContenu()) ; 
-        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1]));
-        main.DI.getContenu(main.ACC.setContenu() ) ;
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+        main.DI.setContenu(main.ACC.getContenu() ) ;
          break;
         
       } 
@@ -867,8 +872,8 @@ class UAL {
         case "CMP": ins = "000101"; break;
         case "OR": res=util.remplirZero(util.OrHex(n,m),4,0) ; break;
         case "AND": res=util.remplirZero(util.AndHex(n,m),4,0) ; break; 
-        case "SHR": res=decalageLogiqueHexadecDroit(n,m); break;
-        case "SHL": res=decalageLogiqueHexadecGauche(n,m); break;
+        case "SHR": res=util.remplirZero(util.decalageLogiqueHexadecDroit(n,m),4,0);  break; 
+        case "SHL": res=util.remplirZero(util.decalageLogiqueHexadecGauche(n,m),4,0);   break; 
         case "ROL": res=rotationHexadecimal("ROL",n,m); break;
         case "ROR": res=rotationHexadecimal("ROR",n,m); break;
         case "JZ": ins = "001100"; break;
