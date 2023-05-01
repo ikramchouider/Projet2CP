@@ -521,6 +521,7 @@ body {
   color: rgb(148 163 184 / var(--tw-text-opacity));
 }
 
+
 nav {
   padding: 1.25rem;
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -1112,6 +1113,7 @@ select{
   margin: 50px;
   background:#1e1f47;
   border-radius: 50px;
+  visibility:visible; 
 
 }
 .bas{
@@ -1131,23 +1133,99 @@ select{
   border-radius: 25px;
   border: 4px dashed rgba(255, 255, 255, 0.1);
  justify-content: space-between;
+
+
 }
+
+
 .textzone{
   box-shadow:  var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   grid-column: span 7 ;
   border-radius: 25px;
   background:none;
-  border: 4px dashed rgba(255, 255, 255, 0.1);
+  border: 4px dashed rgba(255, 255, 255, 0.103);
   
 }
+
+.messagediv {
+  resize: vertical;
+  box-shadow:  var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  border: 4px dashed rgba(255, 255, 255, 0.1);
+  grid-column: span 10 ;
+  color: #333;
+  background:none;
+  border-radius: 25px;
+  overflow: auto;
+}
+
+.loadButton {
+  background-color: transparent;
+  border: 2px solid transparent; /* Set the border color to transparent */
+  color: #9ca3af; /* Set the button text color to white */
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.loadButton:hover {
+  background-color: #3f1466;
+}
+
+.loadButton i {
+  margin-right: 5px; /* Add some space between the icon and text */
+}
+
+/* Optional: Add a different color to the icon on hover */
+.loadButton:hover i {
+  color: rgb(237, 200, 15);
+}
+
+
+.saveButton {
+  background-color: transparent;
+  border: 2px solid transparent; /* Set the border color to transparent */
+  color: #9ca3af; /* Set the button text color to white */
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.saveButton:hover {
+  background-color: #3f1466; /* couleur de fond au survol */
+}
+
+.saveButton i {
+  margin-right: 5px; /* espacement entre l'icône et le texte */
+}
+
+.saveButton:hover i {
+  color: rgb(237, 200, 15);
+}
+
+.btn-warning:hover i {
+  color: rgb(237, 200, 15);
+}
+
 .btn-warning{
-  position: relative;
+ position: relative;
   padding: 10px ;
   border-radius: 10px;
   background-color:#1e1f47;
   transition: 0.2s;
   overflow: hidden; 
-  margin: 10px ;
+  margin: 10px ; 
 }
 
 .btn-warning input[type = "file"]{
@@ -1176,3 +1254,269 @@ select{
     grid-template-columns: 1fr 1fr;
     grid-gap: 20px;
 }
+
+.ARCHI{
+  width: 1200px;
+  height: 850px;
+  position: absolute;
+  box-sizing: border-box;
+  margin:0px 350px;
+  display: block ;
+  visibility: hidden;
+
+
+}
+.bus{
+box-sizing: border-box;
+position: absolute;
+height: 0px;
+border: 5px solid #FFFFFF;
+border-radius: 4px;
+}
+#busDATA{
+  width: 1100.03px;
+  left: 11px;
+  bottom: 120px;
+  transform: rotate(0deg);
+}
+#busRIM{
+  width: 200px;
+left: 925px;
+bottom: 250px;
+  transform: rotate(-90deg);
+}
+#busRAM{
+  width: 150px;
+left: 650px;
+bottom: 560px;
+  transform: rotate(0deg);
+}
+#busRI{
+  width: 130px;
+left: 450px;
+bottom: 220px;
+  transform: rotate(-90deg);
+}
+#busCO{
+  width: 135.02px;
+left: 600px;
+bottom: 645px;
+  transform: rotate(-90deg);
+}
+#busREG{
+  width: 400px;
+left: 175px;
+bottom: 345px;
+  transform: rotate(-90deg);
+}
+#busREG1{
+  width: 52.01px;
+left: 536.5px;
+bottom: 375px;
+  transform: rotate(-90deg);
+}
+#busREG2{
+  width: 54.08px;
+left: 605px;
+bottom: 375px;
+  transform: rotate(-90deg);
+}
+#busEUAL1{
+  width: 90.5px;
+left: 217px;
+bottom: 200px;
+  transform: rotate(-90deg);
+}
+#busEUAL2{
+  width: 90.5px;
+left: 78px;
+bottom: 200px;
+  transform: rotate(-90deg);
+}
+#busTDA{
+  width: 400px;
+left: 550px;
+bottom: 350px;
+  transform: rotate(-90deg);
+}
+#busACC{
+  width: 392.1px;
+  left: -170px;
+  bottom: 350px;
+  transform: rotate(-90deg);
+}
+#c1{
+  width: 150px;
+  left: 525px;
+  bottom: 410px;
+  transform: rotate(0deg); 
+}
+#c2{
+  width: 290px;
+  left: 440px;
+  bottom: 560px;
+  transform: rotate(90deg); 
+
+}
+#c3{
+  width: 80px;
+  left: 501px;
+  bottom: 700px;
+  transform: rotate(0deg);
+}
+#c4{
+  width: 150px;
+  left: 22px;
+  bottom: 550px;
+  transform: rotate(0deg);
+}
+#c5{
+  width: 70px;
+  left: 140px;
+  bottom: 520px;
+  transform: rotate(90deg);
+}
+.decodeur {
+  position: absolute;
+  height: 0px;
+  border-bottom: 150px solid  #4662c6;
+  border-left:  30px solid transparent;
+  border-right:  30px solid transparent;
+  border-radius: 10px;
+}
+#ual{
+  width: 150px;
+  bottom: 300px ;
+  left:95px ;
+}
+#RIM{
+  width: 200px;
+  border-bottom: 50px solid #a7b6e3;
+  bottom: 370px ;
+  left:900px ;
+  transform: rotate(180deg);
+}
+#RAM{
+  width: 200px;
+  border-bottom: 50px solid #a7b6e3;
+  bottom: 550px ;
+  left:720px ;
+  transform: rotate(-90deg);
+}
+.MC{
+  position:absolute;
+  width: 250px;
+  height: 250px;
+  bottom: 450px ;
+  left: 900px;
+  background:  #462c6d;
+  border-radius: 4px;
+}
+.REG{
+  position:absolute;
+  height: 25px;
+  background-color:  #a7b6e3;
+  border-radius: 4px;
+}
+#CO{
+  width: 200px;
+  bottom: 725px;
+  left:575px;
+}
+#RI{
+  width: 240px;
+  bottom: 300px;
+  left: 420px;
+}
+#ACC{
+  width: 120px;
+  bottom: 455px;
+  left: 135px;
+}
+#EUAL1{
+  width: 90px;
+  bottom: 255px;
+  left: 80px;
+}
+#EUAL2{
+  width: 90px;
+  bottom: 255px;
+  left: 225px;
+}
+#AX{
+  width: 240px;
+  bottom: 770px;
+  background-color:  #182c5e;
+  left: 250px;
+}
+#BX{
+  width: 240px;
+  bottom: 740px;
+  background-color:  #182c5e;
+  left: 250px;
+}
+#CX{
+  width: 240px;
+  bottom: 710px;
+  left: 250px;
+  background-color:  #182c5e;
+}
+#DX{
+  width: 240px;
+  bottom: 680px;
+  left: 250px;
+  background-color:  #182c5e;
+}
+#EX{
+  width: 240px;
+  bottom: 650px;
+  left: 250px;
+  background-color:  #182c5e;
+}
+#FX{
+  width: 240px;
+  bottom: 620px;
+  left: 250px;
+  background-color:  #182c5e;
+}
+#SI{
+  width: 240px;
+  bottom: 590px;
+  left: 250px;
+  background-color:  #182c5e;
+}
+#DI{
+  width: 240px;
+  bottom: 560px;
+  left: 250px;
+  background-color:  #182c5e;
+}
+#Z{
+  width: 50px;
+  bottom: 500px;
+  left: 50px;
+}
+#S{
+  width: 50px;
+  bottom: 450px;
+  left: 50px;
+}
+#R{
+  width: 50px;
+  bottom: 400px;
+  left: 50px;
+}
+#D{
+  width: 50px;
+  bottom: 350px;
+  left: 50px;
+}
+.arrow {
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid white;
+  transform: rotate(180deg);
+}
+

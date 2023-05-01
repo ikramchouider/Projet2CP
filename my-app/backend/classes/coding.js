@@ -1,58 +1,78 @@
 import CaseMc from "./caseMemoire.js";
 import util from "./util.js";
+import main from "./main.js";
 
 var coding = {
     // debut coderInst "codage des instructions " return tableau des mots memoir apres codage de l'instruction 
-    coderInst: function (strLigne, adr, dataTab) {
+    coderInst: function (strLigne, adr, dataTab) 
+    {
+      
       let str = "";
       let instrTab = new Array();
       if (strLigne[0][strLigne[0].length - 1] == ":") {
-        str = strLigne[0];
+        str = strLigne[0].slice(0,strLigne[0].length-1);
         strLigne.shift();
       }
+      
+
       instrTab.push(
-        new CaseMc(adr,util.binaryToHex(coding.getCode(strLigne)), str)
+        new CaseMc(adr,util.binaryToHex(coding.getCode(strLigne)),str)
       );
-      if (coding.getFormat(strLigne) == "0") {
+      if(strLigne.length >2) {
+        if(strLigne[0].toUpperCase() == "SHL" || strLigne[0].toUpperCase() == "SHR" || strLigne[0].toUpperCase() == "ROL" || strLigne[0].toUpperCase() == "ROR" ) {
+          adr = util.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr,strLigne[2], ""));
+          for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }  
+          return  instrTab ; 
+        }
+      else if (coding.getFormat(strLigne) == "0") {
         for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
         return instrTab;
       } else if (strLigne[0][strLigne[0].length - 1].toUpperCase() == "I") {
+
         if (coding.modeAdr(strLigne) == "00" && coding.getDest(strLigne) == "0") {
           if (strLigne[1].indexOf("[") != -1) {
-            adr = this.incrementHex(adr, 1);
+            adr = util.incrementHex(adr, 1);
             instrTab.push(
               new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 1), "") // remplir 0 remplirZero
             );
           } else {
             let indice = util.chercherDansTableau(dataTab, strLigne[1]);
-            adr = this.incrementHex(adr, 1);
-            instrTab.push(new CaseMc(adr, dataTab[indice].getVal(), ""));
+            adr = util.incrementHex(adr, 1);
+            instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
           }
-          adr = this.incrementHex(adr, 1);
+          adr = util.incrementHex(adr, 1);
           if (strLigne[2].indexOf("H") != -1) {
+            adr = util.incrementHex(adr, 1);
             instrTab.push(
               new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
             );
-          } else instrTab.push(new CaseMc(adr, strLigne[2], ""));
+          } else { adr = this.incrementHex(adr, 1);
+            instrTab.push(new CaseMc(adr, strLigne[2], ""));}
           for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
           return instrTab;
         }
-        if (coding.modeAdr(strLigne) == "10" && coding.getDest(strLigne) == "0") {
+        else if((coding.modeAdr(strLigne) == "00" && coding.getDest(strLigne) == "1") ||  (coding.modeAdr(strLigne)== "01")) {
+          adr = util.incrementHex(adr, 1);
           instrTab.push(
-            new CaseMc(
-              this.incrementHex(adr, 1),
-              parseInt(getSubstringBetweenChars(strLigne[1], "+", "]")).toString(
-                16
-              )
-            )
+            new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
           );
+        }
+        else if (coding.modeAdr(strLigne) == "10" && coding.getDest(strLigne) == "0") {
+          adr = util.incrementHex(adr, 1);
+          instrTab.push(
+            new CaseMc(adr,parseInt(util.getSubstringBetweenChars(strLigne[1], "+", "]")).toString(16 ),""));
+            adr = util.incrementHex(adr, 1);
+            instrTab.push(
+              new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
+            );
         }
         for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
         return instrTab;
       } else if (coding.modeAdr(strLigne) == "00") {
         if (coding.getDest(strLigne) == "0") {
           if (strLigne[1].indexOf("[") != -1) {
-            adr = this.incrementHex(adr, 1);
+            adr = util.incrementHex(adr, 1);
             instrTab.push(
               new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 2), "") // remplir 0 remplirZero
             );
@@ -65,7 +85,7 @@ var coding = {
           }
         } else {
           if (strLigne[2].indexOf("[") != -1) {
-            adr = this.incrementHex(adr, 1);
+            adr = util.incrementHex(adr, 1);
             instrTab.push(
               new CaseMc(adr, strLigne[2].slice(1, strLigne[2].length - 2), "") // remplir 0 remplirZero
             );
@@ -75,26 +95,187 @@ var coding = {
             instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
           }
         }
-      }
-      
-      //parcourir instTab et mettre le champ Val sur 4 caractere hexa
-      for (let j=0; j<instrTab.length;j++){
-      instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0))  ;
-    }
+      } else {if (coding.modeAdr(strLigne) == "10") {
+        if (coding.getDest(strLigne) == "0"){ //MOV [BX+3], AX
+          let regEtDepl = strLigne[1].slice(1, strLigne[1].length - 1) ;
+          let depl = "";
+          if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
+              else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
+          adr = util.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+        }
+        else {  
+          let regEtDepl = strLigne[2].slice(1, strLigne[2].length - 1) ;
+          let depl = "";
+          if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
+          else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
+          adr = util.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+        }
+    } else if (coding.modeAdr(strLigne) == "11") {
+       if(coding.getDest(strLigne) == "1") {
+        let indice = util.chercherDansTableau(dataTab, strLigne[2].slice(0,strLigne[2].indexOf("[")));
+        adr = util.incrementHex(adr, 1);
+        instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
+        let regEtDepl = strLigne[2].slice(strLigne[2].indexOf("[")+1, strLigne[2].length - 1) ;
+          let depl = "";
+          if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
+          else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
+          adr = util.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+       }else {
+        let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
+        adr = util.incrementHex(adr, 1);
+        instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
+
+          let regEtDepl = strLigne[1].slice(strLigne[1].indexOf("[")+1, strLigne[1].length - 1) ;
+          let depl = "";
+          if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
+          else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
+          adr = util.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+
+       }
+          
+    }}
+  
+  for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }  
+  return instrTab;
+      } else {
+        if ((strLigne[0])[0] == "J"){
+          let indice = util.chercherDansTableau(main.getinstrTab(),strLigne[1]);
+         console.log(indice);
+          adr = util.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr,instrTab[indice].getAdr(), ""));
+           
+        }
+        else if(this.getFormat(strLigne) == "1" ) {
+          if(strLigne[0][strLigne[0].length - 1].toUpperCase() != "I"){
+          if (strLigne[1].indexOf("[") != -1 ) {
+            if(strLigne[1][0] != "[") {
+              let regEtDepl = strLigne[1].slice(strLigne[1].indexOf("[")+1, strLigne[1].length - 1) ;
+              let depl = "";
+              if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
+              else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
+              adr = util.incrementHex(adr, 1);
+              instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+
+            }
+            else{
+            adr = util.incrementHex(adr, 1);
+            instrTab.push(new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 2), "")); // remplir 0 remplirZero 
+            }
+          } else {
+            let indice = util.chercherDansTableau(dataTab, strLigne[1]);
+            adr = util.incrementHex(adr, 1);
+            instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
+          }
+          for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }  
+          return  instrTab ; 
+        }
+        else {
+          adr = util.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr,strLigne[1].slice(0, strLigne[1].length - 1), ""));
+          for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }  
+          return  instrTab ; 
+        }}
+      } 
+      for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }
       return instrTab;
-    }, // fin coder instruction 
+    
+}, // fin coder instruction 
 
 
       // return code binaire de l'instruction 
       getCode: function (str) {
-        let code;
+        let code; 
         if (str.length == 3) {
-          if (!this.regexi(str[1]) && this.regexi(str[2])) {
-            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[2]),"000");
-          } else code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(str[2]));
-        } else
-          code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),"000");
-        return code;
+          if (this.regexi(str[1]) && this.regexi(str[2])){
+            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(str[2]));
+            console.log(code);
+          }
+          else if (!this.regexi(str[1]) && this.regexi(str[2]) ) {
+            if(this.regexi(str[1].slice(1,str[1].length-1))) 
+            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[2]),this.getReg(str[1].slice(1,str[1].length-1)));
+            else if ((str[1].indexOf("[") != -1 ) && (str[1].indexOf("+") != -1)) {
+              let modeAdr= this.modeAdr(str) ; 
+              if(str[1][0] != "["){
+                   let regEtDepl = (str[1].slice(str[1].indexOf("["),str[1].length)).slice(1, str[1].length - 1) ;
+                   let reg = "" ;
+                   if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2);}
+                   else {reg = regEtDepl.slice(-2);}
+                   code = this.getCop(str[0]).concat(modeAdr,this.getFormat(str),this.getDest(str),this.getReg(str[2]),this.getReg(reg));
+              } 
+              else{
+              let regEtDepl = str[1].slice(1, str[1].length - 1) ;
+              let reg = "" ;
+              if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2);}
+              else {reg = regEtDepl.slice(-2);}
+              code = this.getCop(str[0]).concat(modeAdr,this.getFormat(str),this.getDest(str),this.getReg(str[2]),this.getReg(reg));
+            }
+            }
+            else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[2]),"000");}
+          }
+          else if(this.regexi(str[1]) && !this.regexi(str[2]))
+          {
+            if(this.regexi(str[2].slice(1,str[2].length-1))) 
+            {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(str[2].slice(1,str[2].length-1)));}
+            
+            else if ((str[2].indexOf("[") != -1 ) && (str[2].indexOf("+") != -1)) {
+              let modeAdr= this.modeAdr(str) ; 
+              if(str[2][0] != "["){
+                let reg = "";
+              let regEtDepl = (str[2].slice(str[2].indexOf("["),str[2].length)) .slice(1, str[2].length - 1) ;
+              if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2); }
+              else {reg = regEtDepl.slice(-2);}
+              code = this.getCop(str[0]).concat(modeAdr,this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(reg));
+           }else {
+              let reg = "";
+              let regEtDepl = str[2].slice(1, str[2].length - 1) ;
+              if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2); }
+              else {reg = regEtDepl.slice(-2);}
+              code = this.getCop(str[0]).concat(modeAdr,this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(reg));
+           }
+            }
+            else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),"000");} 
+      
+          }
+          else{
+            if(str.indexOf("+") == -1) {
+            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),"000");}
+            else {
+              let regEtDepl = strLigne[1].slice(1, strLigne[1].length - 1) ;
+              let reg ; 
+              if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2);}
+              else {reg = regEtDepl.slice(-2);}
+              
+              code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),"000");}
+          }
+          } 
+        else {
+          
+          if(this.regexi(str[1]))
+          { 
+            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),"000");
+          }
+          else if (this.regexi(str[1].slice(1,str[1].length-1)))
+          {
+            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),"000");
+          } 
+          else if(str[1][0] != "[" && str[1].indexOf("[") != -1) {
+            let reg = "";
+            let regEtDepl = (str[1].slice(str[1].indexOf("["),str[1].length)) .slice(1, str[1].length - 1) ;
+            if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2); }
+            else {reg = regEtDepl.slice(-2);}
+            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),"000");
+            console.log(code);
+           }
+            
+          else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),"000","000");
+        }
+
+        }
+          return code;
       }, // fin getcode 
 
       // return code operation de l'instruction 
@@ -105,7 +286,7 @@ var coding = {
           case "ADD": ins = "000001"; break;
           case "ADA": ins = "000010"; break;
           case "SUB": ins = "000011"; break;
-          case "SUBA": ins = "000100"; break;
+          case "SBA": ins = "000100"; break;
           case "CMP": ins = "000101"; break;
           case "OR": ins = "000110"; break;
           case "AND": ins = "000111"; break;
@@ -221,17 +402,17 @@ var coding = {
       modeAdr: function (tabIns) {
         if (tabIns.length == 3) {
           if (tabIns[0] == "SHR" || tabIns[0] == "SHL" || tabIns[0] == "ROL" || tabIns[0] == "ROR"
-          ) {   console.log("Mode d'Adressage : 00 (direct) ");
+          ) {   
             return "00";
           } else if ( (util.getDel(tabIns[1], "[") != "" && tabIns[1].indexOf("[") != -1) ||
-            (util.getDel(tabIns[2], "[") != "" && tabIns[2].indexOf("[") != -1)) { console.log("Mode d'Adressage : 11 (Direct Indexé) ");
+            (util.getDel(tabIns[2], "[") != "" && tabIns[2].indexOf("[") != -1)) { 
             return "11";
           } else {
-            if (this.modeDirect(tabIns)) { console.log("Mode d'Adressage : 00 (direct) ");
+            if (this.modeDirect(tabIns)) { 
               return "00";
-            } else if (this.modeIndirct(tabIns)) { console.log("Mode d'Adressage : 01 (Indirect) ");
+            } else if (this.modeIndirct(tabIns)) { 
               return "01";
-            } else if (this.modeBaseIndx(tabIns)) { console.log("Mode d'Adressage : 10 (Basé Indexé) ");
+            } else if (this.modeBaseIndx(tabIns)) { 
               return "10";
             }
           }
@@ -239,7 +420,7 @@ var coding = {
           if (tabIns[0] == "LOAD") {
             if (this.regAdrExi(tabIns[1].slice(1, tabIns[1].length - 1)))
               return "01";
-            else if ( this.getDel(tabIns[1], "[") != "" && tabIns[1].indexOf("[") != -1  )
+            else if ( util.getDel(tabIns[1], "[") != "" && tabIns[1].indexOf("[") != -1  )
               return "11";
             else return "00";
           } else return "00";

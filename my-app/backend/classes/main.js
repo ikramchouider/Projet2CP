@@ -11,6 +11,8 @@ import coding from "./coding.js";
 import assembler from "./assembler.js";
 var main = {
   dataTab: [],
+  instrTab :[],
+  indicateurTab: [],
   ual: new UAL("0", "0"),
   AX: new registre("AX", "0"),
   BX: new registre("BX", "0"),
@@ -21,11 +23,18 @@ var main = {
   SI: new registre("SI", "0"),
   DI: new registre("DI", "0"),
   CO: new registre("CO", "0"),
+  ACC: new registre("ACC", "0"),
   ri: new RI(),
 
   
+  getinstrTab: function () {
+    return this.instrTab;
+  },
   getDataTab: function () {
     return this.dataTab;
+  },
+  getindicateurTab: function () {
+    return this.indicateurTab;
   },
   getRI: function () {
     return this.ri;
@@ -57,14 +66,42 @@ var main = {
   getFX: function () {
     return this.FX;
   },
+  getACC: function () {
+    return this.ACC;
+  },
+  getIndicateurZero: function () {
+    return this.indicateurTab[0];
+  },
+  getIndicateurSigne: function () {
+    return this.indicateurTab[1];
+  },
+  getIndicateurRetenue: function () {
+    return this.indicateurTab[2];
+  },
+  getIndicateurDebord: function () {
+    return this.dataTab[3];
+  },
+  setIndicateurZero: function (val) {
+    this.indicateurTab[0]=val ;
+  },
+  setIndicateurSigne: function (val) {
+    this.indicateurTab[1]= val;
+  },
+  setIndicateurRetenue: function (val) {
+    this.indicateurTab[2] = val;
+  },
+  setIndicateurDebord: function (val) {
+    this.dataTab[3] = val ;
+  },
   coder: function () {
-    let instrTab = [];
     let indice = 0;
     let co;
     let adr = "";
 
    
-   // assembler.errorFunction("./test.txt") ; 
+   /* assembler.errorFunction("./test.txt") ; 
+    console.log(console.log(assembler.getMessageError().length));
+    for(let j=0;j<assembler.getMessageError().length;j++) console.log(assembler.getMessageError()[j]);*/
    const fileStream = fs.createReadStream("./test.txt");
     const rl = readline.createInterface({
       input: fileStream,
@@ -97,7 +134,8 @@ var main = {
       } else if (ligne_str[0] == "STOP") {
       } else {
         let tab = coding.coderInst(ligne_str, co, this.getDataTab());
-        instrTab = instrTab.concat(tab);
+       // instrTab = instrTab.concat(tab);
+        main.instrTab=main.getinstrTab().concat(tab) ;
         co = util.incrementHex(co, tab.length);
       } 
     }
@@ -110,17 +148,17 @@ var main = {
       console.log("********************** ");
       console.log("");
       console.log("***  Code Segment *** ");
-      for (let i = 0; i < instrTab.length; i++) instrTab[i].afficher();
+      for (let i = 0; i < main.getinstrTab().length; i++) main.getinstrTab()[i].afficher();
       console.log("********************** ");
-      this.Execute(instrTab);
+      this.Execute(main.getinstrTab());
       main.afficherRegistres() ;
       console.log("***  Data Segment *** ");
       for (let i = 0; i < this.getDataTab().length; i++)
         this.getDataTab()[i].afficher();
       console.log("********************** ");
-      console.log("");
+      console.log(""); 
 
-    });
+    }); 
    
   },
   Execute: function (instrTab) {
@@ -130,23 +168,50 @@ var main = {
       let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
       this.setRI(instrBin) ;
       switch (this.getRI().getCOP()) {
-        case "000000": i = this.ual.mov(this.getDataTab(),instrTab,j,this.getRI().getMA(),this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        case "000000": i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j = i ; break ;
+        case "100000": i = this.ual.opeRation("MOVI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
         j = i ; break ;
         case "000001":
-          i = this.ual.add(this.getDataTab(),this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+          i = this.ual.opeRation("ADD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
           j=i ; break ;
+          case "000011":
+            i = this.ual.opeRation("SUB",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+          case "000111":
+            i = this.ual.opeRation("AND",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+          case "000110":
+            i = this.ual.opeRation("OR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+          case "100001":
+            i = this.ual.opeRation("ADDI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+          case "100011":
+            i = this.ual.opeRation("SUBI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+            case "001001":
+              i = this.ual.opeRation("SHL",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "100100":
+              i = this.ual.opeRation("SBAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            default:
+              break ; 
+
       }
       //j++ ;
     }
     
-  },
+  }, 
   afficherRegistres: function () {
-    console.log("AX: ", this.getAX().getContenu());
-    console.log("BX: ", this.getBX().getContenu());
-    console.log("CX: ", this.getCX().getContenu());
-    console.log("DX: ", this.getDX().getContenu());
-    console.log("EX: ", this.getEX().getContenu());
-    console.log("FX: ", this.getFX().getContenu());
+    console.log("AX: ", util.remplirZero(this.getAX().getContenu(),4,0));
+    console.log("BX: ", util.remplirZero(this.getBX().getContenu(),4,0));
+    console.log("CX: ", util.remplirZero(this.getCX().getContenu(),4,0));
+    console.log("DX: ", util.remplirZero(this.getDX().getContenu(),4,0));
+    console.log("EX: ", util.remplirZero(this.getEX().getContenu(),4,0));
+    console.log("FX: ", util.remplirZero(this.getFX().getContenu(),4,0));
+    console.log("ACC: ", util.remplirZero(this.getACC().getContenu(),4,0));
 
   },
   

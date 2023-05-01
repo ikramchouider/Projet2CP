@@ -7,6 +7,7 @@ var util = {
   chercherDansTableau: function (tableau, valeur) {
     // change the name to chercherEtiq
     let i = 0;
+    console.log(tableau[i].getAdr());
     while (i < tableau.length && tableau[i].getEtiq() != valeur) {
       i++;
     }
@@ -118,6 +119,92 @@ instUnSeulOp: function(str) {
 getCodeASCIIHex: function(caractere) {
   return caractere.charCodeAt(0).toString(16);
 },
+SoustractionHex: function(n,m) {
+    const decimalA = parseInt(n, 16);
+    const decimalB = parseInt(m, 16);
+    let decimalResult = decimalA - decimalB;
+    if (decimalResult < 0) {
+      decimalResult += 4294967296; // 2^32
+    }
+    decimalResult &= 0xFFFF;
+    const hexResult = decimalResult.toString(16);
+    return hexResult;
+},
+
+AndHex: function(n, m) {
+  const decimalN = parseInt(n, 16);
+  const decimalM = parseInt(m, 16);
+  const result = decimalN & decimalM;
+  const hexResult = result.toString(16).toUpperCase();
+  return hexResult;
+},
+
+OrHex: function(n, m) {
+  const decimalN = parseInt(n, 16);
+  const decimalM = parseInt(m, 16);
+  const result = decimalN | decimalM;
+  const hexResult = result.toString(16).toUpperCase();
+  return hexResult;
+},
+
+NotHex: function(n) {
+const decimalN = parseInt(n, 16);
+const result = ~decimalN;
+const hexResult = result.toString(16).toUpperCase();
+return hexResult;
+},
+
+decalageLogiqueHexadecDroit: function(hexa, n) {
+let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
+let resultat = decimal >>> n; // décalage logique de n positions vers la droite
+return resultat.toString(16); // conversion du résultat en hexadécimal
+},
+
+decalageLogiqueHexadecGauche: function(hexa, n) {
+let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
+let resultat = decimal << n; // décalage logique de n positions vers la gauche
+return resultat.toString(16); // conversion du résultat en hexadécimal
+},
+
+rotationHexadecimal: function (code,hexa, n) {
+let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
+let resultat;
+if (code == "ROL") {
+  resultat = (decimal << n) | (decimal >>> (32 - n)); // rotation à gauche de n positions
+} else {
+  resultat = (decimal >>> -n) | (decimal << (32 + n)); // rotation à droite de n positions
+}
+return resultat.toString(16); // conversion du résultat en hexadécimal
+},
+
+compareHexValues: function (x, y) {
+let decimalX = parseInt(x, 16); // conversion hexadécimale en décimal
+let decimalY = parseInt(y, 16); // conversion hexadécimale en décimal
+
+if (decimalX < decimalY) {
+  return -1
+} else if (decimalX > decimalY) {
+  return 1
+} else {
+  return 0
+}
+},
+/*
+convertToAscii: function(string) {
+  let asciiCode = [];
+  let str ; 
+  for (let i = 0; i < string.length; i++) {
+    asciiCode.push((string.charCodeAt(i)).toString(16));
+    str=str+asciiCode[i]
+  }
+  return asciiCode;
+} */
+
+test: function (x) {
+  x.concat("nour")
+}
+
+
 }
 
 
