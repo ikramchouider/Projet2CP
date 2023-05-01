@@ -521,7 +521,6 @@ body {
   color: rgb(148 163 184 / var(--tw-text-opacity));
 }
 
-
 nav {
   padding: 1.25rem;
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -546,8 +545,7 @@ nav {
 .tap {
   position: absolute;
   left: 0px;
-  top: -400px;
-  z-index: -1;
+  top: 5rem;
   width: 100%;
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -707,9 +705,9 @@ h3:hover {
   border-radius: 0.5rem;
   --tw-bg-opacity: 1;
   background-color: rgb(30 31 71 / var(--tw-bg-opacity));
-  --tw-shadow: 0 10px 15px -3px rgba(128, 50, 145, 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #e3c9f400), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 @media (min-width: 768px) {
@@ -913,11 +911,6 @@ details:hover {
   height: 18rem;
   width: 18rem;
 }
-.get{
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-}
 .slider{
   height:500px;
   margin-top: 5;
@@ -1113,7 +1106,7 @@ select{
   margin: 50px;
   background:#1e1f47;
   border-radius: 50px;
-  visibility: hidden;
+  visibility: visible;
 
 }
 .bas{
@@ -1144,6 +1137,7 @@ select{
   border-radius: 25px;
   background:none;
   border: 4px dashed rgba(255, 255, 255, 0.103);
+  padding: 10px;
   
 }
 
@@ -1256,13 +1250,16 @@ select{
 }
 
 .ARCHI{
+  align-items: end;
   width: 1200px;
-  height: 850px;
+  height: 750px;
   position: absolute;
   box-sizing: border-box;
-  margin:0px 350px;
+  margin:0px 150px;
   display: block ;
-
+  visibility: hidden;
+  border: 4px dashed rgba(255, 255, 255, 0.1);
+border-radius: 16px;
 
 }
 .bus{
@@ -1275,104 +1272,104 @@ border-radius: 4px;
 #busDATA{
   width: 1100.03px;
   left: 11px;
-  bottom: 120px;
+  bottom: 35px;
   transform: rotate(0deg);
 }
 #busRIM{
   width: 200px;
 left: 925px;
-bottom: 250px;
+bottom: 150px;
   transform: rotate(-90deg);
 }
 #busRAM{
   width: 150px;
-left: 650px;
-bottom: 560px;
+left: 640px;
+bottom: 460px;
   transform: rotate(0deg);
 }
 #busRI{
   width: 130px;
 left: 450px;
-bottom: 220px;
+bottom: 120px;
   transform: rotate(-90deg);
 }
 #busCO{
   width: 135.02px;
 left: 600px;
-bottom: 645px;
+bottom: 545px;
   transform: rotate(-90deg);
 }
 #busREG{
   width: 400px;
 left: 175px;
-bottom: 345px;
+bottom: 245px;
   transform: rotate(-90deg);
 }
 #busREG1{
   width: 52.01px;
 left: 536.5px;
-bottom: 375px;
+bottom: 275px;
   transform: rotate(-90deg);
 }
 #busREG2{
   width: 54.08px;
 left: 605px;
-bottom: 375px;
+bottom: 275px;
   transform: rotate(-90deg);
 }
 #busEUAL1{
   width: 90.5px;
 left: 217px;
-bottom: 200px;
+bottom: 100px;
   transform: rotate(-90deg);
 }
 #busEUAL2{
   width: 90.5px;
 left: 78px;
-bottom: 200px;
+bottom: 100px;
   transform: rotate(-90deg);
 }
 #busTDA{
   width: 400px;
 left: 550px;
-bottom: 350px;
+bottom: 250px;
   transform: rotate(-90deg);
 }
 #busACC{
   width: 392.1px;
   left: -170px;
-  bottom: 350px;
+  bottom: 250px;
   transform: rotate(-90deg);
 }
 #c1{
   width: 150px;
   left: 525px;
-  bottom: 410px;
+  bottom: 310px;
   transform: rotate(0deg); 
 }
 #c2{
   width: 290px;
   left: 440px;
-  bottom: 560px;
+  bottom: 460px;
   transform: rotate(90deg); 
 
 }
 #c3{
   width: 80px;
   left: 501px;
-  bottom: 700px;
+  bottom: 600px;
   transform: rotate(0deg);
 }
 #c4{
   width: 150px;
   left: 22px;
-  bottom: 550px;
+  bottom: 450px;
   transform: rotate(0deg);
 }
 #c5{
   width: 70px;
   left: 140px;
-  bottom: 520px;
+  bottom: 420px;
   transform: rotate(90deg);
 }
 .decodeur {
@@ -1382,23 +1379,24 @@ bottom: 350px;
   border-left:  30px solid transparent;
   border-right:  30px solid transparent;
   border-radius: 10px;
+  color: #ae44a0;
 }
 #ual{
   width: 150px;
-  bottom: 300px ;
-  left:95px ;
+  bottom: 200px ;
+  left:100px ;
 }
 #RIM{
   width: 200px;
   border-bottom: 50px solid #a7b6e3;
-  bottom: 370px ;
+  bottom: 270px ;
   left:900px ;
   transform: rotate(180deg);
 }
 #RAM{
   width: 200px;
   border-bottom: 50px solid #a7b6e3;
-  bottom: 550px ;
+  bottom: 450px ;
   left:720px ;
   transform: rotate(-90deg);
 }
@@ -1406,7 +1404,7 @@ bottom: 350px;
   position:absolute;
   width: 250px;
   height: 250px;
-  bottom: 450px ;
+  bottom: 350px ;
   left: 900px;
   background:  #462c6d;
   border-radius: 4px;
@@ -1416,98 +1414,130 @@ bottom: 350px;
   height: 25px;
   background-color:  #a7b6e3;
   border-radius: 4px;
+  color: #ae44a0;
 }
 #CO{
   width: 200px;
-  bottom: 725px;
+  bottom: 625px;
   left:575px;
 }
 #RI{
   width: 240px;
-  bottom: 300px;
+  bottom: 200px;
   left: 420px;
 }
 #ACC{
   width: 120px;
-  bottom: 455px;
+  bottom: 355px;
   left: 135px;
 }
 #EUAL1{
   width: 90px;
-  bottom: 255px;
+  bottom: 155px;
   left: 80px;
 }
 #EUAL2{
   width: 90px;
-  bottom: 255px;
+  bottom: 155px;
   left: 225px;
 }
 #AX{
   width: 240px;
-  bottom: 770px;
+  bottom: 670px;
   background-color:  #182c5e;
   left: 250px;
 }
 #BX{
   width: 240px;
-  bottom: 740px;
+  bottom: 640px;
   background-color:  #182c5e;
   left: 250px;
 }
 #CX{
   width: 240px;
-  bottom: 710px;
+  bottom: 610px;
   left: 250px;
   background-color:  #182c5e;
 }
 #DX{
   width: 240px;
-  bottom: 680px;
+  bottom: 580px;
   left: 250px;
   background-color:  #182c5e;
 }
 #EX{
   width: 240px;
-  bottom: 650px;
+  bottom: 550px;
   left: 250px;
   background-color:  #182c5e;
 }
 #FX{
   width: 240px;
-  bottom: 620px;
+  bottom: 520px;
   left: 250px;
   background-color:  #182c5e;
 }
 #SI{
   width: 240px;
-  bottom: 590px;
+  bottom: 490px;
   left: 250px;
   background-color:  #182c5e;
 }
 #DI{
   width: 240px;
-  bottom: 560px;
+  bottom: 460px;
   left: 250px;
   background-color:  #182c5e;
 }
 #Z{
   width: 50px;
-  bottom: 500px;
+  bottom: 400px;
   left: 50px;
 }
 #S{
   width: 50px;
-  bottom: 450px;
+  bottom: 350px;
   left: 50px;
 }
 #R{
   width: 50px;
-  bottom: 400px;
+  bottom: 300px;
   left: 50px;
 }
 #D{
   width: 50px;
-  bottom: 350px;
+  bottom: 250px;
   left: 50px;
 }
-
+.start-pause{
+  position: absolute;
+  z-index: 2;
+  top: 15px;
+  left: 60px;
+  border-radius: 30px;
+  border-width: 3px;
+  border-color: #3f1466;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  font-size: 36px;
+}
+.retour{
+  position: absolute;
+  z-index: 2;
+  top: 15px;
+  left: 5px;
+  border-radius: 30px;
+  border-width: 3px;
+  border-color: #3f1466;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  font-size: 36px;
+}
+ion-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

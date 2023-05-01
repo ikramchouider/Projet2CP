@@ -23,7 +23,7 @@
                   <img src="./img/logo.png" alt="#">
               </span>
             </div>
-            <ul class="tap">
+            <ul class="tap" id="tta">
               <li>
                 <a class="tp" href="./Main.html">Accueil</a>
               </li>
@@ -189,8 +189,17 @@
     </main>   
     <script>
       function Menu(e){
-        let list = document.querySelector('ul');
-        e.name === 'menu' ? (e.name = "close",list.classList.add('top-[80px]') , list.classList.add('opacity-100')) :( e.name = "menu" ,list.classList.remove('top-[80px]') , list.classList.remove('opacity-100'))
+        let list = document.getElementById("tta");
+        if(e.name === 'menu')
+        {
+          e.name = "close";
+          list.style.opacity = '100' ;
+        }
+        else{
+          e.name = "menu" ;
+          list.style.opacity = '0' ;
+        }
+
       }
     </script>
 </body>

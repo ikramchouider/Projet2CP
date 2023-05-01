@@ -903,6 +903,7 @@ fileInputButton.addEventListener("click",() => {
 var saveButton = document.getElementById("save");
 var codeTextarea = document.getElementById("code");
 
+
 saveButton.addEventListener("click", function() {
   let codeText = codeTextarea.value;
   console.log(codeText);
@@ -927,3 +928,17 @@ saveButton.addEventListener("click", function() {
 }, false);*/
 
 
+const simulbtn = document.getElementById("simulate_id");
+const emuleSave = document.getElementById("sml");
+const simulArchi = document.getElementById("arch-id");
+simulbtn.addEventListener("click", () => {
+  emuleSave.style.visibility ='hidden';
+  simulArchi.style.visibility='visible';
+
+
+  }) ;
+var returnBtn = document.getElementById("return");
+returnBtn.addEventListener("click",()=>{
+  simulArchi.style.visibility='hidden';
+  emuleSave.style.visibility='visible';
+}) ;
