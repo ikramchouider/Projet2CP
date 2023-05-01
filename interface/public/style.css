@@ -1113,7 +1113,7 @@ select{
   margin: 50px;
   background:#1e1f47;
   border-radius: 50px;
-  visibility:visible; 
+  visibility: hidden;
 
 }
 .bas{
@@ -1262,7 +1262,6 @@ select{
   box-sizing: border-box;
   margin:0px 350px;
   display: block ;
-  visibility: hidden;
 
 
 }
@@ -1510,13 +1509,5 @@ bottom: 350px;
   width: 50px;
   bottom: 350px;
   left: 50px;
-}
-.arrow {
-  width: 0;
-  height: 0;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-left: 10px solid white;
-  transform: rotate(180deg);
 }
 
