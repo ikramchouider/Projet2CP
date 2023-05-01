@@ -35,7 +35,7 @@ var util = {
   }, //  fin incrementHex
 
 // 
-  remplirZero: function (str, n, gd) {
+  remplirZero: function (str, n, gd) {   
     //gd=0 -> des zeros à gauche , gd=1 -> à droite
     var s = "";
     const length = str.length;
@@ -124,9 +124,11 @@ instUnSeulOp: function(str) {
      str== 'JNO' || str == 'JO' || str=='JNS' || str=='JS' || str=='JNC' || str=='JC' || str=='JNZ' || str== 'JZ' ) return true ; 
      else return false ; 
 },
+
 getCodeASCIIHex: function(caractere) {
   return caractere.charCodeAt(0).toString(16);
 },
+
 SoustractionHex: function(n,m) {
     const decimalA = parseInt(n, 16);
     const decimalB = parseInt(m, 16);
@@ -196,6 +198,13 @@ if (decimalX < decimalY) {
 } else {
   return 0
 }
+},
+
+hexSigne: function(op) {
+      op = util.hexEnBinaire(op) ; 
+      if (op[0] == "1")  return "-1" ; 
+      else return "1" ; 
+ 
 },
 /*
 convertToAscii: function(string) {
