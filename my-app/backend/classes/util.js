@@ -7,7 +7,6 @@ var util = {
   chercherDansTableau: function (tableau, valeur) {
     // change the name to chercherEtiq
     let i = 0;
-    console.log(tableau[i].getAdr());
     while (i < tableau.length && tableau[i].getEtiq() != valeur) {
       i++;
     }
@@ -79,6 +78,15 @@ var util = {
     const hex = decimal.toString(16);
     return hex.toUpperCase();
   }, // fin  binaryToHex
+  
+  hexEnBinaire: function (hex) {
+    let binary = "";
+    for (let i = 0; i < hex.length; i++) {
+      const char = parseInt(hex[i], 16).toString(2);
+      binary += char.padStart(4, "0");
+    }
+    return binary;
+  },
 
    // verifie si un nombre est en hexadecimal 
    estHexadecimal: function (chaine) {
