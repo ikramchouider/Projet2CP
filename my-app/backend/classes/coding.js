@@ -144,7 +144,6 @@ var coding = {
       } else {
         if ((strLigne[0])[0] == "J"){
           let indice = util.chercherDansTableau(main.getinstrTab(),strLigne[1]);
-         console.log(indice);
           adr = util.incrementHex(adr, 1);
           instrTab.push(new CaseMc(adr,instrTab[indice].getAdr(), ""));
            
@@ -192,7 +191,7 @@ var coding = {
         if (str.length == 3) {
           if (this.regexi(str[1]) && this.regexi(str[2])){
             code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(str[2]));
-            console.log(code);
+            
           }
           else if (!this.regexi(str[1]) && this.regexi(str[2]) ) {
             if(this.regexi(str[1].slice(1,str[1].length-1))) 
@@ -241,16 +240,18 @@ var coding = {
       
           }
           else{
-            if(str.indexOf("+") == -1) {
-            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),"000");}
+            if((str[1].indexOf("+") == -1)&&(str[2].indexOf("+") == -1)) {
+            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),"000");
+          }
             else {
-              let regEtDepl = strLigne[1].slice(1, strLigne[1].length - 1) ;
+              let regEtDepl = str[1].slice(1, str[1].length - 1) ;
               let reg ; 
               if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2);}
               else {reg = regEtDepl.slice(-2);}
               
-              code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),"000");}
-          }
+              code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),"000");
+            }
+            }
           } 
         else {
           
@@ -268,13 +269,14 @@ var coding = {
             if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2); }
             else {reg = regEtDepl.slice(-2);}
             code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),"000");
-            console.log(code);
+            
            }
             
           else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),"000","000");
         }
 
         }
+          console.log(code);
           return code;
       }, // fin getcode 
 

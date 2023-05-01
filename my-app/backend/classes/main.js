@@ -12,18 +12,18 @@ import assembler from "./assembler.js";
 var main = {
   dataTab: [],
   instrTab :[],
-  indicateurTab: [],
+  indic: new registre("INDIC","0000") , 
   ual: new UAL("0", "0"),
-  AX: new registre("AX", "0"),
-  BX: new registre("BX", "0"),
-  CX: new registre("CX", "0"),
-  DX: new registre("DX", "0"),
-  EX: new registre("EX", "0"),
-  FX: new registre("FX", "0"),
-  SI: new registre("SI", "0"),
-  DI: new registre("DI", "0"),
-  CO: new registre("CO", "0"),
-  ACC: new registre("ACC", "0"),
+  AX: new registre("AX", "0000"),
+  BX: new registre("BX", "0000"),
+  CX: new registre("CX", "0000"),
+  DX: new registre("DX", "0000"),
+  EX: new registre("EX", "0000"),
+  FX: new registre("FX", "0000"),
+  SI: new registre("SI", "0000"),
+  DI: new registre("DI", "0000"),
+  CO: new registre("CO", "000"),
+  ACC: new registre("ACC", "0000"),
   ri: new RI(),
 
   
@@ -33,8 +33,8 @@ var main = {
   getDataTab: function () {
     return this.dataTab;
   },
-  getindicateurTab: function () {
-    return this.indicateurTab;
+  getIndic: function () {
+    return this.indic;
   },
   getRI: function () {
     return this.ri;
@@ -66,32 +66,46 @@ var main = {
   getFX: function () {
     return this.FX;
   },
+  getSI: function () {
+    return this.SI;
+  },
+  getDI: function () {
+    return this.DI;
+  },
   getACC: function () {
     return this.ACC;
   },
   getIndicateurZero: function () {
-    return this.indicateurTab[0];
+    return util.hexEnBinaire(this.getIndic().getContenu()).slice(-1);
   },
   getIndicateurSigne: function () {
-    return this.indicateurTab[1];
-  },
-  getIndicateurRetenue: function () {
-    return this.indicateurTab[2];
+    return util.hexEnBinaire(this.getIndic().getContenu())[14];
   },
   getIndicateurDebord: function () {
-    return this.dataTab[3];
+    return util.hexEnBinaire(this.getIndic().getContenu())[12];
+  },
+  getIndicateurRetenue: function () {
+    return util.hexEnBinaire(this.getIndic().getContenu())[13];  
   },
   setIndicateurZero: function (val) {
-    this.indicateurTab[0]=val ;
+    let contenuBin = util.hexEnBinaire(this.getIndic().getContenu()) ;
+    contenuBin = (contenuBin.substring(0,15)).concat(val) ;
+    this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ; 
   },
   setIndicateurSigne: function (val) {
-    this.indicateurTab[1]= val;
+    let contenuBin = util.hexEnBinaire(this.getIndic().getContenu()) ;
+    contenuBin = (contenuBin.substring(0,14)).concat(val,contenuBin.slice(-1)) ;
+    this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ;
   },
   setIndicateurRetenue: function (val) {
-    this.indicateurTab[2] = val;
+    let contenuBin = util.hexEnBinaire(this.getIndic().getContenu()) ;
+    contenuBin = (contenuBin.substring(0,13)).concat(val,contenuBin.slice(-2)) ;
+    this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ;
   },
   setIndicateurDebord: function (val) {
-    this.dataTab[3] = val ;
+    let contenuBin = util.hexEnBinaire(this.getIndic().getContenu()) ;
+    contenuBin = (contenuBin.substring(0,12)).concat(val,contenuBin.slice(-3)) ;
+    this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ;
   },
   coder: function () {
     let indice = 0;
@@ -152,6 +166,7 @@ var main = {
       console.log("********************** ");
       this.Execute(main.getinstrTab());
       main.afficherRegistres() ;
+      main.afficherIndicateurs() ;
       console.log("***  Data Segment *** ");
       for (let i = 0; i < this.getDataTab().length; i++)
         this.getDataTab()[i].afficher();
@@ -203,15 +218,25 @@ var main = {
       //j++ ;
     }
     
-  }, 
-  afficherRegistres: function () {
-    console.log("AX: ", util.remplirZero(this.getAX().getContenu(),4,0));
-    console.log("BX: ", util.remplirZero(this.getBX().getContenu(),4,0));
-    console.log("CX: ", util.remplirZero(this.getCX().getContenu(),4,0));
-    console.log("DX: ", util.remplirZero(this.getDX().getContenu(),4,0));
-    console.log("EX: ", util.remplirZero(this.getEX().getContenu(),4,0));
-    console.log("FX: ", util.remplirZero(this.getFX().getContenu(),4,0));
-    console.log("ACC: ", util.remplirZero(this.getACC().getContenu(),4,0));
+  },
+
+  afficherIndicateurs: function () {
+    console.log("I_ZERO: ", this.getIndicateurZero());
+    console.log("I_SIGNE: ", this.getIndicateurSigne());
+    console.log("I_RETENUE: ", this.getIndicateurRetenue());
+    console.log("I_DEBORD: ", this.getIndicateurDebord());
+  },
+ 
+    afficherRegistres: function () {
+    console.log("AX: ", this.getAX().getContenu());
+    console.log("BX: ", this.getBX().getContenu());
+    console.log("CX: ", this.getCX().getContenu());
+    console.log("DX: ", this.getDX().getContenu());
+    console.log("EX: ", this.getEX().getContenu());
+    console.log("FX: ", this.getFX().getContenu());
+    console.log("SI: ", this.getSI().getContenu());
+    console.log("DI: ", this.getDI().getContenu());
+    console.log("ACC: ", this.getACC().getContenu());
 
   },
   
