@@ -1005,9 +1005,10 @@ class UAL {
       let res=0 ; 
       switch (code.toUpperCase()) {
         case "MOV": res=util.remplirZero(m,4,0); this.mettreAjourIndicateur(res);  break; 
-        case "ADD": res=util.remplirZero(util.additionHexa(n,m),4,0); //this.mettreAjourIndicateur(res); 
+        case "ADD": res=util.remplirZero(util.additionHexa(n,m),4,0); 
+        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
         break;
-        case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ;// this.mettreAjourIndicateur(res); 
+        case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ;
          break;
         case "SUBA": ins = "000100"; this.mettreAjourIndicateur(res); break; 
         case "CMP": res=util.compareHexValues(n,m) ;  break;

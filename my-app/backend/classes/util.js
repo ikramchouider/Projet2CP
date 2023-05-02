@@ -60,57 +60,90 @@ var util = {
   
   // faire l'addition en hexadecemal 
   additionHexa: function (x1,x2) {
-
-  //conversion en hexadecimal
-  let x1bin = util.hexEnBinaire(x1) ;
-  let x2bin = util.hexEnBinaire(x2) ;
-
-  let carry = 0;
-  let result = '';
+    let a = util.hexEnBinaire(util.remplirZero(x1,4,0));
+    let b = util.hexEnBinaire(util.remplirZero(x2,4,0));
+    let sum = '';
+    let carry = 0;
+    let i = a.length - 1;
+    let j = b.length - 1;
   
-  // Add digits from right to left
-  for (let i = x1bin.length - 1; i >= 0; i--) {
-    let digit1 = parseInt(x1bin.charAt(i));
-    let digit2 = parseInt(x2bin.charAt(i));
-    let sum = digit1 + digit2 + carry;
-    
-    if (sum > 1) {
-      sum -= 2;
-      carry = 1;
-    } else {
-      carry = 0;
+    while (i >= 0 || j >= 0 || carry > 0) {
+    let digitA = i >= 0 ? parseInt(a.charAt(i), 2) : 0;
+    let digitB = j >= 0 ? parseInt(b.charAt(j), 2) : 0;
+    let digitSum = digitA + digitB + carry;
+  
+    carry = digitSum >= 2 ? 1 : 0;
+    digitSum = digitSum % 2;
+    sum = digitSum + sum;
+
+    i--;
+      j--;
     }
-    result = sum + result;
-  }
+    return util.binaryToHex(sum) ;
+  }, // fin  additionHexa
+
+  /**
++   * elle place l'indicateur zero selon l'operation de l'addition 
++   * @param {1} x1 
++   * @param {2} x2 
++   */
+  setIndZeroAddition: function (x1, x2) {
+      let resultat = this.additionHexa(x1,x2) ;
+      resultat = resultat.slice(-4) ;
+      let resultatBin = util.hexEnBinaire(resultat); 
+      if(resultatBin.slice(-15)=="000000000000000") {main.setIndicateurZero("1");}
+      else {main.setIndicateurZero("0");}
+    }  ,
   
-  // Add final carry bit, if there is one
-  if (carry) {
-    result = carry + result;
-  }
-  
-  result = this.binaryToHex(result) ;
+    /**
+     * place l'indicateur du signe selon l'operation de l'addition
+     * @param {*} x1 
+     * @param {*} x2 
+    */
+    setIndSigneAddition: function(x1,x2) {
 
-  if ((util.hexSigne(util.remplirZero(x1,4,0))=="-1")&&(util.hexSigne(util.remplirZero(x2,4,0))=="-1")&&(util.hexSigne(util.remplirZero(result.slice(-4),4,0))=="1")) 
-  {main.setIndicateurDebord("1"); console.log("Debord:"+ "1");} 
-  else if ((util.hexSigne(util.remplirZero(x1,4,0))=="1")&&(util.hexSigne(util.remplirZero(x2,4,0))=="1")&&(util.hexSigne(util.remplirZero(result.slice(-4),4,0))=="-1"))
-  {main.setIndicateurDebord("1"); console.log("Debord:"+ "1");}
-  else {main.setIndicateurDebord("0"); console.log("Debord:"+ "0");}
+    x1 = util.remplirZero(x1,4,0) ;
+    x2 = util.remplirZero(x2,4,0) ;
+    let x1bin = util.hexEnBinaire(x1) ;
+    let x2bin = util.hexEnBinaire(x2) ;
 
-  if(carry==0){main.setIndicateurRetenue("1");}
-  else {main.setIndicateurRetenue("0");}
+    if ((x1bin[0]=="0")&&(x2bin[0]=="0")) {main.setIndicateurSigne("0"); return ;}
+    if ((x1bin[0]=="1")&&(x2bin[0]=="1")) {main.setIndicateurSigne("1"); return ;}
+   if (((x1bin[0]=="1")&&(x2bin[0]=="0"))) {
+     //le signe dans ce cas sera du signe du nombre dont la valeur absolue est la plus grande 
+      let x2bin_ = util.remplirZero(x2bin.slice(-15),16,0) ;
+      if (parseInt(util.positiveComplementADeux(x1bin),2)>parseInt(x2bin_,2)) //le signe sera du signe de x1bin
+      {main.setIndicateurSigne(x1bin[0]); return ;}
+      else {main.setIndicateurSigne(x2bin[0]); return ;}
+    }
+  if ((x1bin[0]=="0")&&(x2bin[0]=="1")) {
+      let x1bin_ = util.remplirZero(x1bin.slice(-15),16,0) ;
+       if (parseInt(util.positiveComplementADeux(x2bin),2)>parseInt(x1bin_,2)) //le signe sera du signe de x2bin
+      {main.setIndicateurSigne(x2bin[0]); return ;}
+       else {main.setIndicateurSigne(x1bin[0]); return ;}
+  }},
 
-  if (this.hexEnBinaire(result.slice(-4))[0]=="1"){main.setIndicateurSigne("1");}
-  else{main.setIndicateurSigne("0");}
+  setIndDebordAddition: function(x1,x2) {
 
-  console.log("Retenue:"+ carry);
-  console.log("Signe:"+ this.hexEnBinaire(result.slice(-4))[0]);
-  
+x1 = util.remplirZero(x1,4,0) ;
+x2 = util.remplirZero(x2,4,0) ;
+let x1bin = util.hexEnBinaire(x1) ;
+let x2bin = util.hexEnBinaire(x2) ;
+let resultat = (this.additionHexa(x1,x2)).slice(-4) ; //slice(-4) car on doit comparer avec le premier bit du resultat ecrit sur 16bits
+resultat = util.hexEnBinaire(resultat) ;
+if ((x1bin[0]=="1")&&(x2bin[0]=="1")&&(resultat[0]=="0")) {main.setIndicateurDebord("1") ; return ;}
+else if ((x1bin[0]=="0")&&(x2bin[0]=="0")&&(resultat[0]=="1")) {main.setIndicateurDebord("1"); return ;}
+else {main.setIndicateurDebord("0"); return ;}
+},
+    
+setIndRetenueAddition: function(x1,x2) {
+let resultat = this.additionHexa(x1,x2) ;
+if (resultat.length>4) {main.setIndicateurRetenue("1"); return ;}
+else {main.setIndicateurRetenue("0"); return ;}
+},
 
-  return result;
-   },// fin  additionHexa
 
-
-  getSubstringBetweenChars: function (str, startChar, endChar) {
+getSubstringBetweenChars: function (str, startChar, endChar) {
     let startIndex = str.indexOf(startChar);
     if (startIndex === -1) { return ""; }
     startIndex += 1;
@@ -175,18 +208,63 @@ instUnSeulOp: function(str) {
 getCodeASCIIHex: function(caractere) {
   return caractere.charCodeAt(0).toString(16);
 },
+/**
++ * fait la soustraction de n-m tq n et m sont representés en complement à 2, et positionne les indicateurs
++ * @param {1} n 
++ * @param {2} m 
++ */
 
 SoustractionHex: function(n,m) {
-    const decimalA = parseInt(n, 16);
-    const decimalB = parseInt(m, 16);
-    let decimalResult = decimalA - decimalB;
-    if (decimalResult < 0) {
-      decimalResult += 4294967296; // 2^32
-    }
-    decimalResult &= 0xFFFF;
-    const hexResult = decimalResult.toString(16);
-    return hexResult;
-}, 
+    
+let resultat ="" ;
+let m_ = "" ; //soit m convertit en negatif ou positif selon le cas
+m = util.hexEnBinaire(util.remplirZero(m,4,0)) ;
+//cas1: si m est positif cela revient a l'addition signée de n + (-m)
+if (m[0]=="0") 
+{
+m_ = util.negationComplementADeux(m) ;
+resultat = util.additionHexa(util.remplirZero(n,4,0),util.binaryToHex(m_)) ;
+}
+else //cas2: si m negatif ie: le bit le plus a gauche est à 1 cela revient a l'addition de n + m
+{
+m_ = util.positiveComplementADeux(m) ;
+resultat = util.additionHexa(util.remplirZero(n,4,0),util.binaryToHex(m_)) ;
+}
+//positionner les indicateurs
+util.setIndDebordAddition(n,util.binaryToHex(m_)) ;
+util.setIndRetenueAddition(n,util.binaryToHex(m_)) ; 
+util.setIndZeroAddition(n,util.binaryToHex(m_)) ; 
+util.setIndSigneAddition(n,util.binaryToHex(m_)) ; 
+       
+return resultat ;
+
+},
+
+/**
+* convertit un nombre binaire negatif (sur 16bits) en sa valeur positive representée en CA2
+* @param {1} binaryNum 
+* @returns 
+*/
+positiveComplementADeux: function(binaryNum) {
+// inverser les bits
+let onesComplement = "";
+for (let i = 0; i < binaryNum.length; i++) {
+onesComplement += binaryNum[i] === "0" ? "1" : "0";
+}
+let absValue = parseInt(onesComplement, 2) + 1;
+let absBinary = absValue.toString(2).padStart(16, "0");
+return absBinary;},
+
+negationComplementADeux: function(binaryNum) {
+// Convertir binaryNum en decimal
+let decimalNum = parseInt(binaryNum, 2);
+
+// Calculer le nombre negatif et sa representation en CA2
+let negation = -decimalNum;
+let twosComplement = (negation >>> 0).toString(2).padStart(16, '0');
+  
+return twosComplement;  
+},
 
 /*SoustractionHex: function (n, m) {
   // Convertit n et m en nombres décimaux
