@@ -17,7 +17,22 @@ class UAL {
     let m = 0;
     let i=0 ; 
     if(codeIns[0]== "J") {
-      return this.jmp(code,indicateurTab,cpt)  ; 
+      return this.jmp(codeIns,indicateurTab,cpt)  ; 
+    }
+    else if(codeIns[0]== "LOAD") {}
+    else if(codeIns== "CMP") {
+      if ((modeAdr == "00") && dest == "1" && format == "0") {
+        this.cmpDirect(codeIns,param1,param2); 
+        return cpt+1 ;}
+      if ((modeAdr == "01") && dest == "1" && format == "0") {
+        this.cmpIndiret(codeIns,param1,param2); 
+        return cpt+1 ;}
+
+    }
+    else if(codeIns== "CMPI") {
+      if ((modeAdr == "00") && dest == "1" && format == "1") {
+        this.cmpImm(codeIns,param1,instrTab,cpt); 
+        return cpt+2 ;}
     }
     else if(codeIns== "SHR" || codeIns== "SHL" ) {
       this.decalageRotationLogique(codeIns,param1,instrTab,cpt) ; 
@@ -42,7 +57,7 @@ class UAL {
       if(codeIns=="INC" || codeIns=="DEC") {
         this.immediaDirectLongDest(codeIns,param1,instrTab,cpt) ; 
         return cpt+1 ; }
-      else{
+      else{ 
         this.immediaDirectLongDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt)
         return cpt+2 ; }
 
@@ -59,20 +74,6 @@ class UAL {
       this.immediaBaseIndexeLongNonDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt) ; 
       return cpt+3 ; 
     }
-    }
-    else if(codeIns== "CMP") {
-      if ((modeAdr == "00") && dest == "1" && format == "0") {
-        this. cmpDirect(code,param1,param2); 
-        return cpt+1 ;}
-      if ((modeAdr == "01") && dest == "1" && format == "0") {
-        this.cmpIndiret(code,param1,param2); 
-        return cpt+1 ;}
-
-    }
-    else if(codeIns== "CMPI") {
-      if ((modeAdr == "00") && dest == "1" && format == "1") {
-        this.cmpImm(code,param1,instrTab,cpt); 
-        return cpt+2 ;}
     }
     else if ((modeAdr == "00") && dest == "1" && format == "0") {
       this.directCourtDist(codeIns,param1,param2) ; 
@@ -443,7 +444,6 @@ class UAL {
 
       let adretiq = instrTab[cpt+2].getVal() ; 
       let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      console.log(m); 
       i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16);   
       m=dataTab[i].getVal() ;  
       switch (param1) {
@@ -484,7 +484,6 @@ class UAL {
       
       let adretiq = instrTab[cpt+2].getVal() ; 
       i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      console.log(m); 
       i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16);   
       m=dataTab[i].getVal() ;   
       switch (param1) {
@@ -521,7 +520,8 @@ class UAL {
         code ="SUBI"
       }
       else{
-       m = instrTab[cpt+1].getVal() ;}
+       m = instrTab[cpt+1].getVal() ;
+      }
       let n=0 ;
       switch (param1) {
         case "000":
@@ -696,12 +696,14 @@ class UAL {
          break;
         
       } 
+      console.log(main.getIndicateurRetenue());
     }   //  FIN decalage / Rotation Logique
-     // KMP 
+     // JMP 
     jmp = function (code,indicateurTab,cpt) {
-      let i = util.chercherAdr(dataTab,(instrTab[cpt+1].getVal()).slice(1)) ;
+        let i = util.chercherDansTableau(main.getinstrTab(),main.getinstrTab()[cpt+1].getVal()) ; 
+    //  let i = util.chercherAdr(dataTab,(instrTab[cpt+1].getVal()).slice(1)) ;
       switch ( code.toUpperCase())  {
-      case "JMP": return dataTab[i].getVal() ; 
+      case "JMP": return i; //dataTab[i].getVal()  
       case "JZ": if(indicateurTab[0] == 1)
           return dataTab[i].getVal() ; else return cpt+2 ; 
       case "JNZ": if(indicateurTab[0] != 1)
@@ -722,6 +724,7 @@ class UAL {
    //  comparaison direct 
   cmpDirect = function (code,param1,param2) {
    let m=0 ;
+   let n=0 ; 
     switch (param2) {
       case "000":
         m = main.AX.getContenu();
@@ -790,9 +793,11 @@ class UAL {
         main.ACC.setContenu(this.operation("SUB",n,m)); 
         break;
     }
-    if(this.operation(code,n,m)>0) {
+
+   // console.log(n," ",m);
+    if(util.compareHexValues(n,m)>0) { 
       main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
-    }else if(this.operation(code,n,m)<0) {
+    }else if(util.compareHexValues(n,m)<0) {
       main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
     }
     else { 
@@ -807,21 +812,20 @@ class UAL {
 
   cmpIndiret = function (code,param1,param2) {
     let m=0 ;
-     
+     let i=0 ; 
+     let n=0 ; 
     switch (param2) {
       case "001":
         i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
          m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-         m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
        break;
       case "110": 
       i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
       m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-      m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
       break ; 
       case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
       m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-      m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m); break ; 
+      break;
     } 
 
      switch (param1) {
@@ -866,9 +870,9 @@ class UAL {
          main.ACC.setContenu(this.operation("SUB",n,m)); 
          break;
      }
-     if(this.operation(code,n,m)>0) {
+     if(util.compareHexValues(n,m)>0) {
        main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
-     }else if(this.operation(code,n,m)<0) {
+     }else if(util.compareHexValues(n,m)<0) {
        main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
      }
      else { 
@@ -883,6 +887,7 @@ class UAL {
    //  comparaison Imm
   cmpImm = function (code,param1,instrTab,cpt) {
     let m= instrTab[cpt+1].getVal() ; 
+    let n=0 ; 
      switch(param1) {
        case "000":
          n = main.AX.getContenu();
@@ -925,9 +930,9 @@ class UAL {
          main.ACC.setContenu(this.operation("SUB",n,m));
          break;
      }
-     if(this.operation(code,n,m)>0) {
+     if(util.compareHexValues(n,m)>0) {
       main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
-    }else if(this.operation(code,n,m)<0) {
+    }else if(util.compareHexValues(n,m)<0) {
       main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
     }
     else { 
@@ -955,17 +960,18 @@ class UAL {
       let res=0 ; 
       switch (code.toUpperCase()) {
         case "MOV": res=util.remplirZero(m,4,0); this.mettreAjourIndicateur(res);  break; 
-        case "ADD": res=util.remplirZero(util.additionHexa(n,m),4,0); this.mettreAjourIndicateur(res); 
+        case "ADD": res=util.remplirZero(util.additionHexa(n,m),4,0); //this.mettreAjourIndicateur(res); 
         break;
-        case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; this.mettreAjourIndicateur(res);  break;
+        case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ;// this.mettreAjourIndicateur(res); 
+         break;
         case "SUBA": ins = "000100"; this.mettreAjourIndicateur(res); break; 
-        case "CMP": util.compareHexValues(n,m) ; this.mettreAjourIndicateur(res); break;
+        case "CMP": res=util.compareHexValues(n,m) ;  break;
         case "OR": res=util.remplirZero(util.OrHex(n,m),4,0) ; this.mettreAjourIndicateur(res); break;
         case "AND": res=util.remplirZero(util.AndHex(n,m),4,0) ; this.mettreAjourIndicateur(res);  break; 
-        case "SHR": res=util.remplirZero(util.decalageLogiqueHexadecDroit(n,m),4,0); this.mettreAjourIndicateur(res);   break; 
-        case "SHL": res=util.remplirZero(util.decalageLogiqueHexadecGauche(n,m),4,0); this.mettreAjourIndicateur(res);   break; 
-        case "ROL": res=rotationHexadecimal("ROL",n,m); this.mettreAjourIndicateur(res);  break;
-        case "ROR": res=rotationHexadecimal("ROR",n,m); this.mettreAjourIndicateur(res);  break;
+        case "SHR": res=util.remplirZero(util.decalageLogiqueHexadecDroit(n,m),4,0);    break; 
+        case "SHL": res=util.remplirZero(util.decalageLogiqueHexadecGauche(n,m),4,0);    break; 
+        case "ROL": res=rotationHexadecimal("ROL",n,m);   break;
+        case "ROR": res=rotationHexadecimal("ROR",n,m);   break;
         case "JZ": ins = "001100"; this.mettreAjourIndicateur(res); break;
         case "JNZ": ins = "001101"; this.mettreAjourIndicateur(res); break;
         case "JC": ins = "001110"; this.mettreAjourIndicateur(res); break;

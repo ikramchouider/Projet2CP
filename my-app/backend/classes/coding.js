@@ -143,9 +143,10 @@ var coding = {
   return instrTab;
       } else {
         if ((strLigne[0])[0] == "J"){
-          let indice = util.chercherDansTableau(main.getinstrTab(),strLigne[1]);
+          //let indice = util.chercherDansTableau(main.getinstrTab(),strLigne[1]);
           adr = util.incrementHex(adr, 1);
-          instrTab.push(new CaseMc(adr,instrTab[indice].getAdr(), ""));
+          //instrTab.push(new CaseMc(adr,instrTab[indice].getAdr(), ""));
+          instrTab.push(new CaseMc(adr,"",strLigne[1]));
            
         }
         else if(this.getFormat(strLigne) == "1" ) {
@@ -166,6 +167,7 @@ var coding = {
             }
           } else {
             let indice = util.chercherDansTableau(dataTab, strLigne[1]);
+           
             adr = util.incrementHex(adr, 1);
             instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
           }

@@ -1,5 +1,6 @@
 
 import coding from "./coding.js";
+import main from "./main.js";
 var util = {
   
 
@@ -185,13 +186,15 @@ return hexResult;
 decalageLogiqueHexadecDroit: function(hexa, n) {
 let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
 let resultat = decimal >>> n; // décalage logique de n positions vers la droite
+main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[16-n]) ; 
+
 return resultat.toString(16); // conversion du résultat en hexadécimal
 },
 
 decalageLogiqueHexadecGauche: function(hexa, n) {
 let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
 let resultat = decimal << n; // décalage logique de n positions vers la gauche
-//main.setIndicateurRetenue(decimal)
+main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[0+n-1]) ; 
 return resultat.toString(16); // conversion du résultat en hexadécimal
 },
 
@@ -200,8 +203,10 @@ let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
 let resultat;
 if (code == "ROL") {
   resultat = (decimal << n) | (decimal >>> (32 - n)); // rotation à gauche de n positions
+  main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[0+n-1]) ;
 } else {
   resultat = (decimal >>> -n) | (decimal << (32 + n)); // rotation à droite de n positions
+  main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[16-n]) ; 
 }
 return resultat.toString(16); // conversion du résultat en hexadécimal
 },
