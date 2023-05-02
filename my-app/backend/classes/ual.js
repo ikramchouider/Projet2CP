@@ -19,7 +19,7 @@ class UAL {
     if(codeIns[0]== "J") {
       return this.jmp(codeIns,indicateurTab,cpt)  ; 
     }
-    else if(codeIns[0]== "LOAD") {}
+    
     else if(codeIns== "CMP") {
       if ((modeAdr == "00") && dest == "1" && format == "0") {
         this.cmpDirect(codeIns,param1,param2); 
@@ -38,18 +38,24 @@ class UAL {
       this.decalageRotationLogique(codeIns,param1,instrTab,cpt) ; 
       return cpt+2 ; 
     }
-    else if(codeIns== "ADA" || codeIns== "SBA" ) {
+    else if(codeIns== "ADA" || codeIns== "SBA" || codeIns== "LOAD") {
       if((modeAdr == "00") && dest == "1" && format == "0" ){
-        this.immediaAccDirectCourt(code,param1) ; 
+        this.immediaAccDirectCourt(codeIns,param1) ; 
         return cpt+1 ; 
   
       }
       else if((modeAdr == "00") && dest == "0" && format == "1"){
         this.immediaAccDirectLong(codeIns,dataTab,instrTab,cpt) ; 
         return cpt+2 ; 
+      }else if((modeAdr == "01") && dest == "0" && format == "0"){
+        this.LoadinDirectCourt(param1) ; 
+        return cpt+1 ; 
       }
+      else if((modeAdr == "11") && dest == "0" && format == "1")
+      this.LoadDirectIndexe(param1,dataTab,instrTab,cpt) 
+
     }
-    else if(codeIns== "ADAI" || codeIns== "SBAI"){
+    else if(codeIns== "ADAI" || codeIns== "SBAI" ||  codeIns== "LOADI"){
   main.ACC.setContenu(this.operation(codeIns,main.ACC.getContenu(),instrTab[cpt+1].getVal())) ; 
     }
     else if(codeIns[codeIns.length-1] == "I"  || codeIns=="INC" || codeIns=="DEC" ){
@@ -654,10 +660,49 @@ class UAL {
     //  Mode immediate AccDirect  format Long  
     immediaAccDirectLong = function(code,dataTab,instrTab,cpt) {
       let n = instrTab[cpt+1].getVal() ;
-      i = util.chercherAdr(dataTab,n) ;
-      n=dataTab[i].getVal() ; main.ACC.setContenu(this.operation(code,n,main.ACC.getContenu())); 
+      let i = util.chercherAdr(dataTab,n.slice(1)) ;
+      n=dataTab[i].getVal() ; 
+       main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),n)); 
 
-    } //  FIN Mode immediate AccDirect  format Long  
+    } //  FIN Mode immediate AccDirect  format Long 
+    
+
+    LoadinDirectCourt = function(param1) {
+      let i=0 ; let m=0 ; 
+      switch (param1) {
+        case "001":
+          i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+           m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+         break;
+        case "110": 
+        i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+        break ; 
+        case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m);  break ; 
+      } 
+
+    }
+
+    LoadDirectIndexe = function(param1,dataTab,instrTab,cpt) {
+      let n = instrTab[cpt+1].getVal() ; 
+      let m=0 ; 
+      let i=0 ; 
+      switch (param1) {
+        case "001":
+          main.ACC.setContenu(main.BX.getContenu());  m=util.additionHexa(n,main.BX.getContenu().slice(1)) ; main.ACC.setContenu(m);  break;
+        case "110":
+          main.ACC.setContenu(main.SI.getContenu());  m=util.additionHexa(n,main.SI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+        case "111":
+          main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+      }
+      
+      let adretiq = instrTab[cpt+2].getVal() ; 
+      i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
+      i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16) ;   
+      m=dataTab[i].getVal() ;  
+      main.ACC.setContenu(m);
+    }
     //  decalage / Rotation Logique
     decalageRotationLogique= function(code,param1,instrTab,cpt) {
       switch (param1) {
@@ -982,7 +1027,7 @@ class UAL {
         case "JNO": ins = "010011"; this.mettreAjourIndicateur(res);  break;
         case "JE": ins = "010100"; this.mettreAjourIndicateur(res); break;
         case "JNE": ins = "010101"; this.mettreAjourIndicateur(res); break;
-        case "LOAD": ins = "010110"; this.mettreAjourIndicateur(res);  break;
+        case "LOAD": res= util.remplirZero(m,4,0) ; break;
         case "STORE": ins = "010111"; this.mettreAjourIndicateur(res); break;
         case "INC": ins = "011000";  this.mettreAjourIndicateur(res); break;
         case "DEC": ins = "011001";  this.mettreAjourIndicateur(res);break;
@@ -1002,7 +1047,7 @@ class UAL {
         case "CMPI": ins = "100101"; this.mettreAjourIndicateur(res); break;
         case "ORI": ins = "100110"; this.mettreAjourIndicateur(res); break;
         case "ANDI": ins = "100111"; this.mettreAjourIndicateur(res);  break;
-        case "LOADI": ins = "110110"; this.mettreAjourIndicateur(res); break;
+        case "LOADI": res= util.remplirZero(m,4,0) ; break;
         default: ins= "-1"; break;
       }
       return res.slice(-4);

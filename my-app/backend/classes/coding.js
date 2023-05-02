@@ -153,12 +153,15 @@ var coding = {
           if(strLigne[0][strLigne[0].length - 1].toUpperCase() != "I"){
           if (strLigne[1].indexOf("[") != -1 ) {
             if(strLigne[1][0] != "[") {
-              let regEtDepl = strLigne[1].slice(strLigne[1].indexOf("[")+1, strLigne[1].length - 1) ;
-              let depl = "";
-              if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
-              else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
+              let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
               adr = util.incrementHex(adr, 1);
-              instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+              instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
+              let regEtDepl = strLigne[1].slice(strLigne[1].indexOf("[")+1, strLigne[1].length - 1) ;
+               let depl = "";
+              if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
+               else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
+               adr = util.incrementHex(adr, 1);
+               instrTab.push(new CaseMc(adr, depl.toString(16), ""));
 
             }
             else{

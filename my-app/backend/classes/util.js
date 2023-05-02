@@ -59,7 +59,7 @@ var util = {
   }, //fin  getDel
   
   // faire l'addition en hexadecemal 
-  additionHexa: function (x, y) {
+  additionHexa: function (x1,x2) {
 
   //conversion en hexadecimal
   let x1bin = util.hexEnBinaire(x1) ;
