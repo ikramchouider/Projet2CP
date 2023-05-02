@@ -37,24 +37,42 @@ class UAL {
     else if(codeIns== "ADAI" || codeIns== "SBAI"){
   main.ACC.setContenu(this.operation(codeIns,main.ACC.getContenu(),instrTab[cpt+1].getVal())) ; 
     }
-    else if(codeIns[codeIns.length-1] == "I" ){
-    if((modeAdr == "00") && dest == "1" && format == "1" ){
-      this.immediaDirectLongDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt)
-      return cpt+2 ; 
+    else if(codeIns[codeIns.length-1] == "I"  || codeIns=="INC" || codeIns=="DEC" ){
+    if((modeAdr == "00") && dest == "1"  ){
+      if(codeIns=="INC" || codeIns=="DEC") {
+        this.immediaDirectLongDest(codeIns,param1,instrTab,cpt) ; 
+        return cpt+1 ; }
+      else{
+        this.immediaDirectLongDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt)
+        return cpt+2 ; }
 
     }
-    else if((modeAdr == "00") && dest == "0" && format == "1"){
+    else if((modeAdr == "00") && dest == "0" ){
       this.immediaDirectLongNonDest(codeIns.slice(0,codeIns.length-1),instrTab,cpt)
       return cpt+3 ; 
     }
-    else if((modeAdr == "01") && dest == "0" && format == "1") {
+    else if((modeAdr == "01") && dest == "0" ) {
       this.immediaInDirectLongNonDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt) ; 
       return cpt+2
     }
-    else if((modeAdr == "10") && dest == "0" && format == "1") {
+    else if((modeAdr == "10") && dest == "0" ) {
       this.immediaBaseIndexeLongNonDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt) ; 
       return cpt+3 ; 
     }
+    }
+    else if(codeIns== "CMP") {
+      if ((modeAdr == "00") && dest == "1" && format == "0") {
+        this. cmpDirect(code,param1,param2); 
+        return cpt+1 ;}
+      if ((modeAdr == "01") && dest == "1" && format == "0") {
+        this.cmpIndiret(code,param1,param2); 
+        return cpt+1 ;}
+
+    }
+    else if(codeIns== "CMPI") {
+      if ((modeAdr == "00") && dest == "1" && format == "1") {
+        this.cmpImm(code,param1,instrTab,cpt); 
+        return cpt+2 ;}
     }
     else if ((modeAdr == "00") && dest == "1" && format == "0") {
       this.directCourtDist(codeIns,param1,param2) ; 
@@ -84,7 +102,16 @@ class UAL {
     this.BaseIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ;
    }
    return cpt+2 ; 
+  } else if(modeAdr == "11" && format == "1") {
+    if(dest == "1") {
+      this.directIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
+   }else{
+    this.directIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
+   }
+   return cpt+3 ; 
+    
   }
+
   }; 
 
   
@@ -402,9 +429,99 @@ class UAL {
       }
       dataTab[i].setVal(main.ACC.getContenu()) ; 
     } // Fin Mode BaseIndexe format Long  distination =0
+    // Mode direct indexe format Long  distination =0
+    directIndexeLongNonDest = function(code,param1,param2,dataTab,instrTab,cpt) {
+      let m = instrTab[cpt+1].getVal() ; 
+      
+      let n=0 ;
+      
+      switch (param2) {
+        case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
+      }
+
+      let adretiq = instrTab[cpt+2].getVal() ; 
+      let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
+      console.log(m); 
+      i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16);   
+      m=dataTab[i].getVal() ;  
+      switch (param1) {
+        case "000": n = main.AX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "001": n = main.BX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "010": n = main.CX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "011": n = main.DX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "100": n = main.EX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "101": n = main.FX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "110": n = main.SI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "111": n = main.DI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+      }
+      dataTab[i].setVal(main.ACC.getContenu()) ; 
+    } // FIN  Mode direct indexe format Long  distination =0
+
+    // Mode direct indexe format Long  distination =1
+
+    directIndexeLongDest = function(code,param1,param2,dataTab,instrTab,cpt) {
+      let n = instrTab[cpt+1].getVal() ; 
+      let m=0 ; 
+      let i=0 ; 
+      switch (param2) {
+        case "001":
+          main.ACC.setContenu(main.BX.getContenu());  m=util.additionHexa(n,main.BX.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+        case "110":
+          main.ACC.setContenu(main.SI.getContenu());  m=util.additionHexa(n,main.SI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+        case "111":
+          main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+      }
+      
+      let adretiq = instrTab[cpt+2].getVal() ; 
+      i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
+      console.log(m); 
+      i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16);   
+      m=dataTab[i].getVal() ;   
+      switch (param1) {
+        case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
+          break;
+        case "001": n = main.BX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.BX.setContenu(main.ACC.getContenu());
+          break;
+        case "010": n = main.CX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.CX.setContenu(main.ACC.getContenu());
+          break;
+        case "011": n = main.DX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DX.setContenu(main.ACC.getContenu());
+          break;
+        case "100": n = main.EX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.EX.setContenu(main.ACC.getContenu());
+          break;
+        case "101": n = main.FX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.FX.setContenu(main.ACC.getContenu());
+          break;
+        case "110": n = main.SI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.SI.setContenu(main.ACC.getContenu());
+          break;
+        case "111": n = main.DI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DI.setContenu(main.ACC.getContenu());
+          break;
+      }
+
+    }  // FIN Mode direct indexe format Long  distination =1
+    
+
+
     //Mode immediate direct  format Long  distination =1
     immediaDirectLongDest = function(code,param1,instrTab,cpt) {
-      let m = instrTab[cpt+1].getVal() ;
+      let m=0 ; 
+      if(code == "INC"){
+        m=1 ; 
+        code ="ADDI"
+      }else if(code == "DEC"){
+        m=1 ; 
+        code ="SUBI"
+      }
+      else{
+       m = instrTab[cpt+1].getVal() ;}
       let n=0 ;
       switch (param1) {
         case "000":
@@ -603,7 +720,7 @@ class UAL {
     }
   } //JMP 
    //  comparaison direct 
-  cmpDirect = function (code,param1,param2,indicateurTab,cpt) {
+  cmpDirect = function (code,param1,param2) {
    let m=0 ;
     switch (param2) {
       case "000":
@@ -635,46 +752,133 @@ class UAL {
       case "000":
         n = main.AX.getContenu();
         main.ACC.setContenu(n);
-        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        main.ACC.setContenu(this.operation("SUB",n,m));
         break;
       case "001":
         n = main.BX.getContenu();
         main.ACC.setContenu(n);
-        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        main.ACC.setContenu(this.operation("SUB",n,m));
         break;
       case "010":
         n = main.CX.getContenu();
         main.ACC.setContenu(n);
-        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        main.ACC.setContenu(this.operation("SUB",n,m));
         break;
       case "011":
         n = main.DX.getContenu();
         main.ACC.setContenu(n);
-        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        main.ACC.setContenu(this.operation("SUB",n,m));
         break;
       case "100":
         n = main.EX.getContenu();
         main.ACC.setContenu(n);
-        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        main.ACC.setContenu(this.operation("SUB",n,m));
         break;
       case "101":
         n = main.FX.getContenu();
         main.ACC.setContenu(n);
-        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        main.ACC.setContenu(this.operation("SUB",n,m));
         break;
       case "110":
         n = main.SI.getContenu();
         main.ACC.setContenu(n);
-        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        main.ACC.setContenu(this.operation("SUB",n,m));
         break;
       case "111":
         n = main.DI.getContenu();
         main.ACC.setContenu(n);
-        this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+        main.ACC.setContenu(this.operation("SUB",n,m)); 
         break;
     }
+    if(this.operation(code,n,m)>0) {
+      main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+    }else if(this.operation(code,n,m)<0) {
+      main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
+    }
+    else { 
+      main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+      main.setIndicateurDebord("0"); 
+    }
+
       
   }  // FIN   comparaison direct
+
+
+
+  cmpIndiret = function (code,param1,param2) {
+    let m=0 ;
+     
+    switch (param2) {
+      case "001":
+        i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+         m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+         m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
+       break;
+      case "110": 
+      i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+      m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+      m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
+      break ; 
+      case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+      m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+      m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m); break ; 
+    } 
+
+     switch (param1) {
+       case "000":
+         n = main.AX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "001":
+         n = main.BX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "010":
+         n = main.CX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "011":
+         n = main.DX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "100":
+         n = main.EX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "101":
+         n = main.FX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "110":
+         n = main.SI.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "111":
+         n = main.DI.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m)); 
+         break;
+     }
+     if(this.operation(code,n,m)>0) {
+       main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+     }else if(this.operation(code,n,m)<0) {
+       main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
+     }
+     else { 
+       main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+       main.setIndicateurDebord("0"); 
+     }
+ 
+       
+   } 
+
 
    //  comparaison Imm
   cmpImm = function (code,param1,instrTab,cpt) {
@@ -683,44 +887,53 @@ class UAL {
        case "000":
          n = main.AX.getContenu();
          main.ACC.setContenu(n);
-         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "001":
          n = main.BX.getContenu();
          main.ACC.setContenu(n);
-         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "010":
          n = main.CX.getContenu();
          main.ACC.setContenu(n);
-         this.mettreAjourIndicateur(this.operation(code,n,m),code) ; 
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "011":
          n = main.DX.getContenu();
          main.ACC.setContenu(n);
-         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "100":
          n = main.EX.getContenu();
          main.ACC.setContenu(n);
-         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         main.ACC.setContenu(this.operation("SUB",n,m)); 
          break;
        case "101":
          n = main.FX.getContenu();
          main.ACC.setContenu(n);
-         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "110":
          n = main.SI.getContenu();
          main.ACC.setContenu(n);
-         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "111":
          n = main.DI.getContenu();
          main.ACC.setContenu(n);
-         this.mettreAjourIndicateur(this.operation(code,n,m)) ; 
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
      }
+     if(this.operation(code,n,m)>0) {
+      main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+    }else if(this.operation(code,n,m)<0) {
+      main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
+    }
+    else { 
+      main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+      main.setIndicateurDebord("0"); 
+    }
        
    } //  DIN comparaison Imm
    // mettre a jour les indicateurs          
@@ -746,7 +959,7 @@ class UAL {
         break;
         case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; this.mettreAjourIndicateur(res);  break;
         case "SUBA": ins = "000100"; this.mettreAjourIndicateur(res); break; 
-        case "CMP": ins = "000101";  this.mettreAjourIndicateur(res); break;
+        case "CMP": util.compareHexValues(n,m) ; this.mettreAjourIndicateur(res); break;
         case "OR": res=util.remplirZero(util.OrHex(n,m),4,0) ; this.mettreAjourIndicateur(res); break;
         case "AND": res=util.remplirZero(util.AndHex(n,m),4,0) ; this.mettreAjourIndicateur(res);  break; 
         case "SHR": res=util.remplirZero(util.decalageLogiqueHexadecDroit(n,m),4,0); this.mettreAjourIndicateur(res);   break; 

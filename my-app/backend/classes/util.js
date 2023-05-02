@@ -139,7 +139,25 @@ SoustractionHex: function(n,m) {
     decimalResult &= 0xFFFF;
     const hexResult = decimalResult.toString(16);
     return hexResult;
-},
+}, 
+
+/*SoustractionHex: function (n, m) {
+  // Convertit n et m en nombres décimaux
+  const decimalA = parseInt(n, 16);
+  const decimalB = parseInt(m, 16);
+  
+  // Effectue la soustraction
+  let decimalResult = decimalA - decimalB;
+  
+  // Si le résultat est négatif, ajoute 2^32 pour obtenir une représentation correcte en hexadécimal
+  if (decimalResult < 0) {
+    decimalResult += 4294967296; // 2^32
+  }
+  
+  // Convertit le résultat en hexadécimal et le renvoie sous forme de chaîne de caractères
+  const hexResult = decimalResult.toString(16);
+  return hexResult;
+}, */
 
 AndHex: function(n, m) {
   const decimalN = parseInt(n, 16);
@@ -173,6 +191,7 @@ return resultat.toString(16); // conversion du résultat en hexadécimal
 decalageLogiqueHexadecGauche: function(hexa, n) {
 let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
 let resultat = decimal << n; // décalage logique de n positions vers la gauche
+//main.setIndicateurRetenue(decimal)
 return resultat.toString(16); // conversion du résultat en hexadécimal
 },
 

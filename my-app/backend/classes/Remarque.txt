@@ -15,8 +15,3 @@ autre remarque :
 - faudrait verifier que les valeurs ecrites soient en hexadecimal (ie: s'il ecrit par ex MOVI AX, RTT8H cela doit signaler une erreur)
 
 
-1010 
-D = 1
-R = 0
-S =1 
-Z =0
