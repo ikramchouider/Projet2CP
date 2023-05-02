@@ -60,8 +60,54 @@ var util = {
   
   // faire l'addition en hexadecemal 
   additionHexa: function (x, y) {
-    return (parseInt(x, 16) + parseInt(y, 16)).toString(16).toUpperCase();
-  },// fin  additionHexa
+
+  //conversion en hexadecimal
+  let x1bin = util.hexEnBinaire(x1) ;
+  let x2bin = util.hexEnBinaire(x2) ;
+
+  let carry = 0;
+  let result = '';
+  
+  // Add digits from right to left
+  for (let i = x1bin.length - 1; i >= 0; i--) {
+    let digit1 = parseInt(x1bin.charAt(i));
+    let digit2 = parseInt(x2bin.charAt(i));
+    let sum = digit1 + digit2 + carry;
+    
+    if (sum > 1) {
+      sum -= 2;
+      carry = 1;
+    } else {
+      carry = 0;
+    }
+    result = sum + result;
+  }
+  
+  // Add final carry bit, if there is one
+  if (carry) {
+    result = carry + result;
+  }
+  
+  result = this.binaryToHex(result) ;
+
+  if ((util.hexSigne(util.remplirZero(x1,4,0))=="-1")&&(util.hexSigne(util.remplirZero(x2,4,0))=="-1")&&(util.hexSigne(util.remplirZero(result.slice(-4),4,0))=="1")) 
+  {main.setIndicateurDebord("1"); console.log("Debord:"+ "1");} 
+  else if ((util.hexSigne(util.remplirZero(x1,4,0))=="1")&&(util.hexSigne(util.remplirZero(x2,4,0))=="1")&&(util.hexSigne(util.remplirZero(result.slice(-4),4,0))=="-1"))
+  {main.setIndicateurDebord("1"); console.log("Debord:"+ "1");}
+  else {main.setIndicateurDebord("0"); console.log("Debord:"+ "0");}
+
+  if(carry==0){main.setIndicateurRetenue("1");}
+  else {main.setIndicateurRetenue("0");}
+
+  if (this.hexEnBinaire(result.slice(-4))[0]=="1"){main.setIndicateurSigne("1");}
+  else{main.setIndicateurSigne("0");}
+
+  console.log("Retenue:"+ carry);
+  console.log("Signe:"+ this.hexEnBinaire(result.slice(-4))[0]);
+  
+
+  return result;
+   },// fin  additionHexa
 
 
   getSubstringBetweenChars: function (str, startChar, endChar) {
