@@ -142,6 +142,17 @@ if (resultat.length>4) {main.setIndicateurRetenue("1"); return ;}
 else {main.setIndicateurRetenue("0"); return ;}
 },
 
+/**
+ * elle place les indicateurs di signe et zero selon le contenu de l'accumulateur qui est en hexa
+ * @param {1} contenuAcc le contenu de l'accumulateur en hexadecimal
+ */
+setIndicateursAccumulateur: function(contenuAcc) {
+let contenuAccBin = util.hexEnBinaire(contenuAcc) ;
+if (contenuAccBin[0]=="1") {main.setIndicateurSigne("1");}
+else {main.setIndicateurSigne("0");}
+if (contenuAcc=="0000"){main.setIndicateurZero("1");}
+else {main.setIndicateurZero("0");}
+},
 
 getSubstringBetweenChars: function (str, startChar, endChar) {
     let startIndex = str.indexOf(startChar);
@@ -265,24 +276,6 @@ let twosComplement = (negation >>> 0).toString(2).padStart(16, '0');
   
 return twosComplement;  
 },
-
-/*SoustractionHex: function (n, m) {
-  // Convertit n et m en nombres décimaux
-  const decimalA = parseInt(n, 16);
-  const decimalB = parseInt(m, 16);
-  
-  // Effectue la soustraction
-  let decimalResult = decimalA - decimalB;
-  
-  // Si le résultat est négatif, ajoute 2^32 pour obtenir une représentation correcte en hexadécimal
-  if (decimalResult < 0) {
-    decimalResult += 4294967296; // 2^32
-  }
-  
-  // Convertit le résultat en hexadécimal et le renvoie sous forme de chaîne de caractères
-  const hexResult = decimalResult.toString(16);
-  return hexResult;
-}, */
 
 AndHex: function(n, m) {
   const decimalN = parseInt(n, 16);
