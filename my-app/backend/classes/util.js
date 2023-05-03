@@ -130,7 +130,7 @@ x2 = util.remplirZero(x2,4,0) ;
 let x1bin = util.hexEnBinaire(x1) ;
 let x2bin = util.hexEnBinaire(x2) ;
 let resultat = (this.additionHexa(x1,x2)).slice(-4) ; //slice(-4) car on doit comparer avec le premier bit du resultat ecrit sur 16bits
-resultat = util.hexEnBinaire(resultat) ;
+resultat = util.remplirZero((util.hexEnBinaire(resultat)),16,0) ;
 if ((x1bin[0]=="1")&&(x2bin[0]=="1")&&(resultat[0]=="0")) {main.setIndicateurDebord("1") ; return ;}
 else if ((x1bin[0]=="0")&&(x2bin[0]=="0")&&(resultat[0]=="1")) {main.setIndicateurDebord("1"); return ;}
 else {main.setIndicateurDebord("0"); return ;}

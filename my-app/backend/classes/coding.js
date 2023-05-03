@@ -44,8 +44,9 @@ var coding = {
           if (strLigne[1].indexOf("[") != -1) {
             adr = util.incrementHex(adr, 1);
             instrTab.push(
-              new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 1), "") // remplir 0 remplirZero
+              new CaseMc(adr, strLigne[1].slice(1, strLigne[1].length - 2), "") // remplir 0 remplirZero
             );
+            console.log("val=  "+strLigne[1].slice(1, strLigne[1].length - 1));
           } else {
             let indice = util.chercherDansTableau(dataTab, strLigne[1]);
             adr = util.incrementHex(adr, 1);

@@ -15,3 +15,6 @@ autre remarque :
 - faudrait verifier que les valeurs ecrites soient en hexadecimal (ie: s'il ecrit par ex MOVI AX, RTT8H cela doit signaler une erreur)
 
 
+-LIGNES A OIR: ual: 724 -> doit on ajouter if(i==dataTab.length) {dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
+                    771, 886, 890, 893, 1014
+
