@@ -57,6 +57,7 @@ class UAL {
     }
     else if(codeIns== "ADAI" || codeIns== "SBAI" ||  codeIns== "LOADI"){
   main.ACC.setContenu(this.operation(codeIns,main.ACC.getContenu(),instrTab[cpt+1].getVal())) ; 
+
     }
     else if(codeIns[codeIns.length-1] == "I"  || codeIns=="INC" || codeIns=="DEC" ){
     if((modeAdr == "00") && dest == "1"  ){
@@ -1009,15 +1010,14 @@ class UAL {
         util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
         break;
         case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ;
-         break;
-        case "SUBA": ins = "000100"; this.mettreAjourIndicateur(res); break; 
-        case "CMP": res=util.compareHexValues(n,m) ;  break;
-        case "OR": res=util.remplirZero(util.OrHex(n,m),4,0) ; this.mettreAjourIndicateur(res); break;
-        case "AND": res=util.remplirZero(util.AndHex(n,m),4,0) ; this.mettreAjourIndicateur(res);  break; 
-        case "SHR": res=util.remplirZero(util.decalageLogiqueHexadecDroit(n,m),4,0);    break; 
-        case "SHL": res=util.remplirZero(util.decalageLogiqueHexadecGauche(n,m),4,0);    break; 
-        case "ROL": res=rotationHexadecimal("ROL",n,m);   break;
-        case "ROR": res=rotationHexadecimal("ROR",n,m);   break;
+        break;
+        case "CMP": res=util.compareHexValues(n,m) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "OR": res=util.remplirZero(util.OrHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "AND": res=util.remplirZero(util.AndHex(n,m),4,0) ;  util.setIndicateursAccumulateur(res.slice(-4)); break; 
+        case "SHR": res=util.remplirZero(util.decalageLogiqueHexadecDroit(n,m),4,0); util.setIndicateursAccumulateur(res.slice(-4));   break; 
+        case "SHL": res=util.remplirZero(util.decalageLogiqueHexadecGauche(n,m),4,0); util.setIndicateursAccumulateur(res.slice(-4));   break; 
+        case "ROL": res=rotationHexadecimal("ROL",n,m); util.setIndicateursAccumulateur(res.slice(-4));   break;
+        case "ROR": res=rotationHexadecimal("ROR",n,m); util.setIndicateursAccumulateur(res.slice(-4));  break;
         case "JZ": ins = "001100"; this.mettreAjourIndicateur(res); break;
         case "JNZ": ins = "001101"; this.mettreAjourIndicateur(res); break;
         case "JC": ins = "001110"; this.mettreAjourIndicateur(res); break;
@@ -1028,7 +1028,7 @@ class UAL {
         case "JNO": ins = "010011"; this.mettreAjourIndicateur(res);  break;
         case "JE": ins = "010100"; this.mettreAjourIndicateur(res); break;
         case "JNE": ins = "010101"; this.mettreAjourIndicateur(res); break;
-        case "LOAD": res= util.remplirZero(m,4,0) ; break;
+        case "LOAD": res= util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
         case "STORE": ins = "010111"; this.mettreAjourIndicateur(res); break;
         case "INC": ins = "011000";  this.mettreAjourIndicateur(res); break;
         case "DEC": ins = "011001";  this.mettreAjourIndicateur(res);break;
@@ -1038,17 +1038,23 @@ class UAL {
         case "OUT": ins = "011101"; break;
         case "START": ins = "011111"; break;
         case "STOP": ins = "011110"; break;
-        case "MOVI": res=util.remplirZero(m,4,0); break;
-        case "ADDI": res=util.remplirZero(util.additionHexa(n,m),4,0); this.mettreAjourIndicateur(res); break;
-        case "ADAI": res=util.remplirZero(util.additionHexa(n,m),4,0); this.mettreAjourIndicateur(res);  break;
-        case "ADA": res=util.remplirZero(util.additionHexa(n,m),4,0) ; this.mettreAjourIndicateur(res);  break ; 
-        case "SUBI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; this.mettreAjourIndicateur(res); break;
-        case "SBA": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; this.mettreAjourIndicateur(res); break ;
-        case "SBAI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; this.mettreAjourIndicateur(res); break;
-        case "CMPI": ins = "100101"; this.mettreAjourIndicateur(res); break;
-        case "ORI": ins = "100110"; this.mettreAjourIndicateur(res); break;
-        case "ANDI": ins = "100111"; this.mettreAjourIndicateur(res);  break;
-        case "LOADI": res= util.remplirZero(m,4,0) ; break;
+        case "MOVI": res=util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "ADDI": res=util.remplirZero(util.additionHexa(n,m),4,0); 
+        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
+        break;
+        case "ADAI": res=util.remplirZero(util.additionHexa(n,m),4,0); 
+        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
+        break;
+        case "ADA": res=util.remplirZero(util.additionHexa(n,m),4,0) ;  
+        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
+        break; 
+        case "SUBI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
+        case "SBA": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break ;
+        case "SBAI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
+        case "CMPI": res=util.compareHexValues(n,m) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "ORI": res=util.remplirZero(util.OrHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "ANDI":res=util.remplirZero(util.AndHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "LOADI": res= util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
         default: ins= "-1"; break;
       }
       return res.slice(-4);
