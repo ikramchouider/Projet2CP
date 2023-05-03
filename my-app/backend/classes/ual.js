@@ -19,7 +19,9 @@ class UAL {
     if(codeIns[0]== "J") {
       return this.jmp(codeIns,indicateurTab,cpt)  ; 
     }
-    
+    else if(codeIns == "STORE") {
+      this.store(cpt) ; 
+     }
     else if(codeIns== "CMP") {
       if ((modeAdr == "00") && dest == "1" && format == "0") {
         this.cmpDirect(codeIns,param1,param2); 
@@ -34,7 +36,7 @@ class UAL {
         this.cmpImm(codeIns,param1,instrTab,cpt); 
         return cpt+2 ;}
     }
-    else if(codeIns== "SHR" || codeIns== "SHL" ) {
+    else if(codeIns== "SHR" || codeIns== "SHL" || codeIns== "ROR" || codeIns== "ROL" ) {
       this.decalageRotationLogique(codeIns,param1,instrTab,cpt) ; 
       return cpt+2 ; 
     }
@@ -577,7 +579,7 @@ class UAL {
      //Mode immediate direct  format Long  distination =0
     immediaDirectLongNonDest = function(code,instrTab,cpt) {
       let m = instrTab[cpt+1].getVal() ;
-      let i = util.chercherAdr(main.getDataTab(),m.slice(0,m.length-1)) ;
+      let i = util.chercherAdr(main.getDataTab(),m.slice(1)) ;
       m=main.getDataTab()[i].getVal() ;
       main.ACC.setContenu(m);
       let n= instrTab[cpt+2].getVal() ; ; 
@@ -744,28 +746,28 @@ class UAL {
       console.log(main.getIndicateurRetenue());
     }   //  FIN decalage / Rotation Logique
      // JMP 
-    jmp = function (code,indicateurTab,cpt) {
-        let i = util.chercherDansTableau(main.getinstrTab(),main.getinstrTab()[cpt+1].getVal()) ; 
-    //  let i = util.chercherAdr(dataTab,(instrTab[cpt+1].getVal()).slice(1)) ;
-      switch ( code.toUpperCase())  {
-      case "JMP": return i; //dataTab[i].getVal()  
-      case "JZ": if(indicateurTab[0] == 1)
-          return dataTab[i].getVal() ; else return cpt+2 ; 
-      case "JNZ": if(indicateurTab[0] != 1)
-      return dataTab[i].getVal() ; else return cpt+2 ;
-      case "JC": if(indicateurTab[2] == 1)
-      return dataTab[i].getVal() ; else return cpt+2 ; 
-      case "JNC": if(indicateurTab[2] == 1) 
-      return dataTab[i].getVal() ; else return cpt+2 ; 
+     jmp = function (code,indicateurTab,cpt) {
+      let i = main.getinstrTab()[cpt+1].getVal() ; 
+      i= util.chercherAdr(main.getinstrTab(),i.slice(1)) ; 
+    switch ( code.toUpperCase())  {
+    case "JMP": return i;   
+    case "JZ": if( main.getIndicateurZero() == "1")
+        return i; else return cpt+2 ; 
+    case "JNZ": if(main.getIndicateurZero() != "1")
+    return i; else return cpt+2 ;
+    case "JC": if(main.getIndicateurRetenue() == "1")
+    return i; else return cpt+2 ; 
+    case "JNC": if(main.getIndicateurRetenue() != "1") 
+    return i; else return cpt+2 ; 
 
-      case "JS": if(indicateurTab[1] == 1) return dataTab[i].getVal() ; else return cpt+2 ;
-      case "JNS": if(indicateurTab[1] != 1)  return dataTab[i].getVal() ; else return cpt+2 ;
-      case "JO": if(indicateurTab[3] == 1)  return dataTab[i].getVal() ; else return cpt+2 ;
-      case "JNO": if(indicateurTab[3] != 1)  return dataTab[i].getVal() ; else return cpt+2 ;
-      case "JE":   break;
-      case "JNE":  break;
-    }
-  } //JMP 
+    case "JS": if(main.getIndicateurSigne() == "1") return i; else return cpt+2 ;
+    case "JNS": if(main.getIndicateurSigne() != "1")  return i; else return cpt+2 ;
+    case "JO": if(main.getIndicateurDebord() == "1")  return i; else return cpt+2 ;
+    case "JNO": if(main.getIndicateurDebord() != "1")  return i ; else return cpt+2 ;
+    case "JE": if(main.getIndicateurZero() == "1" )  return i ; else return cpt+2 ; 
+    case "JNE": if(main.getIndicateurZero() != "1" ) return i ; else return cpt+2 ;  
+  }
+} //JMP 
    //  comparaison direct 
   cmpDirect = function (code,param1,param2) {
    let m=0 ;
@@ -986,6 +988,29 @@ class UAL {
     }
        
    } //  DIN comparaison Imm
+
+   store = function(cpt) {
+    let i = main.getinstrTab()[cpt+1].getVal() ; 
+    i= util.chercherAdr(main.getDataTab(),i.slice(1)) ; 
+    main.getDataTab()[i].setVal(main.ACC.getContenu())  ; 
+   } 
+
+   NotDirect = function(code,param1) {
+    let m = 0 ; 
+    let n = 0;   
+    switch (param1) { 
+      case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu()); break;
+      case "001": m = main.BX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.BX.setContenu(main.ACC.getContenu()); break;
+      case "010": m = main.CX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.CX.setContenu(main.ACC.getContenu()); break;
+      case "011": m = main.DX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.DX.setContenu(main.ACC.getContenu()); break;
+      case "100": m = main.EX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.EX.setContenu(main.ACC.getContenu()); break;
+      case "101": m = main.FX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.FX.setContenu(main.ACC.getContenu()); break;
+      case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.SI.setContenu(main.ACC.getContenu()); break;
+      case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.DI.setContenu(main.ACC.getContenu()); break;
+
+  }
+   }
+
    // mettre a jour les indicateurs          
    mettreAjourIndicateur = function(val) {   
     let binaryRes = (util.remplirZero(util.hexEnBinaire(val),16,0)).slice(-16) ;
@@ -1032,7 +1057,7 @@ class UAL {
         case "STORE": ins = "010111"; this.mettreAjourIndicateur(res); break;
         case "INC": ins = "011000";  this.mettreAjourIndicateur(res); break;
         case "DEC": ins = "011001";  this.mettreAjourIndicateur(res);break;
-        case "NOT": ins = "011010"; this.mettreAjourIndicateur(res); break;
+        case "NOT":  res= util.remplirZero(util.NotHex(n),4,0) ;  break;
         case "JMP": ins = "011011"; this.mettreAjourIndicateur(res); break;
         case "IN": ins = "011100"; this.mettreAjourIndicateur(res); break;
         case "OUT": ins = "011101"; break;
