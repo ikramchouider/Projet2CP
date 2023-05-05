@@ -391,12 +391,18 @@ function selectElement(Element, delay ,string) {
 }
 var co = document.getElementById("CO");
 var ram = document.getElementById("RAM");
+var acc = document.getElementById("ACC");
 var rim = document.getElementById("Rimcontent");
 var ri = document.getElementById("RI");
+var ual1=document.getElementById("EUAL1");
+var ual2=document.getElementById("EUAL2");
+var ax=document.getElementById("AX");
+var bx=document.getElementById("BX");
+var cx=document.getElementById("CX");
+var dx=document.getElementById("DX");
 var caseMemoire = document.getElementById("caseMemoire");
-let instTAB = ['AAAA',1,2,3,4];
-function premierePhase(adr){
-  var delay = 0;
+let instTAB = ['00000001000001',1,2,3,4];
+function premierePhase(adr,delay){
 
        selectElement(co, delay , adr);
        //delay += 3000; 
@@ -411,12 +417,17 @@ function premierePhase(adr){
        selectElement(rim,delay,instTAB[adr-100]);
        //delay+=3000;
        selectElement(dataRIMel,delay,0);
+       return delay ;
   
 } 
+let addinstel= document.getElementById("addinst");
+let d=0;
 function simulation(){
   var co = document.getElementById("CO");
   var ram = document.getElementById("RAM");
-  premierePhase(100);
+  d=premierePhase(100,d);
+  d=d+3000;
+  deuxiemePhase(d);
 
 
 

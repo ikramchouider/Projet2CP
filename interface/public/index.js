@@ -1382,7 +1382,7 @@ class UAL {
     this.#eUal2 = eUal2;
   }
   
-  opeRation = function (codeIns,dataTab,indicateurTab,instrTab,modeAdr,cpt, dest, format, param1, param2) {
+  opeRation = function (codeIns,dataTab,indicateurTab,instrTab,modeAdr,cpt, dest, format, param1, param2,delay) {
     //addition registre registre et le resultat sera dans reg1 000000 00 0 1 REG1   REG2
     let somme = 0;
     let n = 0;
@@ -1457,7 +1457,8 @@ class UAL {
     }
     }
     else if ((modeAdr == "00") && dest == "1" && format == "0") {
-      this.directCourtDist(codeIns,param1,param2) ; 
+      delay+=3000;
+      this.directCourtDist(codeIns,param1,param2,delay) ; 
       return cpt+1 ;
 
     } 
@@ -1498,7 +1499,7 @@ class UAL {
 
   
   // Mode direct format court distination =1 
-  directCourtDist = function(code,param1,param2) {
+  directCourtDist = function(code,param1,param2,delay) {
     let n = 0;
     let m = 0;
     let i=0 ; 
@@ -1510,59 +1511,475 @@ class UAL {
         case "100":  m = main.EX.getContenu(); break;
         case "101":  m = main.FX.getContenu(); break;
         case "110":  m = main.SI.getContenu(); break;
-        case "111": m = main.DI.getContenu();  break;
+        case "111":  m = main.DI.getContenu(); break;
       }
+      selectElement(dataREG1el,delay,0);
+      delay+=3000;
+      selectElement(dataC1el,delay,0);
+      delay+=3000;
+      selectElement(dataC2el,delay,0);
+      delay+=3000;
+      selectElement(dataC3el,delay,0);
+      delay+=3000;
       switch (param1) {
         case "000":
           n = main.AX.getContenu();
+          selectElement(ax,delay,n);
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(dataEUAL1el,delay,0);
+          delay+=3000;
+          selectElement(ual1,delay,n);
+          delay+=3000;
+          selectElement(acc,delay,n);
           main.ACC.setContenu(n);
           this.mettreAjourIndicateur(main.ACC.getContenu()) ;
+          selectElement(dataREG2el,delay,0);
+          delay+=3000;
+          selectElement(dataC1el,delay,0);
+          delay+=3000;
+          selectElement(dataC2el,delay,0);
+          delay+=3000;
+          selectElement(dataC3el,delay,0);
+          delay+=3000;
+          switch (param2) {
+              case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = main.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = main.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = main.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = main.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = main.DI.getContenu(); selectElement(di,delay,m); break;
+            }
+            selectElement(dataREGel,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual2,delay,n);
+            delay+=3000;
+            selectElement(acc,delay,n);
+            delay+=3000;
+            selectElement(dataC5el,delay,0);
+            delay+=3000;
+            selectElement(dataC4el,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
+          selectElement(acc,delay,this.operation(code,n,m));
+          delay+=3000;
+          selectElement(dataC5el,delay,0);
+          delay+=3000;
+          selectElement(dataC4el,delay,0);
+          delay+=3000;
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(ax,delay,this.operation(code,n,m));
           main.AX.setContenu(main.ACC.getContenu());
           break;
         case "001":
           n = main.BX.getContenu();
+          selectElement(bx,delay,n);
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(dataEUAL1el,delay,0);
+          delay+=3000;
+          selectElement(ual1,delay,n);
+          delay+=3000;
+          selectElement(acc,delay,n);
           main.ACC.setContenu(n);
+          this.mettreAjourIndicateur(main.ACC.getContenu()) ;
+          selectElement(dataREG2el,delay,0);
+          delay+=3000;
+          selectElement(dataC1el,delay,0);
+          delay+=3000;
+          selectElement(dataC2el,delay,0);
+          delay+=3000;
+          selectElement(dataC3el,delay,0);
+          delay+=3000;
+          switch (param2) {
+              case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = main.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = main.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = main.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = main.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = main.DI.getContenu(); selectElement(di,delay,m); break;
+            }
+            selectElement(dataREGel,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual2,delay,n);
+            delay+=3000;
+            selectElement(acc,delay,n);
+            delay+=3000;
+            selectElement(dataC5el,delay,0);
+            delay+=3000;
+            selectElement(dataC4el,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
+          selectElement(acc,delay,this.operation(code,n,m));
+          delay+=3000;
+          selectElement(dataC5el,delay,0);
+          delay+=3000;
+          selectElement(dataC4el,delay,0);
+          delay+=3000;
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(bx,delay,this.operation(code,n,m));
           main.BX.setContenu(main.ACC.getContenu());
           break;
         case "010":
           n = main.CX.getContenu();
+          selectElement(cx,delay,n);
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(dataEUAL1el,delay,0);
+          delay+=3000;
+          selectElement(ual1,delay,n);
+          delay+=3000;
+          selectElement(acc,delay,n);
           main.ACC.setContenu(n);
+          this.mettreAjourIndicateur(main.ACC.getContenu()) ;
+          selectElement(dataREG2el,delay,0);
+          delay+=3000;
+          selectElement(dataC1el,delay,0);
+          delay+=3000;
+          selectElement(dataC2el,delay,0);
+          delay+=3000;
+          selectElement(dataC3el,delay,0);
+          delay+=3000;
+          switch (param2) {
+              case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = main.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = main.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = main.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = main.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = main.DI.getContenu(); selectElement(di,delay,m); break;
+            }
+            selectElement(dataREGel,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual2,delay,n);
+            delay+=3000;
+            selectElement(acc,delay,n);
+            delay+=3000;
+            selectElement(dataC5el,delay,0);
+            delay+=3000;
+            selectElement(dataC4el,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
+          selectElement(acc,delay,this.operation(code,n,m));
+          delay+=3000;
+          selectElement(dataC5el,delay,0);
+          delay+=3000;
+          selectElement(dataC4el,delay,0);
+          delay+=3000;
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(cx,delay,this.operation(code,n,m));
           main.CX.setContenu(main.ACC.getContenu());
           break;
         case "011":
           n = main.DX.getContenu();
+          selectElement(dx,delay,n);
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(dataEUAL1el,delay,0);
+          delay+=3000;
+          selectElement(ual1,delay,n);
+          delay+=3000;
+          selectElement(acc,delay,n);
           main.ACC.setContenu(n);
+          this.mettreAjourIndicateur(main.ACC.getContenu()) ;
+          selectElement(dataREG2el,delay,0);
+          delay+=3000;
+          selectElement(dataC1el,delay,0);
+          delay+=3000;
+          selectElement(dataC2el,delay,0);
+          delay+=3000;
+          selectElement(dataC3el,delay,0);
+          delay+=3000;
+          switch (param2) {
+              case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = main.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = main.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = main.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = main.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = main.DI.getContenu(); selectElement(di,delay,m); break;
+            }
+            selectElement(dataREGel,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual2,delay,n);
+            delay+=3000;
+            selectElement(acc,delay,n);
+            delay+=3000;
+            selectElement(dataC5el,delay,0);
+            delay+=3000;
+            selectElement(dataC4el,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
+          selectElement(acc,delay,this.operation(code,n,m));
+          delay+=3000;
+          selectElement(dataC5el,delay,0);
+          delay+=3000;
+          selectElement(dataC4el,delay,0);
+          delay+=3000;
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(dx,delay,this.operation(code,n,m));
           main.DX.setContenu(main.ACC.getContenu());
           break;
         case "100":
           n = main.EX.getContenu();
+          selectElement(ex,delay,n);
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(dataEUAL1el,delay,0);
+          delay+=3000;
+          selectElement(ual1,delay,n);
+          delay+=3000;
+          selectElement(acc,delay,n);
           main.ACC.setContenu(n);
+          this.mettreAjourIndicateur(main.ACC.getContenu()) ;
+          selectElement(dataREG2el,delay,0);
+          delay+=3000;
+          selectElement(dataC1el,delay,0);
+          delay+=3000;
+          selectElement(dataC2el,delay,0);
+          delay+=3000;
+          selectElement(dataC3el,delay,0);
+          delay+=3000;
+          switch (param2) {
+              case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = main.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = main.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = main.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = main.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = main.DI.getContenu(); selectElement(di,delay,m); break;
+            }
+            selectElement(dataREGel,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual2,delay,n);
+            delay+=3000;
+            selectElement(acc,delay,n);
+            delay+=3000;
+            selectElement(dataC5el,delay,0);
+            delay+=3000;
+            selectElement(dataC4el,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
+          selectElement(acc,delay,this.operation(code,n,m));
+          delay+=3000;
+          selectElement(dataC5el,delay,0);
+          delay+=3000;
+          selectElement(dataC4el,delay,0);
+          delay+=3000;
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(ex,delay,this.operation(code,n,m));
           main.EX.setContenu(main.ACC.getContenu());
           break;
         case "101":
           n = main.FX.getContenu();
+          selectElement(fx,delay,n);
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(dataEUAL1el,delay,0);
+          delay+=3000;
+          selectElement(ual1,delay,n);
+          delay+=3000;
+          selectElement(acc,delay,n);
           main.ACC.setContenu(n);
+          this.mettreAjourIndicateur(main.ACC.getContenu()) ;
+          selectElement(dataREG2el,delay,0);
+          delay+=3000;
+          selectElement(dataC1el,delay,0);
+          delay+=3000;
+          selectElement(dataC2el,delay,0);
+          delay+=3000;
+          selectElement(dataC3el,delay,0);
+          delay+=3000;
+          switch (param2) {
+              case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = main.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = main.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = main.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = main.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = main.DI.getContenu(); selectElement(di,delay,m); break;
+            }
+            selectElement(dataREGel,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual2,delay,n);
+            delay+=3000;
+            selectElement(acc,delay,n);
+            delay+=3000;
+            selectElement(dataC5el,delay,0);
+            delay+=3000;
+            selectElement(dataC4el,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
+          selectElement(acc,delay,this.operation(code,n,m));
+          delay+=3000;
+          selectElement(dataC5el,delay,0);
+          delay+=3000;
+          selectElement(dataC4el,delay,0);
+          delay+=3000;
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(fx,delay,this.operation(code,n,m));
           main.FX.setContenu(main.ACC.getContenu());
           break;
         case "110":
           n = main.SI.getContenu();
+          selectElement(si,delay,n);
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(dataEUAL1el,delay,0);
+          delay+=3000;
+          selectElement(ual1,delay,n);
+          delay+=3000;
+          selectElement(acc,delay,n);
           main.ACC.setContenu(n);
+          this.mettreAjourIndicateur(main.ACC.getContenu()) ;
+          selectElement(dataREG2el,delay,0);
+          delay+=3000;
+          selectElement(dataC1el,delay,0);
+          delay+=3000;
+          selectElement(dataC2el,delay,0);
+          delay+=3000;
+          selectElement(dataC3el,delay,0);
+          delay+=3000;
+          switch (param2) {
+              case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = main.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = main.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = main.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = main.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = main.DI.getContenu(); selectElement(di,delay,m); break;
+            }
+            selectElement(dataREGel,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual2,delay,n);
+            delay+=3000;
+            selectElement(acc,delay,n);
+            delay+=3000;
+            selectElement(dataC5el,delay,0);
+            delay+=3000;
+            selectElement(dataC4el,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
+          selectElement(acc,delay,this.operation(code,n,m));
+          delay+=3000;
+          selectElement(dataC5el,delay,0);
+          delay+=3000;
+          selectElement(dataC4el,delay,0);
+          delay+=3000;
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(si,delay,this.operation(code,n,m));
           main.SI.setContenu(main.ACC.getContenu());
           break;
         case "111":
           n = main.DI.getContenu();
+          selectElement(di,delay,n);
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(dataEUAL1el,delay,0);
+          delay+=3000;
+          selectElement(ual1,delay,n);
+          delay+=3000;
+          selectElement(acc,delay,n);
           main.ACC.setContenu(n);
+          this.mettreAjourIndicateur(main.ACC.getContenu()) ;
+          selectElement(dataREG2el,delay,0);
+          delay+=3000;
+          selectElement(dataC1el,delay,0);
+          delay+=3000;
+          selectElement(dataC2el,delay,0);
+          delay+=3000;
+          selectElement(dataC3el,delay,0);
+          delay+=3000;
+          switch (param2) {
+              case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = main.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = main.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = main.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = main.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = main.DI.getContenu(); selectElement(di,delay,m); break;
+            }
+            selectElement(dataREGel,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual2,delay,n);
+            delay+=3000;
+            selectElement(acc,delay,n);
+            delay+=3000;
+            selectElement(dataC5el,delay,0);
+            delay+=3000;
+            selectElement(dataC4el,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
+          selectElement(acc,delay,this.operation(code,n,m));
+          delay+=3000;
+          selectElement(dataC5el,delay,0);
+          delay+=3000;
+          selectElement(dataC4el,delay,0);
+          delay+=3000;
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(di,delay,this.operation(code,n,m));
           main.DI.setContenu(main.ACC.getContenu());
           break;
       }
+
 
     } // Finnnn Mode direct format court distination =1 
 
@@ -2513,9 +2930,7 @@ var main = {
   DI: new registre("DI", "0000"),
   CO: new registre("CO", "000"),
   ACC: new registre("ACC", "0000"),
-  ri: new RI(),
-
-  
+  ri: new RI(), 
   getinstrTab: function () {
     return this.instrTab;
   },
@@ -2602,6 +3017,7 @@ var main = {
     messageDiv.innerHTML = ""; 
     let indice = 0;
     let co;
+    let delay = 0;
     let adr = "";
     let lines = contents.split('\n');
     console.log(contents);
@@ -2619,6 +3035,7 @@ var main = {
       if (ligne_str[0] == "ORG") {
         if (ligne_str[1].indexOf("H") != -1) {
           adr = ligne_str[1].slice(0, ligne_str[1].length - 1);
+          delay = premierePhase(adr,delay);
         } 
         co = adr;
         this.setCO(co);
@@ -2663,9 +3080,9 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
     console.log("********************** ");
     messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";
 
+   delay +=3000;
 
-
-    this.Execute(main.getinstrTab());
+    this.Execute(main.getinstrTab(),delay);
 
     main.afficherRegistres() ;
     main.afficherRegistresHTML();
@@ -2673,14 +3090,14 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
     main.afficherIndicateurs() ;
     main.afficherIndicateursHTML();
 
-    console.log("***  Data Segment *** ");
+    console.log("***  Data Segment ***");
     messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  Data Segment *** </span></p>";
 
     for (let i = 0; i < this.getDataTab().length; i++){
       this.getDataTab()[i].afficher();
       this.getDataTab()[i].afficherHTML();}
 
-    console.log("********************** ");
+    console.log("**********************");
     messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";
     console.log(""); 
 
@@ -2689,108 +3106,145 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
 
 
 
-  Execute: function (instrTab) {
+  Execute: function (instrTab,delay) {
     let j = 0 ;
     let i = 0 ;
-    while (j < instrTab.length) {
-      let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
-      this.setRI(instrBin) ;
-      switch (this.getRI().getCOP()) {
-        case "000000": i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-        j = i ; break ;
-        case "100000": i = this.ual.opeRation("MOVI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-        j = i ; break ;
-        case "000001":
-        i = this.ual.opeRation("ADD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-        j=i ; break ;
-        case "000011":
-        i = this.ual.opeRation("SUB",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-        j=i ; break ;
-          case "000111":
-            i = this.ual.opeRation("AND",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-          case "000110":
-            i = this.ual.opeRation("OR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-          case "011010":
-            i = this.ual.opeRation("NOT",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-          case "100001":
-            i = this.ual.opeRation("ADDI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-          case "100011":
-            i = this.ual.opeRation("SUBI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-            case "001001":
-              i = this.ual.opeRation("SHL",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+      while (j < instrTab.length) {
+        let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
+        this.setRI(instrBin) ;
+        delay+=3000;
+        selectElement(ri,delay,instrBin);
+        delay+=3000;
+        switch (this.getRI().getCOP()) {
+          case "000000": 
+          selectElement(addinstel,delay,"MOV");
+          i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+          j = i ; break ;
+          case "100000": 
+          selectElement(addinstel,delay,"MOVI");
+          i = this.ual.opeRation("MOVI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+          j = i ; break ;
+          case "000001":
+            selectElement(addinstel,delay,"ADD");
+          i = this.ual.opeRation("ADD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+          j=i ; break ;
+          case "000011":
+            selectElement(addinstel,delay,"SUB");
+          i = this.ual.opeRation("SUB",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+          j=i ; break ;
+            case "000111":
+              selectElement(addinstel,delay,"AND");
+              i = this.ual.opeRation("AND",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
               j=i ; break ;
-            case "001000":
-              i = this.ual.opeRation("SHR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            case "000110":
+              selectElement(addinstel,delay,"OR");
+              i = this.ual.opeRation("OR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
               j=i ; break ;
-            case "100100":
-              i = this.ual.opeRation("SBAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            case "011010":
+              selectElement(addinstel,delay,"NOT");
+              i = this.ual.opeRation("NOT",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
               j=i ; break ;
-            case "011000":
-              i = this.ual.opeRation("INC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            case "100001":
+              selectElement(addinstel,delay,"ADDI");
+              i = this.ual.opeRation("ADDI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
               j=i ; break ;
-            case "011001":
-              i = this.ual.opeRation("DEC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            case "100011":
+              selectElement(addinstel,delay,"SUBI");
+              i = this.ual.opeRation("SUBI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
               j=i ; break ;
-            case "000101":
-              i = this.ual.opeRation("CMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "100101":
-              i = this.ual.opeRation("CMPI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "011011":
-              i = this.ual.opeRation("JMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "001100":
-              i = this.ual.opeRation("JZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ; 
-            case "001101":
-              i = this.ual.opeRation("JNZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "001110":
-              i = this.ual.opeRation("JC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "001111":
-              i = this.ual.opeRation("JNC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010000":
-              i = this.ual.opeRation("JS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010001":
-              i = this.ual.opeRation("JNS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010010":
-              i = this.ual.opeRation("JO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010011":
-              i = this.ual.opeRation("JNO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010100":
-              i = this.ual.opeRation("JE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010101":
-              i = this.ual.opeRation("JNE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010110":
-              i = this.ual.opeRation("LOAD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "110110":
-              i = this.ual.opeRation("LOADI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010111":
-              i = this.ual.opeRation("STORE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-          
-            default:
-              break ; 
-
-      }
+              case "001001":
+                selectElement(addinstel,delay,"SHL");
+                i = this.ual.opeRation("SHL",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "001000":
+                selectElement(addinstel,delay,"SHR");
+                i = this.ual.opeRation("SHR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "100100":
+                selectElement(addinstel,delay,"SBAI");
+                i = this.ual.opeRation("SBAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "011000":
+                selectElement(addinstel,delay,"INC");
+                i = this.ual.opeRation("INC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "011001":
+                selectElement(addinstel,delay,"DEC");
+                i = this.ual.opeRation("DEC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "000101":
+                selectElement(addinstel,delay,"CMP");
+                i = this.ual.opeRation("CMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "100101":
+                selectElement(addinstel,delay,"CMPI");
+                i = this.ual.opeRation("CMPI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "011011":
+                selectElement(addinstel,delay,"JMP");
+                i = this.ual.opeRation("JMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "001100":
+                selectElement(addinstel,delay,"JZ");
+                i = this.ual.opeRation("JZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ; 
+              case "001101":
+                selectElement(addinstel,delay,"JNZ");
+                i = this.ual.opeRation("JNZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "001110":
+                selectElement(addinstel,delay,"JC");
+                i = this.ual.opeRation("JC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "001111":
+                selectElement(addinstel,delay,"JNC");
+                i = this.ual.opeRation("JNC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "010000":
+                selectElement(addinstel,delay,"JS");
+                i = this.ual.opeRation("JS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "010001":
+                selectElement(addinstel,delay,"JNS");
+                i = this.ual.opeRation("JNS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "010010":
+                selectElement(addinstel,delay,"JO");
+                i = this.ual.opeRation("JO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "010011":
+                selectElement(addinstel,delay,"JNO");
+                i = this.ual.opeRation("JNO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "010100":
+                selectElement(addinstel,delay,"JE");
+                i = this.ual.opeRation("JE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "010101":
+                selectElement(addinstel,delay,"JNE");
+                i = this.ual.opeRation("JNE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "010110":
+                selectElement(addinstel,delay,"LOAD");
+                i = this.ual.opeRation("LOAD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "110110":
+                selectElement(addinstel,delay,"LOADI");
+                i = this.ual.opeRation("LOADI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+              case "010111":
+                selectElement(addinstel,delay,"");
+                i = this.ual.opeRation("STORE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+                j=i ; break ;
+            
+              default:
+                break ; 
+  
+        }
+        delay+=3000;
       //j++ ;
     }
+    return delay ;
     
   },
 
@@ -2955,7 +3409,6 @@ const dataC3el=  document.getElementById('dataC3');
 const dataC4el=  document.getElementById('dataC4');
 const dataC5el=  document.getElementById('dataC5');
 const dataDATAel=  document.getElementById('dataDATA');
-//const g2=document.getElementById('g2');
 function moveData(Bus){
   
     var computedStyle = window.getComputedStyle(Bus);
@@ -2984,12 +3437,26 @@ function selectElement(Element, delay ,string) {
 }
 var co = document.getElementById("CO");
 var ram = document.getElementById("RAM");
+var acc = document.getElementById("ACC");
 var rim = document.getElementById("Rimcontent");
 var ri = document.getElementById("RI");
+var ual1=document.getElementById("EUAL1");
+var ual2=document.getElementById("EUAL2");
+var ax=document.getElementById("AX");
+var bx=document.getElementById("BX");
+var cx=document.getElementById("CX");
+var dx=document.getElementById("DX");
+var ex=document.getElementById("EX");
+var fx=document.getElementById("FX");
+var si=document.getElementById("SI");
+var di=document.getElementById("DI");
+var z=document.getElementById("Z");
+var s=document.getElementById("S");
+var r=document.getElementById("R");
+var d=document.getElementById("D");
+var eual=document.getElementById("EUAL");
 var caseMemoire = document.getElementById("caseMemoire");
-let instTAB = ['AAAA',1,2,3,4];
-function premierePhase(adr){
-  var delay = 0;
+function premierePhase(adr,delay){
 
        selectElement(co, delay , adr);
        delay += 3000; 
@@ -3004,6 +3471,7 @@ function premierePhase(adr){
        selectElement(rim,delay,instTAB[adr-100]);
        delay+=3000;
        selectElement(dataRIMel,delay,0);
+       return delay;
   
 } 
 function simulation(){
