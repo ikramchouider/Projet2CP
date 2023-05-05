@@ -605,18 +605,18 @@ class UAL {
       switch (param1) {
         case "001":
           i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
-          if(i==dataTab.length) {dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
+          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
            m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
            m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
          break;
         case "110": 
         i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
-        if(i==dataTab.length) {dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
         m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
         m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
         break ; 
         case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
-        if(i==dataTab.length) {dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
         m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
         m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m); break ; 
       } 
@@ -631,7 +631,7 @@ class UAL {
         case "001": main.ACC.setContenu(main.BX.getContenu().slice(1));
           m = util.additionHexa(main.BX.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
           i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
-          if(i==dataTab.length) {dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
+          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
            m=main.dataTab[i].getVal() ; main.ACC.setContenu(m); 
            m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
          break;
@@ -639,14 +639,14 @@ class UAL {
         main.ACC.setContenu(main.SI.getContenu().slice(1));
         m = util.additionHexa(main.SI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
         i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
-        if(i==dataTab.length) {dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
          m=main.dataTab[i].getVal() ; main.ACC.setContenu(m);
          m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
         break ; 
         case "111": main.ACC.setContenu(main.DI.getContenu().slice(1));
         m = util.additionHexa(main.DI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
         i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
-        if(i==dataTab.length) {dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
          m=main.dataTab[i].getVal() ; main.ACC.setContenu(m); 
          m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
       } 

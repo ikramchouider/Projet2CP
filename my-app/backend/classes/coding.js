@@ -28,7 +28,7 @@ var coding = {
       instrTab.push(
         new CaseMc(adr,util.binaryToHex(coding.getCode(strLigne)),str)
       );
-      
+
       if(strLigne.length >2) {
         if(strLigne[0].toUpperCase() == "SHL" || strLigne[0].toUpperCase() == "SHR" || strLigne[0].toUpperCase() == "ROL" || strLigne[0].toUpperCase() == "ROR" ) {
           adr = util.incrementHex(adr, 1);
@@ -71,10 +71,13 @@ var coding = {
           );
         }
         else if (coding.modeAdr(strLigne) == "10" && coding.getDest(strLigne) == "0") {
+          let regEtDepl = strLigne[1].slice(1, strLigne[1].length - 1) ;
+          let depl = "";
+          if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
+              else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
           adr = util.incrementHex(adr, 1);
-          instrTab.push(
-            new CaseMc(adr,parseInt(util.getSubstringBetweenChars(strLigne[1], "+", "]")).toString(16 ),""));
-            adr = util.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+          adr = util.incrementHex(adr, 1);
             instrTab.push(
               new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
             );
@@ -240,7 +243,8 @@ var coding = {
           else if(this.regexi(str[1]) && !this.regexi(str[2]))
           {
             if(this.regexi(str[2].slice(1,str[2].length-1))) 
-            {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(str[2].slice(1,str[2].length-1)));}
+            {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(str[2].slice(1,str[2].length-1)));
+            }
             
             else if ((str[2].indexOf("[") != -1 ) && (str[2].indexOf("+") != -1)) {
               let modeAdr= this.modeAdr(str) ; 
