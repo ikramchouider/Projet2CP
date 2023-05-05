@@ -884,13 +884,16 @@ class UAL {
     switch (param2) {
       case "001":
         i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+        if(i==dataTab.length) {dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
          m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
        break;
       case "110": 
       i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+      if(i==dataTab.length) {dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
       m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
       break ; 
       case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+      if(i==dataTab.length) {dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
       m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
       break;
     } 
@@ -1012,7 +1015,7 @@ class UAL {
    store = function(cpt) {
     let i = main.getinstrTab()[cpt+1].getVal() ; 
     i= util.chercherAdr(main.getDataTab(),i.slice(1)) ; 
-
+    if(i==dataTab.length) {dataTab.push(new CaseMc(i,"0000",""));}
     main.getDataTab()[i].setVal(main.ACC.getContenu())  ; 
    } 
 
