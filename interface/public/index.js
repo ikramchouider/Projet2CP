@@ -2839,22 +2839,6 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
 };
 // fin obj main 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const testButton = document.getElementById("compile_id");
 const textDiv = document.getElementById("code");
 testButton.addEventListener("click", () => {
@@ -2953,4 +2937,92 @@ for (let i = 1; i <= n; i++) {
   const p = document.createElement("p");
   p.textContent = i;
   maDiv.appendChild(p);
+}
+const dataCOel=  document.getElementById('dataCO');
+const dataRAMel=  document.getElementById('dataRAM');
+const dataRIMel=  document.getElementById('dataRIM');
+const dataRIel=  document.getElementById('dataRI');
+const dataACCel=  document.getElementById('dataACC');
+const dataEUAL1el=  document.getElementById('dataEUAL2');
+const dataEUAL2el=  document.getElementById('dataEUAL2');
+const dataREGel=  document.getElementById('dataREG');
+const dataREG1el=  document.getElementById('dataREG1');
+const dataREG2el=  document.getElementById('dataREG2');
+const dataTDAel=  document.getElementById('dataTDA');
+const dataC1el=  document.getElementById('dataC1');
+const dataC2el=  document.getElementById('dataC2');
+const dataC3el=  document.getElementById('dataC3');
+const dataC4el=  document.getElementById('dataC4');
+const dataC5el=  document.getElementById('dataC5');
+const dataDATAel=  document.getElementById('dataDATA');
+//const g2=document.getElementById('g2');
+function moveData(Bus){
+  
+    var computedStyle = window.getComputedStyle(Bus);
+    var left = computedStyle.getPropertyValue('left');
+       console.log(left);
+       Bus.style.visibility='visible';
+    if (left === '0px'){
+      
+      Bus.style.animation='slide-left 3s';
+    }
+    else {
+      console.log('hello world');
+      Bus.style.animation='slide-right 3s';
+    }
+
+  }
+function selectElement(Element, delay ,string) {
+  setTimeout(function() {
+    if (Element.className==='dataflux'){
+          moveData(Element);
+    }else{
+      Element.textContent = string ;
+    }
+
+  }, delay);
+}
+var co = document.getElementById("CO");
+var ram = document.getElementById("RAM");
+var rim = document.getElementById("Rimcontent");
+var ri = document.getElementById("RI");
+var caseMemoire = document.getElementById("caseMemoire");
+let instTAB = ['AAAA',1,2,3,4];
+function premierePhase(adr){
+  var delay = 0;
+
+       selectElement(co, delay , adr);
+       delay += 3000; 
+       selectElement(dataCOel,delay,0);
+       delay+=3000;
+       selectElement(dataRAMel,delay,0);
+       delay+=3000;
+       selectElement(ram,delay,adr);
+       delay+=3000;
+       selectElement(caseMemoire,delay,instTAB[adr-100]);
+       delay+=3000;
+       selectElement(rim,delay,instTAB[adr-100]);
+       delay+=3000;
+       selectElement(dataRIMel,delay,0);
+  
+} 
+function simulation(){
+  var co = document.getElementById("CO");
+  var ram = document.getElementById("RAM");
+  premierePhase(100);
+
+
+
+};
+function start(e) {
+  if(e.name === 'caret-forward-outline')
+  {
+    e.name = "stop-circle-outline";
+    simulation();
+  }
+  else{
+    e.name = "caret-forward-outline" ;
+
+  }
+  
 }

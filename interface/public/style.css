@@ -1283,14 +1283,14 @@ border-radius: 4px;
 #busDATA{
   width: 1100.03px;
   left: 11px;
-  bottom: 35px;
+  bottom: 86px;
   transform: rotate(0deg);
 }
 #busRIM{
-  width: 200px;
+  width: 160px;
 left: 925px;
-bottom: 150px;
-  transform: rotate(-90deg);
+bottom: 174px;
+  transform: rotate(90deg);
 }
 #busRAM{
   width: 150px;
@@ -1299,21 +1299,21 @@ bottom: 460px;
   transform: rotate(0deg);
 }
 #busRI{
-  width: 130px;
-left: 450px;
-bottom: 120px;
+  width: 100px;
+left: 550px;
+bottom: 140px;
   transform: rotate(-90deg);
 }
 #busCO{
   width: 135.02px;
 left: 600px;
 bottom: 545px;
-  transform: rotate(-90deg);
+  transform: rotate(90deg);
 }
 #busREG{
-  width: 400px;
-left: 175px;
-bottom: 245px;
+  width: 340px;
+left: 210px;
+bottom: 275px;
   transform: rotate(-90deg);
 }
 #busREG1{
@@ -1329,27 +1329,27 @@ bottom: 275px;
   transform: rotate(-90deg);
 }
 #busEUAL1{
-  width: 90.5px;
+  width: 60px;
 left: 217px;
-bottom: 100px;
+bottom: 120px;
   transform: rotate(-90deg);
 }
 #busEUAL2{
-  width: 90.5px;
+  width: 60px;
 left: 78px;
-bottom: 100px;
+bottom: 120px;
   transform: rotate(-90deg);
 }
 #busTDA{
-  width: 400px;
+  width: 350px;
 left: 550px;
-bottom: 250px;
+bottom: 270px;
   transform: rotate(-90deg);
 }
 #busACC{
-  width: 392.1px;
-  left: -170px;
-  bottom: 250px;
+  width: 350px;
+  left: -150px;
+  bottom: 272px;
   transform: rotate(-90deg);
 }
 #c1{
@@ -1391,135 +1391,177 @@ bottom: 250px;
   border-right:  30px solid transparent;
   border-radius: 10px;
   color: #ae44a0;
+  text-align: center;
+  font-size:larger;
+  font-weight: bold;
 }
 #ual{
-  width: 150px;
+  width: 180px;
   bottom: 200px ;
   left:100px ;
 }
 #RIM{
-  width: 200px;
+  width: 240px;
   border-bottom: 50px solid #a7b6e3;
   bottom: 270px ;
-  left:900px ;
+  left:880px ;
+  text-align: center;
+  text-rendering: geometricPrecision;
   transform: rotate(180deg);
 }
+#RIM p{
+  transform: rotate(180deg);
+  margin: auto;
+}
 #RAM{
-  width: 200px;
+  width: 250px;
   border-bottom: 50px solid #a7b6e3;
   bottom: 450px ;
-  left:720px ;
+  left:700px ;
   transform: rotate(-90deg);
+}
+#SEQ{
+  width: 120px;
+  bottom: 160px ;
+  left:400px ;
+  height: 10px;
+  border-bottom: 50px solid #4662c6;
 }
 .MC{
   position:absolute;
   width: 250px;
   height: 250px;
-  bottom: 350px ;
-  left: 900px;
-  background:  #462c6d;
-  border-radius: 4px;
+  bottom: 340px ;
+  left: 870px;
+  background:  #36539c;
+  border-radius: 8px;
+}
+.caseMemoire{
+  position: absolute;
+  width: 250px;
+  height: 20px;
+  background-color:#4662c6;
+  text-align: center;
+  margin: auto;
+  top: 50%;
+  bottom: 50%;
+  font-size:larger;
+  font-weight: bold;
 }
 .REG{
   position:absolute;
   height: 25px;
-  background-color:  #a7b6e3;
+  background-color:  #6071a1;
   border-radius: 4px;
-  color: #ae44a0;
+  color: #ae60a3;
+  box-shadow: white;
+  text-align: center;
+  font-size:larger;
+  font-weight: bold;
 }
 #CO{
-  width: 200px;
+  width: 210px;
   bottom: 625px;
-  left:575px;
+  left:585px;
+  height: 30px;
 }
 #RI{
   width: 240px;
-  bottom: 200px;
+  bottom: 205px;
   left: 420px;
+  height: 40px;
 }
 #ACC{
   width: 120px;
   bottom: 355px;
-  left: 135px;
+  left: 130px;
+  height: 30px;
 }
 #EUAL1{
   width: 90px;
-  bottom: 155px;
-  left: 80px;
+  bottom: 162px;
+  left: 94px;
+  height: 30px;
 }
 #EUAL2{
   width: 90px;
-  bottom: 155px;
-  left: 225px;
+  bottom: 162px;
+  left: 202px;
+  height: 30px;
 }
 #AX{
   width: 240px;
   bottom: 670px;
-  background-color:  #182c5e;
+  background-color:  #36539c;
   left: 250px;
 }
 #BX{
   width: 240px;
   bottom: 640px;
-  background-color:  #182c5e;
+  background-color:  #36539c;
   left: 250px;
 }
 #CX{
   width: 240px;
   bottom: 610px;
   left: 250px;
-  background-color:  #182c5e;
+  background-color:  #36539c;
 }
 #DX{
   width: 240px;
   bottom: 580px;
   left: 250px;
-  background-color:  #182c5e;
+  background-color:  #36539c;
 }
 #EX{
   width: 240px;
   bottom: 550px;
   left: 250px;
-  background-color:  #182c5e;
+  background-color:  #36539c;
 }
 #FX{
   width: 240px;
   bottom: 520px;
   left: 250px;
-  background-color:  #182c5e;
+  background-color:  #36539c;
 }
 #SI{
   width: 240px;
   bottom: 490px;
   left: 250px;
-  background-color:  #182c5e;
+  background-color:  #36539c;
 }
 #DI{
   width: 240px;
   bottom: 460px;
   left: 250px;
-  background-color:  #182c5e;
+  background-color:  #36539c;
 }
 #Z{
-  width: 50px;
+  width: 30px;
   bottom: 400px;
   left: 50px;
+  height: 30px;
 }
 #S{
-  width: 50px;
-  bottom: 350px;
+  width: 30px;
+  bottom: 360px;
   left: 50px;
+  height: 30px;
 }
 #R{
-  width: 50px;
-  bottom: 300px;
+  width: 30px;
+  bottom: 320px;
   left: 50px;
+  height: 30px;
 }
 #D{
-  width: 50px;
-  bottom: 250px;
+  width: 30px;
+  bottom: 280px;
   left: 50px;
+  height: 30px;
 }
+
 .start-pause{
   position: absolute;
   z-index: 2;
@@ -1532,6 +1574,404 @@ bottom: 250px;
   width: 50px;
   height: 50px;
   font-size: 36px;
+}
+
+.arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid white;
+  transform: rotate(180deg);
+}
+#a1{
+  left: 375px;
+  top: 280px;
+  transform: rotate(-90deg);
+}
+#a2{
+  left: 103px;
+  top: 575px;
+  transform: rotate(-90deg);  
+}
+#a3{
+  left: 242px;
+  top: 575px;
+  transform: rotate(-90deg);
+}
+#a4{
+  left: 595px;
+  top: 535px;
+  transform: rotate(-90deg); 
+}
+#a5{
+  left: 1001px;
+  top: 472px;
+  transform: rotate(-90deg);  
+}
+#a6{
+  left: 5px;
+  top: 642px;
+  transform: rotate(180deg);
+}
+#a7{
+  left: 1108px;
+  top: 642px;
+  transform: rotate(0deg);
+}
+#a8{
+  left: 788px;
+  top: 268px;
+  transform: rotate(0deg);
+}
+#a9{
+  left: 662px;
+  top: 115px;
+  transform: rotate(-90deg);
+}
+#a10{
+  left: 663px;
+  top: 250px;
+  transform: rotate(90deg);
+}
+#a11{
+  left: 558px;
+  top: 425px;
+  transform: rotate(-90deg);
+}
+#a12{
+  left: 630px;
+  top: 425px;
+  transform: rotate(-90deg);
+}
+#a13{
+  left: 1000px;
+  top: 635px;
+  transform: rotate(90deg);
+}
+#a14{
+  left: 375px;
+  top: 620px;
+  transform: rotate(90deg);
+}
+#a15{
+  left: 492px;
+  top: 127px;
+  transform: rotate(180deg);
+}
+#a16{
+  top: 630px;
+  left: 20px;
+  transform: rotate(90deg);
+}
+#a17{
+  left: 720px; 
+  top: 280px; 
+  transform: rotate(-90deg);
+}
+#incco{
+  transform: rotate(90deg);
+  width: 40px;
+  left: 700px;
+  top: 60px;
+}
+#inc{
+  width: 40px;
+  left: 700px;
+  top: 90px;
+  transform: rotate(90deg);
+}
+#inctxt {
+  position: absolute;
+  left: 708px;
+  top: 15px;
+  font-size: 20px;
+  color: white;
+}
+#LE{
+  width: 40px;
+  left: 900px;
+  transform: rotate(90deg);
+  top: 110px;
+}
+#le{
+  left: 915px;
+  top: 130px;
+  transform: rotate(90deg);
+}
+#letxt{
+  position: absolute;
+  left: 910px;
+  top: 60px;
+  font-size: 20px;
+  color: white;
+}
+#START{
+  position: absolute;
+  left: 70px; 
+  top: 75px;
+  color: white;
+  font-size: 13px;
+}
+#goback{
+  position: absolute;
+  top: 75px;
+  left: 12px;
+  color: white;
+  font-size: 13px;
+}
+#indZ{
+  position: absolute;
+  left: 90px;
+  top: 315px;
+  color: white;
+}
+#indS{
+  position: absolute;
+  left: 90px;
+  top: 355px;
+  color: white; 
+}
+#indR{
+  position: absolute;
+  left: 90px;
+  top: 395px;
+  color: white; 
+}
+#indD{
+  position: absolute;
+  left: 90px;
+  top: 435px;
+  color: white; 
+}
+#seq{
+  position: absolute;
+  left: 445px;
+  top: 545px; 
+  color: white;
+}
+/* les textes */ 
+#AXtxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 220px;
+  top: 50px;
+}
+#BXtxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 220px;
+  top: 80px;
+}
+#CXtxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 220px;
+  top: 110px;
+}
+#DXtxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 220px;
+  top: 140px;
+}
+#EXtxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 220px;
+  top: 170px;
+}
+#FXtxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 220px;
+  top: 200px;
+}
+#DItxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 220px;
+  top: 230px;
+}
+#SItxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 220px;
+  top: 260px;
+}
+#COtxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 800px;
+  top: 90px;
+}
+#RAMtxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 800px;
+  top: 390px; 
+}
+#RIMtxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 1110px;
+  top: 440px;
+}
+#RItxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 400px;
+  top: 500px;
+}
+#ACCtxt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 200px;
+  top: 330px;
+}
+#EUAL1txt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 120px;
+  top: 580px;
+}
+#EUAL2txt{
+  position: absolute;
+  font-size: 15px;
+  color: white;
+  left: 260px;
+  top: 580px;
+}
+#Add{
+  width: 20px; 
+  left: 260px;
+  top: 400px; 
+}
+#addinst{
+  width: 50px; 
+  left: 212px;
+  top: 395px; 
+}
+#Sub{
+  width: 25px;
+  left: 265px; 
+  top: 420px;
+}
+#subinst{
+  width: 50px; 
+  left: 218px;
+  top: 415px;  
+}
+#pnt{
+  position: absolute;
+  font-size: 30px;
+  color: white;
+  left: 270px;
+  top: 410px;
+}
+#mov{
+  width: 20px;
+  left: 280px;
+  top: 450px;
+}
+#movinst{
+  width: 50px; 
+  left: 232px;
+  top: 445px;  
+}
+.dataflux{
+  position: absolute;
+  background-color: #013e48;
+  width: 14px;
+  height: 13px;
+  border-radius: 5px;
+  margin: auto 0px;
+  top:0px;
+  left:0%;
+  right: 0%;
+  bottom: 0px;
+  filter: blur(5px);
+  visibility: hidden;
+
+}
+#g1{
+  position: absolute;
+  background-color: #018198;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  margin: auto 0px;
+  top:0px;
+  left:0px;
+  right:0px;
+  bottom: 0%;
+
+}
+#g2{
+  position: absolute;
+  background-color: #e3c715;
+  filter: blur(5px);
+  height: 20px;
+  width: 20px;
+  left: 658px;
+  top: 270px;
+  visibility: hidden;
+
+}
+@keyframes slide-left{
+  from {
+    margin-left: 0%;
+  }
+
+  to {
+    margin-left: 100%;
+  }
+}
+@keyframes slide-right{
+  from {
+    margin-left: 0%;
+  }
+
+  to {
+    margin-left:-100%;
+  }
+}
+@keyframes slide-top{
+  from {
+    margin-top: 0%;
+  }
+
+  to {
+    margin-top: 100%;
+  }
+}
+@keyframes slide-bottom{
+  from {
+    margin-bottom: 0%;
+  }
+
+  to {
+    margin-bottom: 100%;
+  }
+}
+#bu{
+ 
+  left: 100px;
 }
 .retour{
   position: absolute;

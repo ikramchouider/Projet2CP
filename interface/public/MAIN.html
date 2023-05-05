@@ -126,27 +126,72 @@
           <span class="retour" id="return" >
             <ion-icon name="arrow-undo-outline"></ion-icon>
           </span>
-          <div class="bus" id="busDATA"> </div>
-          <div class="bus" id="busREG"></div>
-          <div class="bus" id="busRIM"></div>
-          <div class="bus" id="busRAM"></div>
-          <div class="bus" id="busEUAL1"></div>
-          <div class="bus" id="busEUAL2"></div>
-          <div class="bus" id="busACC"></div>
-          <div class="bus" id="busRI"></div>
-          <div class="bus" id="busCO"> </div>
-          <div class="bus" id="busTDA"></div>
-          <div class="bus" id="busREG1"></div>
-          <div class="bus" id="busREG2"></div>
-          <div class="bus" id="c1"></div>
-          <div class="bus" id="c2"></div>
-          <div class="bus" id="c3"></div>
-          <div class="bus" id="c4"></div>
-          <div class="bus" id="c5"></div>
+          <div class="bus" id="busDATA"> 
+            <div class="dataflux" id="dataDATA"></div>
+          </div>
+          <div class="bus" id="busREG">
+            <div class="dataflux" id="dataREG"></div>
+          </div>
+          <div class="bus" id="busRIM">
+            <div class="dataflux" id="dataRIM"></div>
+          </div>
+          <div class="bus" id="busRAM">
+            <div class="dataflux" id="dataRAM"></div>
+          </div>
+          <div class="bus" id="busEUAL1">
+            <div class="dataflux" id="dataEUAL1"></div>
+          </div>
+          <div class="bus" id="busEUAL2">
+            <div class="dataflux" id="dataEUAL2"></div>
+          </div>
+          <div class="bus" id="busACC">
+            <div class="dataflux" id="dataACC"></div>
+          </div>
+          <div class="bus" id="busRI">
+            <div class="dataflux" id="dataRI"></div>
+          </div>
+          <div class="bus" id="busCO">
+            <div class="dataflux" id="dataCO"></div> </div>
+          <div class="bus" id="busTDA">
+            <div class="dataflux" id="dataTDA"></div>
+          </div> 
+          <div class="bus" id="busREG1">
+            <div class="dataflux" id="dataREG1"></div>
+          </div>
+          <div class="bus" id="busREG2">
+            <div class="dataflux" id="dataREG2"></div>
+          </div>
+          <div class="bus" id="c1">
+            <div class="dataflux" id="dataC1"></div>
+          </div>
+          <div class="bus" id="c2">
+            <div class="dataflux" id="dataC2"></div>
+          </div>
+          <div class="bus" id="c3">
+            <div class="dataflux" id="dataC3"></div>
+          </div>
+          <div class="bus" id="c4">
+            <div class="dataflux" id="dataC4"></div>
+          </div>
+          <div class="bus" id="c5">
+            <div class="dataflux" id="dataC5"></div>
+          </div>
+          <div class="bus" id="incco"></div>
+          <div class="bus" id="LE"></div>
+          <!--les instructions-->
+          <div class="bus" id="Add"></div>
+          <div class="bus" id="Sub"></div>
+          <div class="bus" id="mov"></div>
+          <!---->
           <div class="decodeur" id="ual"></div>
-          <div class="decodeur" id="RIM"></div>
+          <div class="decodeur" id="RIM">
+            <p id="Rimcontent"></p>
+          </div>
           <div class="decodeur" id="RAM"></div>
-          <div class="MC"></div>
+          <div class="decodeur" id="SEQ"></div>
+          <div class="MC">
+            <div class="caseMemoire" id="caseMemoire"></div>
+          </div>
           <div class="REG" id="CO"> </div>
           <div class="REG" id="RI"></div>
           <div class="REG" id="ACC"></div>
@@ -164,9 +209,59 @@
           <div class="REG" id="S"></div>
           <div class="REG" id="R"></div>
           <div class="REG" id="D"></div>
+          <div class="glow" id="g2"></div>
+          
   
+<div class="arrow" id="a1"></div>
+<div class="arrow" id="a2"></div>
+<div class="arrow" id="a3"></div>
+<div class="arrow" id="a4"></div>
+<div class="arrow" id="a5"></div>
+<div class="arrow" id="a6"></div>
+<div class="arrow" id="a7"></div>
+<div class="arrow" id="a8"></div>
+<div class="arrow" id="a9"></div>
+<div class="arrow" id="a10"></div>
+<div class="arrow" id="a11"></div>
+<div class="arrow" id="a12"></div>
+<div class="arrow" id="a13"></div>
+<div class="arrow" id="a14"></div>
+<div class="arrow" id="a15"></div>
+<div class="arrow" id="inc"></div>
+<div class="arrow" id="le"></div>
+<div class="arrow" id="a16"></div>
+<div class="arrow" id="a17"></div>
+<div class="arrow" id="addinst"></div>
+<div class="arrow" id="subinst"></div>
+<div class="arrow" id="movinst"></div>
   
-  
+  <p id="inctxt"> INC </p>
+  <p id="letxt"> L/E </p>
+  <p id="START"> START </p>
+  <p id="goback"> Go Back</p>
+  <p id="indZ"> Z </p>
+  <p id="indS"> S </p>
+  <p id="indR"> R </p>
+  <p id="indD"> D </p>
+  <p id="seq"> SEQ </p>
+  <p id="AXtxt">AX</p>
+  <p id="BXtxt">BX</p>
+  <p id="CXtxt">CX</p>
+  <p id="DXtxt">DX</p>
+  <p id="EXtxt">EX</p>
+  <p id="FXtxt">FX</p>
+  <p id="DItxt">DI</p>
+  <p id="SItxt">SI</p>
+  <p id="COtxt"> CO </p>
+  <p id="RAMtxt">RAM</p>
+  <p id="RIMtxt">RIM</p>
+  <p id="RItxt">RI</p>
+  <p id="ACCtxt">ACC</p>
+  <p id="EUAL1txt">EUAL1</p>
+  <p id="EUAL2txt">EUAL2</p>
+  <p id="pnt">... 
+  </p>
+
       </div>
          <section class="emulator" id="sml">
           <div class="option" >
@@ -239,33 +334,105 @@
         }
 
       }
-      function start(e){
-        if(e.name === 'caret-forward-outline')
-        {
-          e.name = "stop-circle-outline";
-          simulation();
-        }
-        else{
-          e.name = "caret-forward-outline" ;
+      const dataCOel=  document.getElementById('dataCO');
+const dataRAMel=  document.getElementById('dataRAM');
+const dataRIMel=  document.getElementById('dataRIM');
+const dataRIel=  document.getElementById('dataRI');
+const dataACCel=  document.getElementById('dataACC');
+const dataEUAL1el=  document.getElementById('dataEUAL2');
+const dataEUAL2el=  document.getElementById('dataEUAL2');
+const dataREGel=  document.getElementById('dataREG');
+const dataREG1el=  document.getElementById('dataREG1');
+const dataREG2el=  document.getElementById('dataREG2');
+const dataTDAel=  document.getElementById('dataTDA');
+const dataC1el=  document.getElementById('dataC1');
+const dataC2el=  document.getElementById('dataC2');
+const dataC3el=  document.getElementById('dataC3');
+const dataC4el=  document.getElementById('dataC4');
+const dataC5el=  document.getElementById('dataC5');
+const dataDATAel=  document.getElementById('dataDATA');
+//const g2=document.getElementById('g2');
+function moveData(Bus,delay){
+  
+    setTimeout(function() {
+      var computedStyle = window.getComputedStyle(Bus);
+    var left = computedStyle.getPropertyValue('left');
+       console.log(left);
+       Bus.style.visibility='visible';
+    if (left === '0px'){
+      
+      Bus.style.animation='slide-left 3s';
+    }
+    else {
+      console.log('hello world');
+      Bus.style.animation='slide-right 3s';
+    }
 
-        }
+  }, delay);
 
-      }
-      function simulation(){
-         var co = document.getElementById("CO");
-         var ram = document.getElementById("RAM");
-       /*
-         co.innerText=100;
-         co.style.textAlign="center";
-         co.style.boxShadow="2px 2px 4px white";
-         ram.innerText=100;
-         ram.style.textAlign="center";
-         ram.style.filter="blur()";
-       */
+  }
+  function hideData(Bus,delay){
+    setTimeout(function(){
+      Bus.style.visibility='hidden';
+    },delay);
+  }
+function selectElement(Element, delay ,string) {
+  setTimeout(function() {
+    delay=0;
+    if (Element.className==='dataflux'){
+          moveData(Element,delay);
+         // delay+=3000;
+         // hideData(Element,delay);
+    }else{
+      Element.textContent = string ;
+    }
+
+  }, delay);
+}
+var co = document.getElementById("CO");
+var ram = document.getElementById("RAM");
+var rim = document.getElementById("Rimcontent");
+var ri = document.getElementById("RI");
+var caseMemoire = document.getElementById("caseMemoire");
+let instTAB = ['AAAA',1,2,3,4];
+function premierePhase(adr){
+  var delay = 0;
+
+       selectElement(co, delay , adr);
+       //delay += 3000; 
+       selectElement(dataCOel,delay,0);
+       delay+=3000;
+       selectElement(dataRAMel,delay,0);
+       delay+=3000;
+       selectElement(ram,delay,adr);
+       delay+=3000;
+       selectElement(caseMemoire,delay,instTAB[adr-100]);
+       delay+=3000;
+       selectElement(rim,delay,instTAB[adr-100]);
+       //delay+=3000;
+       selectElement(dataRIMel,delay,0);
+  
+} 
+function simulation(){
+  var co = document.getElementById("CO");
+  var ram = document.getElementById("RAM");
+  premierePhase(100);
 
 
 
-      }
+};
+function start(e) {
+  if(e.name === 'caret-forward-outline')
+  {
+    e.name = "stop-circle-outline";
+    simulation();
+  }
+  else{
+    e.name = "caret-forward-outline" ;
+
+  }
+  
+}
     </script>
     <div class="con">
     <div id="links"> <p> Site de l'école : <a href="https://www.esi.dz/"> www.esi.dz </a></p></div>
