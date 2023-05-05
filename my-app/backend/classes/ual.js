@@ -1017,7 +1017,7 @@ class UAL {
    store = function(cpt) {
     let i = main.getinstrTab()[cpt+1].getVal() ; 
     i= util.chercherAdr(main.getDataTab(),i.slice(1)) ; 
-
+    if(i==dataTab.length) {dataTab.push(new CaseMc(i,"0000",""));}
     main.getDataTab()[i].setVal(main.ACC.getContenu())  ; 
    } 
 
