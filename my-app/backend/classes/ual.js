@@ -1054,7 +1054,7 @@ class UAL {
         case "ADD": res=util.remplirZero(util.additionHexa(n,m),4,0); 
         util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
         break;
-        case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ;
+        case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; 
         break;
         case "CMP": res=util.compareHexValues(n,m) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
         case "OR": res=util.remplirZero(util.OrHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;

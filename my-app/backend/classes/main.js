@@ -165,6 +165,7 @@ var main = {
       console.log("***  Code Segment *** ");
       for (let i = 0; i < main.getinstrTab().length; i++) main.getinstrTab()[i].afficher();
       console.log("********************** ");
+      console.log("hhhh");
       this.Execute(main.getinstrTab());
       main.afficherRegistres() ;
       main.afficherIndicateurs() ;
@@ -272,7 +273,12 @@ var main = {
             case "010111":
               i = this.ual.opeRation("STORE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
               j=i ; break ;
-          
+            case "000010":
+              i = this.ual.opeRation("ADA",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "100010":
+              i = this.ual.opeRation("ADAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
             default:
               break ; 
 

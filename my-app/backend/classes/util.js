@@ -88,6 +88,8 @@ var util = {
 +   * @param {2} x2 
 +   */
   setIndZeroAddition: function (x1, x2) {
+    x1 = (util.remplirZero(x1,4,0)).slice(-4) ;
+    x2 = (util.remplirZero(x2,4,0)).slice(-4) ;
       let resultat = this.additionHexa(x1,x2) ;
       resultat = resultat.slice(-4) ;
       let resultatBin = util.hexEnBinaire(resultat); 
@@ -102,8 +104,8 @@ var util = {
     */
     setIndSigneAddition: function(x1,x2) {
 
-    x1 = util.remplirZero(x1,4,0) ;
-    x2 = util.remplirZero(x2,4,0) ;
+    x1 = (util.remplirZero(x1,4,0)).slice(-4) ;
+    x2 = (util.remplirZero(x2,4,0)).slice(-4) ;
     let x1bin = util.hexEnBinaire(x1) ;
     let x2bin = util.hexEnBinaire(x2) ;
 
@@ -125,8 +127,8 @@ var util = {
 
   setIndDebordAddition: function(x1,x2) {
 
-x1 = util.remplirZero(x1,4,0) ;
-x2 = util.remplirZero(x2,4,0) ;
+x1 = (util.remplirZero(x1,4,0)).slice(-4) ;
+x2 = (util.remplirZero(x2,4,0)).slice(-4) ;
 let x1bin = util.hexEnBinaire(x1) ;
 let x2bin = util.hexEnBinaire(x2) ;
 let resultat = (this.additionHexa(x1,x2)).slice(-4) ; //slice(-4) car on doit comparer avec le premier bit du resultat ecrit sur 16bits
@@ -137,6 +139,8 @@ else {main.setIndicateurDebord("0"); return ;}
 },
     
 setIndRetenueAddition: function(x1,x2) {
+  x1 = (util.remplirZero(x1,4,0)).slice(-1) ;
+  x2 = (util.remplirZero(x2,4,0)).slice(-1) ;
 let resultat = this.additionHexa(x1,x2) ;
 if (resultat.length>4) {main.setIndicateurRetenue("1"); return ;}
 else {main.setIndicateurRetenue("0"); return ;}
@@ -226,26 +230,26 @@ getCodeASCIIHex: function(caractere) {
 + */
 
 SoustractionHex: function(n,m) {
-    
+   
 let resultat ="" ;
 let m_ = "" ; //soit m convertit en negatif ou positif selon le cas
 m = util.hexEnBinaire(util.remplirZero(m,4,0)) ;
 //cas1: si m est positif cela revient a l'addition signée de n + (-m)
 if (m[0]=="0") 
 {
-m_ = util.negationComplementADeux(m) ;
-resultat = util.additionHexa(util.remplirZero(n,4,0),util.binaryToHex(m_)) ;
+m_ = (util.negationComplementADeux(m)).slice(-16) ;
+resultat = util.additionHexa(util.remplirZero(n,4,0),(util.binaryToHex(m_)).slice(-4)) ;
 }
 else //cas2: si m negatif ie: le bit le plus a gauche est à 1 cela revient a l'addition de n + m
 {
-m_ = util.positiveComplementADeux(m) ;
-resultat = util.additionHexa(util.remplirZero(n,4,0),util.binaryToHex(m_)) ;
+m_ = (util.positiveComplementADeux(m)).slice(-16) ;
+resultat = util.additionHexa(util.remplirZero(n,4,0),(util.binaryToHex(m_)).slice(-4)) ;
 }
 //positionner les indicateurs
-util.setIndDebordAddition(n,util.binaryToHex(m_)) ;
-util.setIndRetenueAddition(n,util.binaryToHex(m_)) ; 
-util.setIndZeroAddition(n,util.binaryToHex(m_)) ; 
-util.setIndSigneAddition(n,util.binaryToHex(m_)) ; 
+util.setIndDebordAddition(n,(util.binaryToHex(m_)).slice(-4)) ;
+util.setIndRetenueAddition(n,(util.binaryToHex(m_)).slice(-4)) ; 
+util.setIndZeroAddition(n,(util.binaryToHex(m_)).slice(-4)) ; 
+util.setIndSigneAddition(n,(util.binaryToHex(m_)).slice(-4)) ; 
        
 return resultat ;
 

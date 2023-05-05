@@ -28,6 +28,7 @@ var coding = {
       instrTab.push(
         new CaseMc(adr,util.binaryToHex(coding.getCode(strLigne)),str)
       );
+      
       if(strLigne.length >2) {
         if(strLigne[0].toUpperCase() == "SHL" || strLigne[0].toUpperCase() == "SHR" || strLigne[0].toUpperCase() == "ROL" || strLigne[0].toUpperCase() == "ROR" ) {
           adr = util.incrementHex(adr, 1);
