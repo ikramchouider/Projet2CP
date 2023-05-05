@@ -164,7 +164,7 @@ var main = {
           )
         );
         indice++;
-      } else if (ligne_str[0] == "STOP") {
+ //     } else if (ligne_str[0] == "STOP") {
       } else {
         let tab = coding.coderInst(ligne_str, co, this.getDataTab());
        // instrTab = instrTab.concat(tab);
@@ -298,6 +298,9 @@ var main = {
               j=i ; break ;
             case "000100": 
             i = this.ual.opeRation("SBA",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+            case "011110": 
+            i = this.ual.opeRation("STOP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
             j=i ; break ;
             default:
               break ; 

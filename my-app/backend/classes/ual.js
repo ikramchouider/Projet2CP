@@ -16,6 +16,7 @@ class UAL {
     let n = 0;
     let m = 0;
     let i=0 ; 
+    if(codeIns == "STOP") return cpt+1 ; 
     if(codeIns[0]== "J") {
       return this.jmp(codeIns,indicateurTab,cpt)  ; 
     }
@@ -84,6 +85,10 @@ class UAL {
       this.immediaBaseIndexeLongNonDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt) ; 
       return cpt+3 ; 
     }
+    else if((modeAdr == "11") && dest == "0" ) {
+      this.immDirectIndexeLongNonDest(codeIns,param2,dataTab,instrTab,cpt) 
+      return cpt+4 ; 
+    }
     }
     else if ((modeAdr == "00") && dest == "1" && format == "0") {
       this.directCourtDist(codeIns,param1,param2) ; 
@@ -115,7 +120,7 @@ class UAL {
    return cpt+2 ; 
   } else if(modeAdr == "11" && format == "1") {
     if(dest == "1") {
-      this.directIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
+      this.directIndexeLongDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
    }else{
     this.directIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
    }
@@ -459,10 +464,10 @@ class UAL {
         case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
         case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
       }
-
+    
       let adretiq = instrTab[cpt+2].getVal() ; 
       let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16);   
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
       m=dataTab[i].getVal() ;  
       switch (param1) {
         case "000": n = main.AX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
@@ -502,7 +507,7 @@ class UAL {
       
       let adretiq = instrTab[cpt+2].getVal() ; 
       i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16);   
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
       m=dataTab[i].getVal() ;   
       switch (param1) {
         case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
@@ -653,6 +658,27 @@ class UAL {
       } 
     }  // Fin Mode immediate BaseIndexe  format Long  distination =0 
 
+
+    immDirectIndexeLongNonDest = function(code,param2,dataTab,instrTab,cpt) {
+      let m = instrTab[cpt+1].getVal() ; 
+      
+      let n=0 ;
+      
+      switch (param2) {
+        case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
+      }
+    
+      let adretiq = instrTab[cpt+2].getVal() ; 
+      let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
+      m=dataTab[i].getVal() ;  
+      n= instrTab[cpt+3].getVal() ; 
+      main.ACC.setContenu(this.operation(code,m,n))
+      dataTab[i].setVal(main.ACC.getContenu()) ; 
+    } 
+
     //  Mode immediate AccDirect  format COURT  
     immediaAccDirectCourt = function(code,param1) {
       switch (param1) {
@@ -770,7 +796,6 @@ class UAL {
      jmp = function (code,indicateurTab,cpt) {
       let i = main.getinstrTab()[cpt+1].getVal() ; 
       i= util.chercherAdr(main.getinstrTab(),i.slice(1)) ; 
-      console.log("i== "+i);
     switch ( code.toUpperCase())  {
     case "JMP": return i;   
     case "JZ": if( main.getIndicateurZero() == "1")
