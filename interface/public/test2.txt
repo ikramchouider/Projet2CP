@@ -1,8 +1,9 @@
-ORG 
-SET ?A 7
+ORG 100H
+SET A 7H
 SET C 0H
 START
-bloc :
-MO [SI+ 4H] , BX
+bloc: MOV [SI+4H] , BX
 MOV C , AX
+MOVI C, 6H
+STOP
 
