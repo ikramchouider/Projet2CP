@@ -137,7 +137,25 @@ var main = {
         co = adr;
         this.setCO(co);
       } else if (ligne_str[0] == "START") {
-      } else if (ligne_str[0] == "SET") {
+      } else if (ligne_str[0] == "SETZ") {
+        this.getDataTab().push(
+          new CaseMc(
+            util.remplirZero(indice.toString(16),3,0),"0000",
+            ligne_str[1]
+          )
+        );
+        indice++;
+        for (let k=1; k < parseInt(ligne_str[2]); k++) {
+          this.getDataTab().push(
+            new CaseMc(
+              util.remplirZero(indice.toString(16),3,0),"0000",
+              ""
+            )
+          );
+          indice++;
+        }
+      }
+       else if (ligne_str[0] == "SET") {
         this.getDataTab().push(
           new CaseMc(
             util.remplirZero(indice.toString(16),3,0),

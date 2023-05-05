@@ -21,6 +21,7 @@ class UAL {
     }
     else if(codeIns == "STORE") {
       this.store(cpt) ; 
+      return cpt +2 ;
      }
     else if(codeIns== "CMP") {
       if ((modeAdr == "00") && dest == "1" && format == "0") {
@@ -55,11 +56,11 @@ class UAL {
       }
       else if((modeAdr == "11") && dest == "0" && format == "1")
       this.LoadDirectIndexe(param1,dataTab,instrTab,cpt) 
-
+      return cpt +3 ;
     }
     else if(codeIns== "ADAI" || codeIns== "SBAI" ||  codeIns== "LOADI"){
   main.ACC.setContenu(this.operation(codeIns,main.ACC.getContenu(),instrTab[cpt+1].getVal())) ; 
-
+      return cpt +2 ;
     }
     else if(codeIns[codeIns.length-1] == "I"  || codeIns=="INC" || codeIns=="DEC" ){
     if((modeAdr == "00") && dest == "1"  ){
@@ -769,6 +770,7 @@ class UAL {
      jmp = function (code,indicateurTab,cpt) {
       let i = main.getinstrTab()[cpt+1].getVal() ; 
       i= util.chercherAdr(main.getinstrTab(),i.slice(1)) ; 
+      console.log("i== "+i);
     switch ( code.toUpperCase())  {
     case "JMP": return i;   
     case "JZ": if( main.getIndicateurZero() == "1")
@@ -784,7 +786,7 @@ class UAL {
     case "JNS": if(main.getIndicateurSigne() != "1")  return i; else return cpt+2 ;
     case "JO": if(main.getIndicateurDebord() == "1")  return i; else return cpt+2 ;
     case "JNO": if(main.getIndicateurDebord() != "1")  return i ; else return cpt+2 ;
-    case "JE": if(main.getIndicateurZero() == "1" )  return i ; else return cpt+2 ; 
+    case "JE": if(main.getIndicateurZero() == "1" )  {return i ;} else return cpt+2 ; 
     case "JNE": if(main.getIndicateurZero() != "1" ) return i ; else return cpt+2 ;  
   }
 } //JMP 
@@ -884,13 +886,16 @@ class UAL {
     switch (param2) {
       case "001":
         i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
          m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
        break;
       case "110": 
       i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
       m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
       break ; 
       case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
       m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
       break;
     } 

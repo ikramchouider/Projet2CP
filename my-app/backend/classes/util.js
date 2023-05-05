@@ -333,8 +333,13 @@ return resultat.toString(16); // conversion du résultat en hexadécimal
 },
 
 compareHexValues: function (x, y) {
-let decimalX = parseInt(x, 16); // conversion hexadécimale en décimal
-let decimalY = parseInt(y, 16); // conversion hexadécimale en décimal
+let decimalX = "";// conversion hexadécimale en décimal
+let decimalY = ""; // conversion hexadécimale en décimal
+let xBin = (this.hexEnBinaire(util.remplirZero(x,4,0))).slice(-16); 
+let yBin = (this.hexEnBinaire(util.remplirZero(y,4,0))).slice(-16);
+if(xBin[0]=="0"){decimalX = parseInt(x, 16);} else {decimalX = parseInt(((util.binaryToHex(this.positiveComplementADeux(x))).slice(-4)),16)*(-1);}
+if(yBin[0]=="0"){decimalY = parseInt(y, 16);} else {decimalY = parseInt(((util.binaryToHex(this.positiveComplementADeux(y))).slice(-4)),16)*(-1);}
+
 
 if (decimalX < decimalY) {
   return -1
