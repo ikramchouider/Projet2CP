@@ -165,7 +165,6 @@ var main = {
       console.log("***  Code Segment *** ");
       for (let i = 0; i < main.getinstrTab().length; i++) main.getinstrTab()[i].afficher();
       console.log("********************** ");
-      console.log("hhhh");
       this.Execute(main.getinstrTab());
       main.afficherRegistres() ;
       main.afficherIndicateurs() ;

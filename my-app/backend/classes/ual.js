@@ -212,7 +212,7 @@ class UAL {
               case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); break;
               case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); break;
             }
-            console.log("mmm = "+dataTab[i].getVal()+"      "+m);
+          //  console.log("mmm = "+dataTab[i].getVal()+"      "+m);
             main.ACC.setContenu(this.operation(code,dataTab[i].getVal(),m));
             dataTab[i].setVal(main.ACC.getContenu()) ; 
            } 
@@ -763,7 +763,7 @@ class UAL {
          break;
         
       } 
-      console.log(main.getIndicateurRetenue());
+   //   console.log(main.getIndicateurRetenue());
     }   //  FIN decalage / Rotation Logique
      // JMP 
      jmp = function (code,indicateurTab,cpt) {

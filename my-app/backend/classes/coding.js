@@ -53,7 +53,7 @@ var coding = {
             adr = util.incrementHex(adr, 1);
             instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
           }
-          adr = util.incrementHex(adr, 1);
+        //  adr = util.incrementHex(adr, 1);
           if (strLigne[2].indexOf("H") != -1) {
             adr = util.incrementHex(adr, 1);
             instrTab.push(
