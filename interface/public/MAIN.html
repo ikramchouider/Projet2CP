@@ -120,8 +120,11 @@
          <br>
          <h3>Simulation</h3> 
          <div class="ARCHI" id="arch-id">
-          <div class="start-pause">
-            <ion-icon name="caret-forward-outline" onclick="start(this)"></ion-icon>   
+          <div class="start-pause" >
+            <button id="strt"> 
+            <ion-icon name="caret-forward-outline"></ion-icon> 
+            </button>
+              
           </div>
           <span class="retour" id="return" >
             <ion-icon name="arrow-undo-outline"></ion-icon>
@@ -193,7 +196,15 @@
             <div class="caseMemoire" id="caseMemoire"></div>
           </div>
           <div class="REG" id="CO"> </div>
-          <div class="REG" id="RI"></div>
+
+          <div class="REG" id="RI"> <!--on va mettre les champs de l'instruction dans le div RI-->
+               <div class="REG"  id="COP"></div>
+               <div class="REG" id="MA"></div>
+               <div class="REG" id="F"></div>
+               <div class="REG" id="DD"></div>
+               <div class="REG" id="REG1"></div>
+               <div class="REG" id="REG2"></div>
+          </div>    
           <div class="REG" id="ACC"></div>
           <div class="REG" id="EUAL1"></div>
           <div class="REG" id="EUAL2"></div>
@@ -261,6 +272,7 @@
   <p id="EUAL2txt">EUAL2</p>
   <p id="pnt">... 
   </p>
+  <div id="instname"></div>
 
       </div>
          <section class="emulator" id="sml">
@@ -276,9 +288,9 @@
             </select>
             <button type="button" id="compile_id">Assembler</button>
             <button id="run_id">Exécuter</button>
-            <button id="simulate_id">Simuler</button>
+            <button type="button" id="simulate_id">Simuler</button>
             <button id="help_id">Aide</button>
-
+  
 
 
 
@@ -300,7 +312,8 @@
             </div>
             <div class="nbLigne" id="NbLigne"></div>
              
-              <textarea class="textzone" name="code" id="code" placeholder="    ORG  100H 
+              <textarea class="textzone"   value="aha"  name="code1" id="code" placeholder="   
+    ORG  100H 
     SET A 4H
     SET C 0H
     START
@@ -425,10 +438,10 @@ let d=0;
 function simulation(){
   var co = document.getElementById("CO");
   var ram = document.getElementById("RAM");
-  d=premierePhase(100,d);
-  d=d+3000;
-  deuxiemePhase(d);
-
+  //d=premierePhase(100,d);
+  //d=d+3000;
+  //deuxiemePhase(d);
+  main.coder(contents,d);
 
 
 };

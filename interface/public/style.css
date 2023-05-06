@@ -1569,7 +1569,7 @@ bottom: 270px;
   left: 60px;
   border-radius: 30px;
   border-width: 3px;
-  border-color: #3f1466;
+  border-color: #4ecf23;
   cursor: pointer;
   width: 50px;
   height: 50px;
@@ -1854,8 +1854,16 @@ bottom: 270px;
   position: absolute;
   font-size: 15px;
   color: white;
-  left: 260px;
+  left: 270px;
   top: 580px;
+  
+}
+#instname{
+  position: absolute;
+     left: 290px;
+     top: 380px;
+     font-size: 18px;
+     color: #00FF00;
 }
 #Add{
   width: 20px; 
@@ -1894,11 +1902,12 @@ bottom: 270px;
   left: 232px;
   top: 445px;  
 }
+
 .dataflux{
   position: absolute;
-  background-color: #013e48;
-  width: 14px;
-  height: 13px;
+  background-color: #cdc313;
+  width: 20px;
+  height: 20px;
   border-radius: 5px;
   margin: auto 0px;
   top:0px;
@@ -1909,30 +1918,7 @@ bottom: 270px;
   visibility: hidden;
 
 }
-#g1{
-  position: absolute;
-  background-color: #018198;
-  width: 10px;
-  height: 10px;
-  border-radius: 5px;
-  margin: auto 0px;
-  top:0px;
-  left:0px;
-  right:0px;
-  bottom: 0%;
 
-}
-#g2{
-  position: absolute;
-  background-color: #e3c715;
-  filter: blur(5px);
-  height: 20px;
-  width: 20px;
-  left: 658px;
-  top: 270px;
-  visibility: hidden;
-
-}
 @keyframes slide-left{
   from {
     margin-left: 0%;
@@ -1969,10 +1955,7 @@ bottom: 270px;
     margin-bottom: 100%;
   }
 }
-#bu{
- 
-  left: 100px;
-}
+
 .retour{
   position: absolute;
   z-index: 2;
@@ -1980,16 +1963,69 @@ bottom: 270px;
   left: 5px;
   border-radius: 30px;
   border-width: 3px;
-  border-color: #3f1466;
+  border-color: #38cc16;
   border-color: rgb(150, 10, 10);
   cursor: pointer;
   width: 50px;
   height: 50px;
   font-size: 36px;
 }
+
 ion-icon {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* les champs de RI */ 
+
+#COP{
+ 
+  background-color: rgb(255, 255, 255);
+  width: 60px;
+  height: 39px;
+  font-size: 15px;
+  
+}
+#MA{
+  position: absolute;
+  width: 30px;
+  height: 39px;
+  font-size: 15px;
+  left: 62px;
+  background: rgb(234, 224, 224);
+
+}
+#F{
+  position: absolute;
+  width: 20px;
+  height: 39px;
+  font-size: 15px;
+  left: 94px;
+  background: rgb(214, 197, 197);
+}
+#DD{
+  position: absolute;
+  width: 20px;
+  height: 39px;
+  font-size: 15px;
+  left: 114px;
+  background: rgb(189, 162, 162);
+}
+#REG1{
+  position: absolute;
+  width: 50px;
+  height: 39px;
+  font-size: 15px;
+  left: 135px;
+  background: rgb(250, 249, 249);
+}
+#REG2{
+  position: absolute;
+  width: 50px;
+  height: 39px;
+  font-size: 15px;
+  left: 186px;
+  background: rgb(233, 209, 209);
 }
