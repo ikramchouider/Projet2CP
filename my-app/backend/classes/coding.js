@@ -18,7 +18,6 @@ var coding = {
             main.instrTab[indice2].setVal(util.remplirZero(adr,4,0)) ;
             
           }
-
         }
         str = strLigne[0].slice(0,strLigne[0].length-1);
         strLigne.shift();
@@ -174,16 +173,14 @@ var coding = {
   return instrTab;
       } else if(strLigne.length == 2) {
         if ((strLigne[0])[0] == "J"){
-           
            adr = util.incrementHex(adr, 1);
              let indice = util.chercherDansTableau(main.instrTab,strLigne[1]) ; 
              if(indice<(main.instrTab).length){
-               instrTab.push(new CaseMc(adr,util.remplirZero(main.instrTab[indice].getAdr(),3,0)),"");
+               instrTab.push(new CaseMc(adr,util.remplirZero(main.instrTab[indice].getAdr(),3,0),""));
              }else{
                instrTab.push(new CaseMc(adr,"","")) ; 
                main.tabEtiq.push(new CaseMc(adr,"",strLigne[1])) ; 
              }
-           
         }
         else if(this.getFormat(strLigne) == "1" ) {
           if(strLigne[0][strLigne[0].length - 1].toUpperCase() != "I"){
@@ -220,6 +217,7 @@ var coding = {
           return  instrTab ; 
         }}
       } 
+    
       for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }
       return instrTab;
     
