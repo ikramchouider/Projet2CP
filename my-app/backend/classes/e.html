@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      
+    </head>
+    <body>
+      
+            
+            <div id="total"></div>
+              <script type="text/javascript">
+            function calc()
+            {
+            var total = 0;
+            var course = 0;
+            var nrOfLessons = 0;
+            var vat = 0;
+            
+            course = Number(document.getElementById("course").value)
+            nrOfLessons = Number(document.getElementById("nrOfLessons").value)
+            
+            total =(course * nrOfLessons)
+            vat = total * 0.15
+            total = total+ vat;
+            document.getElementById("total").innerHTML =  total.toString;
+            }
+            </script>
+    </body>
+</html>
