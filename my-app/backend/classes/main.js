@@ -137,7 +137,25 @@ var main = {
         co = adr;
         this.setCO(co);
       } else if (ligne_str[0] == "START") {
-      } else if (ligne_str[0] == "SET") {
+      } else if (ligne_str[0] == "SETZ") {
+        this.getDataTab().push(
+          new CaseMc(
+            util.remplirZero(indice.toString(16),3,0),"0000",
+            ligne_str[1]
+          )
+        );
+        indice++;
+        for (let k=1; k < parseInt(ligne_str[2]); k++) {
+          this.getDataTab().push(
+            new CaseMc(
+              util.remplirZero(indice.toString(16),3,0),"0000",
+              ""
+            )
+          );
+          indice++;
+        }
+      }
+       else if (ligne_str[0] == "SET") {
         this.getDataTab().push(
           new CaseMc(
             util.remplirZero(indice.toString(16),3,0),
@@ -146,7 +164,7 @@ var main = {
           )
         );
         indice++;
-      } else if (ligne_str[0] == "STOP") {
+ //     } else if (ligne_str[0] == "STOP") {
       } else {
         let tab = coding.coderInst(ligne_str, co, this.getDataTab());
        // instrTab = instrTab.concat(tab);
@@ -280,6 +298,9 @@ var main = {
               j=i ; break ;
             case "000100": 
             i = this.ual.opeRation("SBA",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+            case "011110": 
+            i = this.ual.opeRation("STOP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
             j=i ; break ;
             default:
               break ; 
