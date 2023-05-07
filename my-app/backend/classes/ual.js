@@ -507,8 +507,9 @@ class UAL {
       
       let adretiq = instrTab[cpt+2].getVal() ; 
       i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
-      m=dataTab[i].getVal() ;   
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);  
+      m=dataTab[i].getVal() ;  
+      console.log(m);  
       switch (param1) {
         case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
           break;
