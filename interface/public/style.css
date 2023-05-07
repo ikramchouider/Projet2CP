@@ -1383,6 +1383,12 @@ bottom: 270px;
   bottom: 420px;
   transform: rotate(90deg);
 }
+#c6{
+  width: 70px;
+  left: 28px;
+  transform: rotate(0deg);
+  bottom: 130px;
+}
 .decodeur {
   position: absolute;
   height: 0px;
@@ -1669,6 +1675,21 @@ bottom: 270px;
   left: 720px; 
   top: 280px; 
   transform: rotate(-90deg);
+}
+#a18{
+  bottom: 122px;
+  left: 94px;
+  transform: rotate(0deg);
+}
+#a19{
+  top: 420px;
+  left: 675px;
+  transform: rotate(-0deg);
+}
+#a20{
+  top: 420px;
+  left: 520px;
+  transform: rotate(180deg);
 }
 #incco{
   transform: rotate(90deg);
