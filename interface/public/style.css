@@ -1261,7 +1261,7 @@ p.errormsg {
 }
 
 .ARCHI{
-  align-items: end;
+  align-items: left;
   width: 1200px;
   height: 750px;
   position: absolute;
@@ -1277,7 +1277,7 @@ border-radius: 16px;
 box-sizing: border-box;
 position: absolute;
 height: 0px;
-border: 5px solid #FFFFFF;
+border: 5px solid #ffffff;
 border-radius: 4px;
 }
 #busDATA{
@@ -1335,9 +1335,9 @@ bottom: 120px;
   transform: rotate(-90deg);
 }
 #busEUAL2{
-  width: 60px;
-left: 78px;
-bottom: 120px;
+  width: 30px;
+left: 92px;
+bottom: 140px;
   transform: rotate(-90deg);
 }
 #busTDA{
@@ -1696,6 +1696,7 @@ bottom: 270px;
   width: 40px;
   left: 700px;
   top: 60px;
+  color: #00FF00;
 }
 #inc{
   width: 40px;
@@ -1926,8 +1927,8 @@ bottom: 270px;
 
 .dataflux{
   position: absolute;
-  background-color: #cdc313;
-  width: 20px;
+  background-color: #e5b029;
+  width: 30px;
   height: 20px;
   border-radius: 5px;
   margin: auto 0px;
@@ -1935,10 +1936,22 @@ bottom: 270px;
   left:0%;
   right: 0%;
   bottom: 0px;
-  filter: blur(5px);
+  filter: blur(6px);
   visibility: hidden;
 
 }
+/* animation flow data dans les bus */ 
+@keyframes flow {
+ /* 0% {
+    left: -20px;
+  }
+  100% {
+    left: 100%;
+  }*/
+  0% { opacity: 0; transform: translateX(-100%) rotate(-120deg); }
+  100% { opacity: 1; transform: translateX(0px) rotate(0deg); } 
+}
+/* fin */ 
 
 @keyframes slide-left{
   from {
