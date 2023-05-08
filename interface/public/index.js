@@ -470,14 +470,15 @@ export var coding = {
     let instrTab = new Array();
     if (strLigne[0][strLigne[0].length - 1] == ":") {
       if(main.tabEtiq.length > 0) {
-        let indice  = util.chercherDansTableau(main.tabEtiq,strLigne[0].slice(0,strLigne[0].length-1)) ; 
+        let indice  = util.chercherDansTableau2(main.tabEtiq,strLigne[0].slice(0,strLigne[0].length-1),adr) ; 
+      /*  console.log(strLigne[0].slice(0,strLigne[0].length-1));
+        console.log(main.tabEtiq.length);
         if(indice<main.tabEtiq.length){
           let adresse = main.tabEtiq[indice].getAdr();
           let indice2 = util.chercherAdr(main.instrTab,adresse)
           main.instrTab[indice2].setVal(util.remplirZero(adr,4,0)) ;
           
-        }
-
+        }*/
       }
       str = strLigne[0].slice(0,strLigne[0].length-1);
       strLigne.shift();
@@ -487,7 +488,7 @@ export var coding = {
     instrTab.push(
       new CaseMc(adr,util.binaryToHex(coding.getCode(strLigne)),str)
     );
-    
+
     if(strLigne.length >2) {
       if(strLigne[0].toUpperCase() == "SHL" || strLigne[0].toUpperCase() == "SHR" || strLigne[0].toUpperCase() == "ROL" || strLigne[0].toUpperCase() == "ROR" ) {
         adr = util.incrementHex(adr, 1);
@@ -530,10 +531,29 @@ export var coding = {
         );
       }
       else if (coding.modeAdr(strLigne) == "10" && coding.getDest(strLigne) == "0") {
+        let regEtDepl = strLigne[1].slice(1, strLigne[1].length - 1) ;
+        let depl = "";
+        if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
+            else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
         adr = util.incrementHex(adr, 1);
-        instrTab.push(
-          new CaseMc(adr,parseInt(util.getSubstringBetweenChars(strLigne[1], "+", "]")).toString(16 ),""));
-          adr = util.incrementHex(adr, 1);
+        instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+        adr = util.incrementHex(adr, 1);
+          instrTab.push(
+            new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
+          );
+      }
+      else if(coding.modeAdr(strLigne) == "11" && coding.getDest(strLigne) == "0") {
+        let regEtDepl = strLigne[1].slice(strLigne[1].indexOf("[")+1, strLigne[1].length - 1) ;
+        let depl = "";
+        if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
+        else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
+        if(strLigne[1].indexOf("+") != -1){
+        adr = util.incrementHex(adr, 1);
+        instrTab.push(new CaseMc(adr, depl.toString(16), ""));}
+        let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
+         adr = util.incrementHex(adr, 1);
+         instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
+        adr = util.incrementHex(adr, 1);
           instrTab.push(
             new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
           );
@@ -585,26 +605,29 @@ export var coding = {
       }
   } else if (coding.modeAdr(strLigne) == "11") {
      if(coding.getDest(strLigne) == "1") {
-      let indice = util.chercherDansTableau(dataTab, strLigne[2].slice(0,strLigne[2].indexOf("[")));
-      adr = util.incrementHex(adr, 1);
-      instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
+    
       let regEtDepl = strLigne[2].slice(strLigne[2].indexOf("[")+1, strLigne[2].length - 1) ;
         let depl = "";
         if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
         else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
+        if(strLigne[2].indexOf("+") != -1){
+          adr = util.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr, depl.toString(16), ""));}
+        let indice = util.chercherDansTableau(dataTab, strLigne[2].slice(0,strLigne[2].indexOf("[")));
         adr = util.incrementHex(adr, 1);
-        instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+        instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
      }else {
-      let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
-      adr = util.incrementHex(adr, 1);
-      instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
 
         let regEtDepl = strLigne[1].slice(strLigne[1].indexOf("[")+1, strLigne[1].length - 1) ;
         let depl = "";
         if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
         else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
-        adr = util.incrementHex(adr, 1);
-        instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+        if(strLigne[1].indexOf("+") != -1){
+          adr = util.incrementHex(adr, 1);
+          instrTab.push(new CaseMc(adr, depl.toString(16), ""));}
+        let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
+         adr = util.incrementHex(adr, 1);
+         instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
 
      }
         
@@ -612,32 +635,32 @@ export var coding = {
 
 for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }  
 return instrTab;
-    } else {
+    } else if(strLigne.length == 2) {
       if ((strLigne[0])[0] == "J"){
-         
          adr = util.incrementHex(adr, 1);
            let indice = util.chercherDansTableau(main.instrTab,strLigne[1]) ; 
+      //     console.log(strLigne[1]);
            if(indice<(main.instrTab).length){
-             instrTab.push(new CaseMc(adr,util.remplirZero(main.instrTab[indice].getAdr(),3,0)),"");
+             instrTab.push(new CaseMc(adr,util.remplirZero(main.instrTab[indice].getAdr(),3,0),""));
            }else{
              instrTab.push(new CaseMc(adr,"","")) ; 
              main.tabEtiq.push(new CaseMc(adr,"",strLigne[1])) ; 
            }
-         
       }
       else if(this.getFormat(strLigne) == "1" ) {
         if(strLigne[0][strLigne[0].length - 1].toUpperCase() != "I"){
         if (strLigne[1].indexOf("[") != -1 ) {
           if(strLigne[1][0] != "[") {
-            let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
-            adr = util.incrementHex(adr, 1);
-            instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
             let regEtDepl = strLigne[1].slice(strLigne[1].indexOf("[")+1, strLigne[1].length - 1) ;
              let depl = "";
             if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
              else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
-             adr = util.incrementHex(adr, 1);
-             instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+             if(strLigne[1].indexOf("+") != -1){
+              adr = util.incrementHex(adr, 1);
+              instrTab.push(new CaseMc(adr, depl.toString(16), ""));}
+              let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
+            adr = util.incrementHex(adr, 1);
+            instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
 
           }
           else{
@@ -660,6 +683,7 @@ return instrTab;
         return  instrTab ; 
       }}
     } 
+  
     for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }
     return instrTab;
   
@@ -669,7 +693,10 @@ return instrTab;
     // return code binaire de l'instruction 
     getCode: function (str) {
       let code; 
-      if (str.length == 3) {
+      if(str[0] == "STOP") {
+        code = this.getCop(str[0]).concat("0000000000");
+      }
+      else if (str.length == 3) {
         if (this.regexi(str[1]) && this.regexi(str[2])){
           code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(str[2]));
           
@@ -694,12 +721,18 @@ return instrTab;
             code = this.getCop(str[0]).concat(modeAdr,this.getFormat(str),this.getDest(str),this.getReg(str[2]),this.getReg(reg));
           }
           }
-          else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[2]),"000");}
+          else {
+            if(str[1][0] != "[" && (str[1].indexOf("[") != -1 )) {
+              let reg = str[1].slice(str[1].indexOf("[")+1,str[1].length-1);
+              code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[2]),this.getReg(reg));
+            }
+            else code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[2]),"000");}
         }
         else if(this.regexi(str[1]) && !this.regexi(str[2]))
         {
           if(this.regexi(str[2].slice(1,str[2].length-1))) 
-          {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(str[2].slice(1,str[2].length-1)));}
+          {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(str[2].slice(1,str[2].length-1)));
+          }
           
           else if ((str[2].indexOf("[") != -1 ) && (str[2].indexOf("+") != -1)) {
             let modeAdr= this.modeAdr(str) ; 
@@ -717,20 +750,39 @@ return instrTab;
             code = this.getCop(str[0]).concat(modeAdr,this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(reg));
          }
           }
-          else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),"000");} 
+          else {
+            if(str[2][0] != "[" && (str[2].indexOf("[") != -1 )) {
+              let reg = str[2].slice(str[2].indexOf("[")+1,str[2].length-1);
+              code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(reg));
+            }
+            else code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),"000");} 
     
         }
         else{
           if((str[1].indexOf("+") == -1)&&(str[2].indexOf("+") == -1)) {
-          code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),"000");
+             if((str[1].indexOf("[") != -1 ) && str[1][0] != "[" ){
+              let reg = str[1].slice(str[1].indexOf("[")+1,str[1].length-1);
+              code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),"000");
+            }
+         else  code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),"000");
         }
-          else {
-            let regEtDepl = str[1].slice(1, str[1].length - 1) ;
-            let reg ; 
-            if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2);}
-            else {reg = regEtDepl.slice(-2);}
-            
-            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),"000");
+          
+            else if ((str[1].indexOf("[") != -1 ) && (str[1].indexOf("+") != -1)) {
+              let modeAdr= this.modeAdr(str) ; 
+              if(str[1][0] != "["){
+                   let regEtDepl = (str[1].slice(str[1].indexOf("["),str[1].length)).slice(1, str[1].length - 1) ;
+                   let reg = "" ;
+                   if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2);}
+                   else {reg = regEtDepl.slice(-2);}
+                   code = this.getCop(str[0]).concat(modeAdr,this.getFormat(str),this.getDest(str),this.getReg(reg),"000");
+              } 
+              else{
+              let regEtDepl = str[1].slice(1, str[1].length - 1) ;
+              let reg = "" ;
+              if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2);}
+              else {reg = regEtDepl.slice(-2);}
+              code = this.getCop(str[0]).concat(modeAdr,this.getFormat(str),this.getDest(str),this.getReg(reg),"000");
+            }
           }
           }
         } 
@@ -745,12 +797,17 @@ return instrTab;
           code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),"000");
         } 
         else if(str[1][0] != "[" && str[1].indexOf("[") != -1) {
+          if(str[1].indexOf("+") != -1) {
           let reg = "";
           let regEtDepl = (str[1].slice(str[1].indexOf("["),str[1].length)) .slice(1, str[1].length - 1) ;
           if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2); }
           else {reg = regEtDepl.slice(-2);}
           code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),"000");
-          
+          }
+          else {
+            let reg = str[1].slice(str[1].indexOf("[")+1,str[1].length-1);
+              code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),"000");
+          }
          }
           
         else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),"000","000");
@@ -946,6 +1003,7 @@ return instrTab;
 
 
 
+
 // l'objet registre du fichier registre.js
 class registre {
   #nom;
@@ -980,6 +1038,8 @@ class registre {
 
 // util.js no need to import it 
 export var util = {
+  
+
 
   chercherDansTableau: function (tableau, valeur) {
     // change the name to chercherEtiq
@@ -990,7 +1050,31 @@ export var util = {
     return i;
   }, // fin  chercherDansTableau
 
-  // return element de tableau contant adr 
+  chercherDansTableau2: function (tableau, valeur,adr) {
+    // change the name to chercherEtiq
+    let i = 0;
+    while (i < tableau.length ) {
+      if(tableau[i].getEtiq() == valeur) {
+        let adresse = main.tabEtiq[i].getAdr();
+        let indice2 = util.chercherAdr(main.instrTab,adresse)
+        main.instrTab[indice2].setVal(util.remplirZero(adr,4,0)) ;
+      }
+      i++;
+    }
+    return i;
+  }, // fin  chercherDansTableau
+
+  chercherDansTableauDeuxDimension: function (tableau, valeur) {
+    // change the name to chercherEtiq
+    let i = 0;
+    while (i < tableau.length && tableau[i][0] != valeur) {
+      i++;
+    }
+    return i;
+  }, // fin  chercherDansTableau
+
+
+   // return element de tableau contant adr 
   chercherAdr: function (tableau, adr) {
     let i = 0;
     while (i < tableau.length && tableau[i].getAdr() != adr) {
@@ -1011,184 +1095,100 @@ export var util = {
     return decimal.toString(16).toUpperCase();
   }, //  fin incrementHex
 
-  // 
-  remplirZero: function (str, n, gd) {
+// 
+  remplirZero: function (str, n, gd) {   
     //gd=0 -> des zeros à gauche , gd=1 -> à droite
     var s = "";
     const length = str.length;
     if (gd == 0) {
-      for (let k = 0; k < n - length; k++) { s += "0"; }
+      for (let k = 0; k < n - length; k++) { s += "0";}
       return s + str;
     } else {
       if (gd == 1) {
-        for (let k = 0; k < n - length; k++) { str += "0"; }
+        for (let k = 0; k < n - length; k++) {str += "0"; }
         return str;
-      } else { throw new Error("Le troisieme parametre doit etre 0 ou 1."); }
-    }
+      } else { throw new Error("Le troisieme parametre doit etre 0 ou 1."); } }
   }, // fin remplirZero
 
-  // Find position of delimiter
+ // Find position of delimiter
   getDel: function (str, delimiter) {
-    let position = str.indexOf(delimiter);
+    let position = str.indexOf(delimiter); 
     if (position !== -1) { // Check if delimiter is found
-      str = str.substring(0, position);
-    }// Delete characters after delimiter
+      str = str.substring(0, position); }// Delete characters after delimiter
     return str;
   }, //fin  getDel
-
+  
   // faire l'addition en hexadecemal 
-  additionHexa: function (x, y) {
-    return (parseInt(x, 16) + parseInt(y, 16)).toString(16).toUpperCase();
-  },// fin  additionHexa
+  additionHexa: function (x1,x2) {
+    let a = util.hexEnBinaire(util.remplirZero(x1,4,0));
+    let b = util.hexEnBinaire(util.remplirZero(x2,4,0));
+    let sum = '';
+    let carry = 0;
+    let i = a.length - 1;
+    let j = b.length - 1;
+  
+    while (i >= 0 || j >= 0 || carry > 0) {
+    let digitA = i >= 0 ? parseInt(a.charAt(i), 2) : 0;
+    let digitB = j >= 0 ? parseInt(b.charAt(j), 2) : 0;
+    let digitSum = digitA + digitB + carry;
+  
+    carry = digitSum >= 2 ? 1 : 0;
+    digitSum = digitSum % 2;
+    sum = digitSum + sum;
 
-
-  getSubstringBetweenChars: function (str, startChar, endChar) {
-    let startIndex = str.indexOf(startChar);
-    if (startIndex === -1) { return ""; }
-    startIndex += 1;
-    const endIndex = str.indexOf(endChar, startIndex);
-    if (endIndex === -1) { return ""; }
-    return str.substring(startIndex, endIndex);
-  }, // fin getSubstringBetweenChars
-
-
-
-  // convertir un nombre binaire en hexadecimal 
-  binaryToHex: function (binary) {
-    const decimal = parseInt(binary, 2);
-    const hex = decimal.toString(16);
-    return hex.toUpperCase();
-  }, // fin  binaryToHex
-
-
-
-  // verifie si un nombre est en hexadecimal 
-  estHexadecimal: function (chaine) {
-    return !isNaN(parseInt(chaine, 16));
-  }, // fin estHexadecimal
-
-
-
-  // Verifie si le nom de la variable est valide
-  isVariableNameValid: function (str, nbLigne) {
-    let nbError=0;
-    let messageDiv = document.getElementById("messageDiv");
-    if (!str) {
-      messageDiv.innerHTML += "<p class='errormsg'><span style='color: rgb(150, 10, 10);'> Ligne " + nbLigne + "</span> <span style='color: #9ca3af; '> : Il faut que le nom de la variable soit valide [chaine vide ] </span></p>";
-      nbError++;
-    } // Vérifier si la chaîne est vide ou null
-
-    // Vérifier si le premier caractère est une lettre, un underscore ou un dollar
-    let firstChar = str.charAt(0);
-    if (!/^[a-zA-Z_$]/.test(firstChar)) {
-      messageDiv.innerHTML += "<p class='errormsg'><span style='color: rgb(150, 10, 10);'> Ligne " + nbLigne + "</span> <span style='color: #9ca3af; '> : Il faut que le nom de la variable soit valide [premier caractère invalide ] </span></p>";
-      nbError++;
+    i--;
+      j--;
     }
+    return util.binaryToHex(sum) ;
+  }, // fin  additionHexa
 
-    // Vérifier si les autres caractères sont des lettres, des chiffres, des underscores ou des dollars
-    for (let i = 1; i < str.length; i++) {
-      let char = str.charAt(i);
-      if (!/^[a-zA-Z0-9_$]/.test(char)) {
-        messageDiv.innerHTML += "<p class='errormsg'><span style='color: rgb(150, 10, 10);'> Ligne " + nbLigne + "</span> <span style='color: #9ca3af; '> : Il faut que le nom de la variable soit valide [caractères invalides ] </span></p>";
-        nbError++;
-      }
-    }
-
-    //verifier si ce n'est pas sun nom de registre 
-    if (coding.regexi(str)) {
-      messageDiv.innerHTML += "<p class='errormsg'><span style='color: rgb(150, 10, 10);'> Ligne " + nbLigne + "</span> <span style='color: #9ca3af; '> : Il faut que le nom de la variable soit valide , il ne faut pas que ça soit un nom de registre </span></p>";
-      nbError++;
-    }
-
-    // sinon :   La chaîne est valide 
-
-    return nbError;
-  }, // fin nom variable valide
-
-
-
-
-  // Verifie si le nombre est en hexadecimal et est valide
-  checkNumber: function (ligne_str, nbLigne) {
-    let nbError=0;
-    let messageDiv = document.getElementById("messageDiv");
-    if (ligne_str.indexOf("H") == -1) {
-      messageDiv.innerHTML += "<p class='errormsg'><span style='color: rgb(150, 10, 10);'> Ligne " + nbLigne + "</span> <span style='color: #9ca3af; '> : Il faut ecrire 'H' qui signifie la base hexadecimal </span></p>";
-      nbError++;
-    } else {
-      ligne_str = ligne_str.slice(0, ligne_str.length - 1);
-      if (!this.estHexadecimal(ligne_str)) {
-        messageDiv.innerHTML += "<p class='errormsg'><span style='color: rgb(150, 10, 10);'> Ligne " + nbLigne + "</span> <span style='color: #9ca3af; '> : Il faut donner une valeur hexadecimal valide </span></p>";
-        nbError++;
-      }
-    }
-    return nbError;
-  },// fin verification nombre 
-
-
-
-// verifie si l'instruction est à un seul opérande
-  instUnSeulOp: function (str) {
-    str = str.toUpperCase();
-    if (str == 'ADA' || str == 'ADAI' || str == "SBA" || str == "SBAI" || str == 'STOP' || str == 'START' || str == 'IN' || str == 'OUT' || str == 'JMP' ||
-      str == 'NOT' || str == 'DEC' || str == 'INC' || str == 'STORE' || str == 'LOAD' || str == 'LOADI' || str == 'JNE' || str == 'JE' ||
-      str == 'JNO' || str == 'JO' || str == 'JNS' || str == 'JS' || str == 'JNC' || str == 'JC' || str == 'JNZ' || str == 'JZ') return true;
-    else return false;
-  },// fin instruction à un seul opérande
-
-
-
-  // récupère le code ASCII d'un caractère et le retourne en HEX
-  getCodeASCIIHex: function (caractere) {
-    return caractere.charCodeAt(0).toString(16);
-  },// fin get code ASCII
-
-
-   /**
+  /**
 +   * elle place l'indicateur zero selon l'operation de l'addition 
 +   * @param {1} x1 
 +   * @param {2} x2 
 +   */
-setIndZeroAddition: function (x1, x2) {
-  let resultat = this.additionHexa(x1,x2) ;
-  resultat = resultat.slice(-4) ;
-  let resultatBin = util.hexEnBinaire(resultat); 
-  if(resultatBin.slice(-15)=="000000000000000") {main.setIndicateurZero("1");}
-  else {main.setIndicateurZero("0");}
-}  ,
+  setIndZeroAddition: function (x1, x2) {
+    x1 = (util.remplirZero(x1,4,0)).slice(-4) ;
+    x2 = (util.remplirZero(x2,4,0)).slice(-4) ;
+      let resultat = this.additionHexa(x1,x2) ;
+      resultat = resultat.slice(-4) ;
+      let resultatBin = util.hexEnBinaire(resultat); 
+      if(resultatBin.slice(-15)=="000000000000000") {main.setIndicateurZero("1");}
+      else {main.setIndicateurZero("0");}
+    }  ,
+  
+    /**
+     * place l'indicateur du signe selon l'operation de l'addition
+     * @param {*} x1 
+     * @param {*} x2 
+    */
+    setIndSigneAddition: function(x1,x2) {
 
-/**
- * place l'indicateur du signe selon l'operation de l'addition
- * @param {*} x1 
- * @param {*} x2 
-*/
-setIndSigneAddition: function(x1,x2) {
+    x1 = (util.remplirZero(x1,4,0)).slice(-4) ;
+    x2 = (util.remplirZero(x2,4,0)).slice(-4) ;
+    let x1bin = util.hexEnBinaire(x1) ;
+    let x2bin = util.hexEnBinaire(x2) ;
 
-x1 = util.remplirZero(x1,4,0) ;
-x2 = util.remplirZero(x2,4,0) ;
-let x1bin = util.hexEnBinaire(x1) ;
-let x2bin = util.hexEnBinaire(x2) ;
+    if ((x1bin[0]=="0")&&(x2bin[0]=="0")) {main.setIndicateurSigne("0"); return ;}
+    if ((x1bin[0]=="1")&&(x2bin[0]=="1")) {main.setIndicateurSigne("1"); return ;}
+   if (((x1bin[0]=="1")&&(x2bin[0]=="0"))) {
+     //le signe dans ce cas sera du signe du nombre dont la valeur absolue est la plus grande 
+      let x2bin_ = util.remplirZero(x2bin.slice(-15),16,0) ;
+      if (parseInt(util.positiveComplementADeux(x1bin),2)>parseInt(x2bin_,2)) //le signe sera du signe de x1bin
+      {main.setIndicateurSigne(x1bin[0]); return ;}
+      else {main.setIndicateurSigne(x2bin[0]); return ;}
+    }
+  if ((x1bin[0]=="0")&&(x2bin[0]=="1")) {
+      let x1bin_ = util.remplirZero(x1bin.slice(-15),16,0) ;
+       if (parseInt(util.positiveComplementADeux(x2bin),2)>parseInt(x1bin_,2)) //le signe sera du signe de x2bin
+      {main.setIndicateurSigne(x2bin[0]); return ;}
+       else {main.setIndicateurSigne(x1bin[0]); return ;}
+  }},
 
-if ((x1bin[0]=="0")&&(x2bin[0]=="0")) {main.setIndicateurSigne("0"); return ;}
-if ((x1bin[0]=="1")&&(x2bin[0]=="1")) {main.setIndicateurSigne("1"); return ;}
-if (((x1bin[0]=="1")&&(x2bin[0]=="0"))) {
- //le signe dans ce cas sera du signe du nombre dont la valeur absolue est la plus grande 
-  let x2bin_ = util.remplirZero(x2bin.slice(-15),16,0) ;
-  if (parseInt(util.positiveComplementADeux(x1bin),2)>parseInt(x2bin_,2)) //le signe sera du signe de x1bin
-  {main.setIndicateurSigne(x1bin[0]); return ;}
-  else {main.setIndicateurSigne(x2bin[0]); return ;}
-}
-if ((x1bin[0]=="0")&&(x2bin[0]=="1")) {
-  let x1bin_ = util.remplirZero(x1bin.slice(-15),16,0) ;
-   if (parseInt(util.positiveComplementADeux(x2bin),2)>parseInt(x1bin_,2)) //le signe sera du signe de x2bin
-  {main.setIndicateurSigne(x2bin[0]); return ;}
-   else {main.setIndicateurSigne(x1bin[0]); return ;}
-}},
+  setIndDebordAddition: function(x1,x2) {
 
-setIndDebordAddition: function(x1,x2) {
-
-x1 = util.remplirZero(x1,4,0) ;
-x2 = util.remplirZero(x2,4,0) ;
+x1 = (util.remplirZero(x1,4,0)).slice(-4) ;
+x2 = (util.remplirZero(x2,4,0)).slice(-4) ;
 let x1bin = util.hexEnBinaire(x1) ;
 let x2bin = util.hexEnBinaire(x2) ;
 let resultat = (this.additionHexa(x1,x2)).slice(-4) ; //slice(-4) car on doit comparer avec le premier bit du resultat ecrit sur 16bits
@@ -1197,17 +1197,19 @@ if ((x1bin[0]=="1")&&(x2bin[0]=="1")&&(resultat[0]=="0")) {main.setIndicateurDeb
 else if ((x1bin[0]=="0")&&(x2bin[0]=="0")&&(resultat[0]=="1")) {main.setIndicateurDebord("1"); return ;}
 else {main.setIndicateurDebord("0"); return ;}
 },
-
+    
 setIndRetenueAddition: function(x1,x2) {
+  x1 = (util.remplirZero(x1,4,0)).slice(-1) ;
+  x2 = (util.remplirZero(x2,4,0)).slice(-1) ;
 let resultat = this.additionHexa(x1,x2) ;
 if (resultat.length>4) {main.setIndicateurRetenue("1"); return ;}
 else {main.setIndicateurRetenue("0"); return ;}
 },
 
 /**
-* elle place les indicateurs di signe et zero selon le contenu de l'accumulateur qui est en hexa
-* @param {1} contenuAcc le contenu de l'accumulateur en hexadecimal
-*/
+ * elle place les indicateurs di signe et zero selon le contenu de l'accumulateur qui est en hexa
+ * @param {1} contenuAcc le contenu de l'accumulateur en hexadecimal
+ */
 setIndicateursAccumulateur: function(contenuAcc) {
 let contenuAccBin = util.hexEnBinaire(contenuAcc) ;
 if (contenuAccBin[0]=="1") {main.setIndicateurSigne("1");}
@@ -1215,18 +1217,23 @@ else {main.setIndicateurSigne("0");}
 if (contenuAcc=="0000"){main.setIndicateurZero("1");}
 else {main.setIndicateurZero("0");}
 },
-    
-    getSubstringBetweenChars: function (str, startChar, endChar) {
-        let startIndex = str.indexOf(startChar);
-        if (startIndex === -1) { return ""; }
-        startIndex += 1;
-        const endIndex = str.indexOf(endChar, startIndex);
-        if (endIndex === -1) { return "";   }
-        return str.substring(startIndex, endIndex);
-      }, // fin getSubstringBetweenChars
 
+getSubstringBetweenChars: function (str, startChar, endChar) {
+    let startIndex = str.indexOf(startChar);
+    if (startIndex === -1) { return ""; }
+    startIndex += 1;
+    const endIndex = str.indexOf(endChar, startIndex);
+    if (endIndex === -1) { return "";   }
+    return str.substring(startIndex, endIndex);
+  }, // fin getSubstringBetweenChars
 
-
+  // convertir un nombre binaire en hexadecimal 
+  binaryToHex: function (binary) {
+    const decimal = parseInt(binary, 2);
+    const hex = decimal.toString(16);
+    return hex.toUpperCase();
+  }, // fin  binaryToHex
+  
   hexEnBinaire: function (hex) {
     let binary = "";
     for (let i = 0; i < hex.length; i++) {
@@ -1236,15 +1243,46 @@ else {main.setIndicateurZero("0");}
     return binary;
   },
 
+   // verifie si un nombre est en hexadecimal 
+   estHexadecimal: function (chaine) {
+    return !isNaN(parseInt(chaine, 16));
+  }, // fin estHexadecimal
 
-  // convertir un nombre binaire en hexadecimal 
-  binaryToHex: function (binary) {
-    const decimal = parseInt(binary, 2);
-    const hex = decimal.toString(16);
-    return hex.toUpperCase();
-  }, // fin  binaryToHex
+  
+ isVariableNameValid: function (str,nbLigne) {
+  let messageError= [] ; 
+  if (!str) {  messageError.push(nbLigne+" Il faut que le nom de la variable soit valide  ") ;  } // Vérifier si la chaîne est vide ou null
 
+  // Vérifier si le premier caractère est une lettre, un underscore ou un dollar
+  let firstChar = str.charAt(0);
+  if (!/^[a-zA-Z_$]/.test(firstChar)) { messageError.push(nbLigne+" Il faut que le nom de la variable soit valide ");  }
 
+  // Vérifier si les autres caractères sont des lettres, des chiffres, des underscores ou des dollars
+  for (let i = 1; i < str.length; i++) {
+    let char = str.charAt(i);
+    if (!/^[a-zA-Z0-9_$]/.test(char)) {  messageError.push(nbLigne+" Il faut que le nom de la variable soit valide ");  } }
+  if ( coding.regexi(str)) {   messageError.push(nbLigne+" Il faut que le nom de la variable soit valide , il faut pas que ça soit un nom de registre ");  ; }
+  /* La chaîne est valide */
+  return messageError ;    },
+
+checkNumber: function(ligne_str,nbLigne) {
+  let messageError= [] ; 
+  if (ligne_str.indexOf("H") ==  -1 ) {  messageError.push(nbLigne+" Il faut ecrire 'H' qui signifie la base hexadecimal ");    } 
+         else { ligne_str = ligne_str.slice(0,ligne_str.length-1) ; 
+          if (! this.estHexadecimal(ligne_str)) {  messageError.push(nbLigne+" Il faut donner une valeur hexadecimal"); } }
+     return messageError ; 
+},
+instUnSeulOp: function(str) {
+     str = str.toUpperCase() ; 
+     if (str== 'ADA' || str == 'ADAI' ||str=="SBA" || str=="SBAI" || str=='STOP' || str=='START' || str=='IN' || str=='OUT' || str=='JMP' || 
+     str=='NOT' || str=='DEC' || str=='INC' || str=='STORE' || str=='LOAD' || str=='LOADI' || str=='JNE' || str=='JE' ||
+     str== 'JNO' || str == 'JO' || str=='JNS' || str=='JS' || str=='JNC' || str=='JC' || str=='JNZ' || str== 'JZ' ) return true ; 
+     else return false ; 
+},
+
+getCodeASCIIHex: function(caractere) {
+  return caractere.charCodeAt(0).toString(16);
+},
 /**
 + * fait la soustraction de n-m tq n et m sont representés en complement à 2, et positionne les indicateurs
 + * @param {1} n 
@@ -1252,137 +1290,142 @@ else {main.setIndicateurZero("0");}
 + */
 
 SoustractionHex: function(n,m) {
-    
-  let resultat ="" ;
-  let m_ = "" ; //soit m convertit en negatif ou positif selon le cas
-  m = util.hexEnBinaire(util.remplirZero(m,4,0)) ;
-  //cas1: si m est positif cela revient a l'addition signée de n + (-m)
-  if (m[0]=="0") 
-  {
-  m_ = util.negationComplementADeux(m) ;
-  resultat = util.additionHexa(util.remplirZero(n,4,0),util.binaryToHex(m_)) ;
-  }
-  else //cas2: si m negatif ie: le bit le plus a gauche est à 1 cela revient a l'addition de n + m
-  {
-  m_ = util.positiveComplementADeux(m) ;
-  resultat = util.additionHexa(util.remplirZero(n,4,0),util.binaryToHex(m_)) ;
-  }
-  //positionner les indicateurs
-  util.setIndDebordAddition(n,util.binaryToHex(m_)) ;
-  util.setIndRetenueAddition(n,util.binaryToHex(m_)) ; 
-  util.setIndZeroAddition(n,util.binaryToHex(m_)) ; 
-  util.setIndSigneAddition(n,util.binaryToHex(m_)) ; 
-         
-  return resultat ;
+   
+let resultat ="" ;
+let m_ = "" ; //soit m convertit en negatif ou positif selon le cas
+m = util.hexEnBinaire(util.remplirZero(m,4,0)) ;
+//cas1: si m est positif cela revient a l'addition signée de n + (-m)
+if (m[0]=="0") 
+{
+m_ = (util.negationComplementADeux(m)).slice(-16) ;
+resultat = util.additionHexa(util.remplirZero(n,4,0),(util.binaryToHex(m_)).slice(-4)) ;
+}
+else //cas2: si m negatif ie: le bit le plus a gauche est à 1 cela revient a l'addition de n + m
+{
+m_ = (util.positiveComplementADeux(m)).slice(-16) ;
+resultat = util.additionHexa(util.remplirZero(n,4,0),(util.binaryToHex(m_)).slice(-4)) ;
+}
+//positionner les indicateurs
+util.setIndDebordAddition(n,(util.binaryToHex(m_)).slice(-4)) ;
+util.setIndRetenueAddition(n,(util.binaryToHex(m_)).slice(-4)) ; 
+util.setIndZeroAddition(n,(util.binaryToHex(m_)).slice(-4)) ; 
+util.setIndSigneAddition(n,(util.binaryToHex(m_)).slice(-4)) ; 
+       
+return resultat ;
+
+},
+
+/**
+* convertit un nombre binaire negatif (sur 16bits) en sa valeur positive representée en CA2
+* @param {1} binaryNum 
+* @returns 
+*/
+positiveComplementADeux: function(binaryNum) {
+// inverser les bits
+let onesComplement = "";
+for (let i = 0; i < binaryNum.length; i++) {
+onesComplement += binaryNum[i] === "0" ? "1" : "0";
+}
+let absValue = parseInt(onesComplement, 2) + 1;
+let absBinary = absValue.toString(2).padStart(16, "0");
+return absBinary;},
+
+negationComplementADeux: function(binaryNum) {
+// Convertir binaryNum en decimal
+let decimalNum = parseInt(binaryNum, 2);
+
+// Calculer le nombre negatif et sa representation en CA2
+let negation = -decimalNum;
+let twosComplement = (negation >>> 0).toString(2).padStart(16, '0');
   
-  },
-  
-  /**
-  * convertit un nombre binaire negatif (sur 16bits) en sa valeur positive representée en CA2
-  * @param {1} binaryNum 
-  * @returns 
-  */
-  positiveComplementADeux: function(binaryNum) {
-  // inverser les bits
-  let onesComplement = "";
-  for (let i = 0; i < binaryNum.length; i++) {
-  onesComplement += binaryNum[i] === "0" ? "1" : "0";
-  }
-  let absValue = parseInt(onesComplement, 2) + 1;
-  let absBinary = absValue.toString(2).padStart(16, "0");
-  return absBinary;},
-  
-  negationComplementADeux: function(binaryNum) {
-  // Convertir binaryNum en decimal
-  let decimalNum = parseInt(binaryNum, 2);
-  
-  // Calculer le nombre negatif et sa representation en CA2
-  let negation = -decimalNum;
-  let twosComplement = (negation >>> 0).toString(2).padStart(16, '0');
-    
-  return twosComplement;  
-  },
-  
-  AndHex: function(n, m) {
-    const decimalN = parseInt(n, 16);
-    const decimalM = parseInt(m, 16);
-    const result = decimalN & decimalM;
-    const hexResult = result.toString(16).toUpperCase();
-    return hexResult;
-  },
-  
-  OrHex: function(n, m) {
-    const decimalN = parseInt(n, 16);
-    const decimalM = parseInt(m, 16);
-    const result = decimalN | decimalM;
-    const hexResult = result.toString(16).toUpperCase();
-    return hexResult;
-  },
-  
-  NotHex: function(n) {
+return twosComplement;  
+},
+
+AndHex: function(n, m) {
   const decimalN = parseInt(n, 16);
-  const result = ~decimalN;
+  const decimalM = parseInt(m, 16);
+  const result = decimalN & decimalM;
   const hexResult = result.toString(16).toUpperCase();
   return hexResult;
-  },
-  
-  decalageLogiqueHexadecDroit: function(hexa, n) {
-  let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
-  let resultat = decimal >>> n; // décalage logique de n positions vers la droite
+},
+
+OrHex: function(n, m) {
+  const decimalN = parseInt(n, 16);
+  const decimalM = parseInt(m, 16);
+  const result = decimalN | decimalM;
+  const hexResult = result.toString(16).toUpperCase();
+  return hexResult;
+},
+
+NotHex: function(n) {
+const decimalN = parseInt(n, 16);
+const result = ~decimalN;
+const hexResult = result.toString(16).toUpperCase();
+return hexResult;
+},
+
+decalageLogiqueHexadecDroit: function(hexa, n) {
+let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
+let resultat = decimal >>> n; // décalage logique de n positions vers la droite
+main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[16-n]) ; 
+
+return resultat.toString(16); // conversion du résultat en hexadécimal
+},
+
+decalageLogiqueHexadecGauche: function(hexa, n) {
+let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
+let resultat = decimal << n; // décalage logique de n positions vers la gauche
+main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[0+n-1]) ; 
+return resultat.toString(16); // conversion du résultat en hexadécimal
+},
+
+rotationHexadecimal: function (code,hexa, n) {
+let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
+let resultat;
+if (code == "ROL") {
+  resultat = (decimal << n) | (decimal >>> (32 - n)); // rotation à gauche de n positions
+  main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[0+n-1]) ;
+} else {
+  resultat = (decimal >>> -n) | (decimal << (32 + n)); // rotation à droite de n positions
   main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[16-n]) ; 
-  
-  return resultat.toString(16); // conversion du résultat en hexadécimal
-  },
-  
-  decalageLogiqueHexadecGauche: function(hexa, n) {
-  let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
-  let resultat = decimal << n; // décalage logique de n positions vers la gauche
-  main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[0+n-1]) ; 
-  return resultat.toString(16); // conversion du résultat en hexadécimal
-  },
-  
-  rotationHexadecimal: function (code,hexa, n) {
-  let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
-  let resultat;
-  if (code == "ROL") {
-    resultat = (decimal << n) | (decimal >>> (32 - n)); // rotation à gauche de n positions
-    main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[0+n-1]) ;
-  } else {
-    resultat = (decimal >>> -n) | (decimal << (32 + n)); // rotation à droite de n positions
-    main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[16-n]) ; 
+}
+return resultat.toString(16); // conversion du résultat en hexadécimal
+},
+
+compareHexValues: function (x, y) {
+let decimalX = "";// conversion hexadécimale en décimal
+let decimalY = ""; // conversion hexadécimale en décimal
+let xBin = (this.hexEnBinaire(util.remplirZero(x,4,0))).slice(-16); 
+let yBin = (this.hexEnBinaire(util.remplirZero(y,4,0))).slice(-16);
+if(xBin[0]=="0"){decimalX = parseInt(x, 16);} else {decimalX = parseInt(((util.binaryToHex(this.positiveComplementADeux(x))).slice(-4)),16)*(-1);}
+if(yBin[0]=="0"){decimalY = parseInt(y, 16);} else {decimalY = parseInt(((util.binaryToHex(this.positiveComplementADeux(y))).slice(-4)),16)*(-1);}
+
+
+if (decimalX < decimalY) {
+  return -1
+} else if (decimalX > decimalY) {
+  return 1
+} else {
+  return 0
+}
+},
+
+hexSigne: function(op) {
+      op = util.hexEnBinaire(op) ; 
+      if (op[0] == "1")  return "-1" ; 
+      else return "1" ; 
+ 
+},
+/*
+convertToAscii: function(string) {
+  let asciiCode = [];
+  let str ; 
+  for (let i = 0; i < string.length; i++) {
+    asciiCode.push((string.charCodeAt(i)).toString(16));
+    str=str+asciiCode[i]
   }
-  return resultat.toString(16); // conversion du résultat en hexadécimal
-  },
-  
-  compareHexValues: function (x, y) {
-  let decimalX = parseInt(x, 16); // conversion hexadécimale en décimal
-  let decimalY = parseInt(y, 16); // conversion hexadécimale en décimal
-  
-  if (decimalX < decimalY) {
-    return -1
-  } else if (decimalX > decimalY) {
-    return 1
-  } else {
-    return 0
-  }
-  },
-  
-  hexSigne: function(op) {
-        op = util.hexEnBinaire(op) ; 
-        if (op[0] == "1")  return "-1" ; 
-        else return "1" ; 
-   
-  },
-  /*
-  convertToAscii: function(string) {
-    let asciiCode = [];
-    let str ; 
-    for (let i = 0; i < string.length; i++) {
-      asciiCode.push((string.charCodeAt(i)).toString(16));
-      str=str+asciiCode[i]
-    }
-    return asciiCode;
-  } */
+  return asciiCode;
+} */
 
 
 
@@ -2648,16 +2691,19 @@ class UAL {
     let i  ; 
     switch (param2) {
       case "001":
-        i = util.chercherAdr(dataTab,(main.BX.getContenu()).slice(1)) ; 
+        i = util.chercherAdr(dataTab,(main.BX.getContenu()).slice(-3)) ; 
+        if(i==dataTab.length) {dataTab.push(new CaseMc((main.BX.getContenu()).slice(1),"0000",""));}
         main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
         break;
       
       case "110":
-        i = util.chercherAdr(dataTab,(main.SI.getContenu()).slice(1)) ;
+        i = util.chercherAdr(dataTab,(main.SI.getContenu()).slice(-3)) ;
+        if(i==dataTab.length) {dataTab.push(new CaseMc((main.SI.getContenu()).slice(1),"0000",""));}
         main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
         break;
       case "111":
-        i = util.chercherAdr(dataTab,(main.DI.getContenu()).slice(1)) ;
+        i = util.chercherAdr(dataTab,(main.DI.getContenu()).slice(-3)) ;
+        if(i==dataTab.length) {dataTab.push(new CaseMc((main.DI.getContenu()).slice(1),"0000",""));}
         main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
         break;
     }
@@ -2671,16 +2717,19 @@ class UAL {
       let i=0 ; 
       switch (param2) {
         case "001":
-          i = util.chercherAdr(dataTab,(main.BX.getContenu()).slice(1)) ;
+          i = util.chercherAdr(dataTab,(main.BX.getContenu()).slice(-3)) ;
+          if(i==dataTab.length) {dataTab.push(new CaseMc((main.BX.getContenu()).slice(1),"0000",""));}
           m = (dataTab[i].getVal()).slice(1)  
           break;
         
         case "110":
-          i = util.chercherAdr(dataTab,(main.SI.getContenu()).slice(1)) ;
+          i = util.chercherAdr(dataTab,(main.SI.getContenu()).slice(-3)) ;
+          if(i==dataTab.length) {dataTab.push(new CaseMc((main.SI.getContenu()).slice(1),"0000",""));}
           m = (dataTab[i].getVal()).slice(1) 
           break;
         case "111":
-          i = util.chercherAdr(dataTab,(main.DI.getContenu()).slice(1)) ;
+          i = util.chercherAdr(dataTab,(main.DI.getContenu()).slice(-3)) ;
+          if(i==dataTab.length) {dataTab.push(new CaseMc((main.DI.getContenu()).slice(1),"0000",""));}
           m = (dataTab[i].getVal()).slice(1) 
           break;
       }
@@ -2745,6 +2794,7 @@ class UAL {
       }
       
       i = util.chercherAdr(main.getDataTab(),util.remplirZero(m,3,0)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc((util.remplirZero(m,3,0)).slice(-3),"0000",""));}
       m=main.getDataTab()[i].getVal() ; 
       switch (param1) {
         case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
@@ -2778,7 +2828,7 @@ class UAL {
         case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
       }
       let i = util.chercherAdr(dataTab,util.remplirZero(m,3,0)) ;
-      if(i==dataTab.length) {dataTab.push(new CaseMc((util.remplirZero(m,3,0)),0,"")); } 
+      if(i==dataTab.length) {dataTab.push(new CaseMc((util.remplirZero(m,3,0)).slice(-3),"0000",""));}
       m=dataTab[i].getVal() ;  
       switch (param1) {
         case "000": n = main.AX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
@@ -2799,11 +2849,13 @@ class UAL {
           break;
       }
       dataTab[i].setVal(main.ACC.getContenu()) ; 
-    } // Fin Mode BaseIndexe format Long  distination =0
+    }// Fin Mode BaseIndexe format Long  distination =0
     // Mode direct indexe format Long  distination =0
     directIndexeLongNonDest = function(code,param1,param2,dataTab,instrTab,cpt) {
-      let m = instrTab[cpt+1].getVal() ; 
-      
+      let m=0 ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+       m = instrTab[cpt+1].getVal() ; } else m=0 ;
+       
       let n=0 ;
       
       switch (param2) {
@@ -2811,10 +2863,12 @@ class UAL {
         case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
         case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
       }
-
-      let adretiq = instrTab[cpt+2].getVal() ; 
+      
+      let adretiq =0 ; 
+      if(main.nbMot[main.Nbinst] == 3) {
+      adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
       let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16);   
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
       m=dataTab[i].getVal() ;  
       switch (param1) {
         case "000": n = main.AX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
@@ -2840,7 +2894,10 @@ class UAL {
     // Mode direct indexe format Long  distination =1
 
     directIndexeLongDest = function(code,param1,param2,dataTab,instrTab,cpt) {
-      let n = instrTab[cpt+1].getVal() ; 
+      let n=0 ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+        n = instrTab[cpt+1].getVal() ; } else n=0 ;
+  
       let m=0 ; 
       let i=0 ; 
       switch (param2) {
@@ -2852,10 +2909,12 @@ class UAL {
           main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
       }
       
-      let adretiq = instrTab[cpt+2].getVal() ; 
+      let adretiq =0 ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+      adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
       i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16);   
-      m=dataTab[i].getVal() ;   
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);  
+      m=dataTab[i].getVal() ;    
       switch (param1) {
         case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
           break;
@@ -2939,9 +2998,10 @@ class UAL {
 
     }  //Mode immediate direct  format Long  distination =1
      //Mode immediate direct  format Long  distination =0
-    immediaDirectLongNonDest = function(code,instrTab,cpt) {
+     immediaDirectLongNonDest = function(code,instrTab,cpt) {
       let m = instrTab[cpt+1].getVal() ;
       let i = util.chercherAdr(main.getDataTab(),m.slice(1)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc((instrTab[cpt+1].getVal()).slice(-3),"0000",""));}
       m=main.getDataTab()[i].getVal() ;
       main.ACC.setContenu(m);
       let n= instrTab[cpt+2].getVal() ; ; 
@@ -2950,26 +3010,29 @@ class UAL {
     }  // Fin Mode immediate direct  format Long  distination =0 
 
       //Mode immediate indirect  format Long  distination =0 
-    immediaInDirectLongNonDest = function(code,param1,instrTab,cpt) {
-      let n = instrTab[cpt+1].getVal() ;
-      let i ; 
-      let m=0 ; 
-      switch (param1) {
-        case "001":
-          i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
-           m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-           m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
-         break;
-        case "110": 
-        i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
-        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-        m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
-        break ; 
-        case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
-        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-        m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m); break ; 
-      } 
-    } // FIN Mode immediate indirect  format Long  distination =0 
+      immediaInDirectLongNonDest = function(code,param1,instrTab,cpt) {
+        let n = instrTab[cpt+1].getVal() ;
+        let i ; 
+        let m=0 ; 
+        switch (param1) {
+          case "001":
+            i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+            if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
+             m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+             m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
+           break;
+          case "110": 
+          i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
+          m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+          m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
+          break ; 
+          case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
+          m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+          m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m); break ; 
+        } 
+      }// FIN Mode immediate indirect  format Long  distination =0 
 
     //  Mode immediate BaseIndexe  format Long  distination =0 
     immediaBaseIndexeLongNonDest = function(code,param1,instrTab,cpt) {
@@ -2980,6 +3043,7 @@ class UAL {
         case "001": main.ACC.setContenu(main.BX.getContenu().slice(1));
           m = util.additionHexa(main.BX.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
           i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
+          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
            m=main.dataTab[i].getVal() ; main.ACC.setContenu(m); 
            m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
          break;
@@ -2987,16 +3051,18 @@ class UAL {
         main.ACC.setContenu(main.SI.getContenu().slice(1));
         m = util.additionHexa(main.SI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
         i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
          m=main.dataTab[i].getVal() ; main.ACC.setContenu(m);
          m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
         break ; 
         case "111": main.ACC.setContenu(main.DI.getContenu().slice(1));
         m = util.additionHexa(main.DI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
         i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
          m=main.dataTab[i].getVal() ; main.ACC.setContenu(m); 
          m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
       } 
-    }  // Fin Mode immediate BaseIndexe  format Long  distination =0 
+    } // Fin Mode immediate BaseIndexe  format Long  distination =0 
 
     //  Mode immediate AccDirect  format COURT  
     immediaAccDirectCourt = function(code,param1) {
@@ -3021,6 +3087,36 @@ class UAL {
       } 
     } // FIN  Mode immediate AccDirect  format COURT  
 
+
+    immDirectIndexeLongNonDest = function(code,param1,dataTab,instrTab,cpt) {
+
+      let m=0 ; 
+     if(main.nbMot[main.Nbinst][1] == 4) {
+      m = instrTab[cpt+1].getVal() ; } else m=0 ;
+     
+     let n=0 ;
+     
+     switch (param1) {
+       case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
+       case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
+       case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
+     }
+     
+     
+     let adretiq ; 
+     if(main.nbMot[main.Nbinst][1] == 4) {
+       adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
+     let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
+     i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
+     m=dataTab[i].getVal() ;  
+     if(main.nbMot[main.Nbinst][1] == 4) {
+       n= instrTab[cpt+3].getVal() ;  } else n= instrTab[cpt+2].getVal() ; 
+     main.ACC.setContenu(this.operation(code,m,n))
+     dataTab[i].setVal(main.ACC.getContenu()) ; 
+   } 
+
+
+
     //  Mode immediate AccDirect  format Long  
     immediaAccDirectLong = function(code,dataTab,instrTab,cpt) {
       let n = instrTab[cpt+1].getVal() ;
@@ -3031,25 +3127,31 @@ class UAL {
     } //  FIN Mode immediate AccDirect  format Long 
     
 
-    LoadinDirectCourt = function(param1) {
+   LoadinDirectCourt = function(param1) {
       let i=0 ; let m=0 ; 
       switch (param1) {
         case "001":
           i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+          if(i==dataTab.length) {dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
            m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
          break;
         case "110": 
         i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+        if(i==dataTab.length) {dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
         m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
         break ; 
         case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+        if(i==dataTab.length) {dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
         m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m);  break ; 
       } 
 
     }
 
     LoadDirectIndexe = function(param1,dataTab,instrTab,cpt) {
-      let n = instrTab[cpt+1].getVal() ; 
+      let n=0 ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+       n = instrTab[cpt+1].getVal() ; } else n=0 ;
+  
       let m=0 ; 
       let i=0 ; 
       switch (param1) {
@@ -3061,9 +3163,13 @@ class UAL {
           main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
       }
       
-      let adretiq = instrTab[cpt+2].getVal() ; 
+      let adretiq ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+        adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
+
       i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16) ;   
+      
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16) ;   
       m=dataTab[i].getVal() ;  
       main.ACC.setContenu(m);
     }
@@ -3105,8 +3211,8 @@ class UAL {
          break;
         
       } 
-      console.log(main.getIndicateurRetenue());
-    }   //  FIN decalage / Rotation Logique
+   //   console.log(main.getIndicateurRetenue());
+    }    //  FIN decalage / Rotation Logique
      // JMP 
      jmp = function (code,indicateurTab,cpt) {
       let i = main.getinstrTab()[cpt+1].getVal() ; 
@@ -3126,99 +3232,12 @@ class UAL {
     case "JNS": if(main.getIndicateurSigne() != "1")  return i; else return cpt+2 ;
     case "JO": if(main.getIndicateurDebord() == "1")  return i; else return cpt+2 ;
     case "JNO": if(main.getIndicateurDebord() != "1")  return i ; else return cpt+2 ;
-    case "JE": if(main.getIndicateurZero() == "1" )  return i ; else return cpt+2 ; 
+    case "JE": if(main.getIndicateurZero() == "1" )  {return i ;} else return cpt+2 ; 
     case "JNE": if(main.getIndicateurZero() != "1" ) return i ; else return cpt+2 ;  
   }
 } //JMP 
    //  comparaison direct 
-  cmpDirect = function (code,param1,param2) {
-   let m=0 ;
-   let n=0 ; 
-    switch (param2) {
-      case "000":
-        m = main.AX.getContenu();
-        break;
-      case "001":
-        m = main.BX.getContenu();
-        break;
-      case "010":
-        m = main.CX.getContenu();
-        break;
-      case "011":
-        m = main.DX.getContenu();
-        break;
-      case "100":
-        m = main.EX.getContenu();
-        break;
-      case "101":
-        m = main.FX.getContenu();
-        break;
-      case "110":
-       m = main.SI.getContenu();
-         break;
-        case "111":
-        m = main.DI.getContenu();
-        break;
-    }
-    switch (param1) {
-      case "000":
-        n = main.AX.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "001":
-        n = main.BX.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "010":
-        n = main.CX.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "011":
-        n = main.DX.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "100":
-        n = main.EX.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "101":
-        n = main.FX.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "110":
-        n = main.SI.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "111":
-        n = main.DI.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m)); 
-        break;
-    }
-
-   // console.log(n," ",m);
-    if(util.compareHexValues(n,m)>0) { 
-      main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
-    }else if(util.compareHexValues(n,m)<0) {
-      main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
-    }
-    else { 
-      main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
-      main.setIndicateurDebord("0"); 
-    }
-
-      
-  }  // FIN   comparaison direct
-
-
-
+   
   cmpIndiret = function (code,param1,param2) {
     let m=0 ;
      let i=0 ; 
@@ -3226,13 +3245,16 @@ class UAL {
     switch (param2) {
       case "001":
         i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
          m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
        break;
       case "110": 
       i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
       m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
       break ; 
       case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
       m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
       break;
     } 
@@ -3257,7 +3279,23 @@ class UAL {
          n = main.DX.getContenu();
          main.ACC.setContenu(n);
          main.ACC.setContenu(this.operation("SUB",n,m));
-         case "111":
+         break;
+       case "100":
+         n = main.EX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "101":
+         n = main.FX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "110":
+         n = main.SI.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "111":
          n = main.DI.getContenu();
          main.ACC.setContenu(n);
          main.ACC.setContenu(this.operation("SUB",n,m)); 
@@ -3278,7 +3316,7 @@ class UAL {
 
 
    //  comparaison Imm
-  cmpImm = function (code,param1,instrTab,cpt) {
+   cmpImm = function (code,param1,instrTab,cpt) {
     let m= instrTab[cpt+1].getVal() ; 
     let n=0 ; 
      switch(param1) {
@@ -3323,6 +3361,7 @@ class UAL {
          main.ACC.setContenu(this.operation("SUB",n,m));
          break;
      }
+     
      if(util.compareHexValues(n,m)>0) {
       main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
     }else if(util.compareHexValues(n,m)<0) {
@@ -3338,6 +3377,7 @@ class UAL {
    store = function(cpt) {
     let i = main.getinstrTab()[cpt+1].getVal() ; 
     i= util.chercherAdr(main.getDataTab(),i.slice(1)) ; 
+    if(i==dataTab.length) {dataTab.push(new CaseMc(i,"0000",""));}
     main.getDataTab()[i].setVal(main.ACC.getContenu())  ; 
    } 
 
@@ -3372,64 +3412,64 @@ class UAL {
     else {main.setIndicateurSigne("0");}
 
    } // FIN mettre a jour les indicateurs 
-    operation = function(code,n,m ) {
-      let res=0 ; 
-      switch (code.toUpperCase()) {
-        case "MOV": res=util.remplirZero(m,4,0); this.mettreAjourIndicateur(res);  break; 
-        case "ADD": res=util.remplirZero(util.additionHexa(n,m),4,0); 
-        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
-        break;
-        case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ;
-        break;
-        case "CMP": res=util.compareHexValues(n,m) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "OR": res=util.remplirZero(util.OrHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "AND": res=util.remplirZero(util.AndHex(n,m),4,0) ;  util.setIndicateursAccumulateur(res.slice(-4)); break; 
-        case "SHR": res=util.remplirZero(util.decalageLogiqueHexadecDroit(n,m),4,0); util.setIndicateursAccumulateur(res.slice(-4));   break; 
-        case "SHL": res=util.remplirZero(util.decalageLogiqueHexadecGauche(n,m),4,0); util.setIndicateursAccumulateur(res.slice(-4));   break; 
-        case "ROL": res=rotationHexadecimal("ROL",n,m); util.setIndicateursAccumulateur(res.slice(-4));   break;
-        case "ROR": res=rotationHexadecimal("ROR",n,m); util.setIndicateursAccumulateur(res.slice(-4));  break;
-        case "JZ": ins = "001100"; this.mettreAjourIndicateur(res); break;
-        case "JNZ": ins = "001101"; this.mettreAjourIndicateur(res); break;
-        case "JC": ins = "001110"; this.mettreAjourIndicateur(res); break;
-        case "JS": ins = "010000"; this.mettreAjourIndicateur(res); break;
-        case "JNC": ins = "001111"; this.mettreAjourIndicateur(res); break;
-        case "JNS": ins = "010001"; this.mettreAjourIndicateur(res);  break;
-        case "JO": ins = "010010"; this.mettreAjourIndicateur(res); break;
-        case "JNO": ins = "010011"; this.mettreAjourIndicateur(res);  break;
-        case "JE": ins = "010100"; this.mettreAjourIndicateur(res); break;
-        case "JNE": ins = "010101"; this.mettreAjourIndicateur(res); break;
-        case "LOAD": res= util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "STORE": ins = "010111"; this.mettreAjourIndicateur(res); break;
-        case "INC": ins = "011000";  this.mettreAjourIndicateur(res); break;
-        case "DEC": ins = "011001";  this.mettreAjourIndicateur(res);break;
-        case "NOT":  res= util.remplirZero(util.NotHex(n),4,0) ;  break;
-        case "JMP": ins = "011011"; this.mettreAjourIndicateur(res); break;
-        case "IN": ins = "011100"; this.mettreAjourIndicateur(res); break;
-        case "OUT": ins = "011101"; break;
-        case "START": ins = "011111"; break;
-        case "STOP": ins = "011110"; break;
-        case "MOVI": res=util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "ADDI": res=util.remplirZero(util.additionHexa(n,m),4,0); 
-        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
-        break;
-        case "ADAI": res=util.remplirZero(util.additionHexa(n,m),4,0); 
-        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
-        break;
-        case "ADA": res=util.remplirZero(util.additionHexa(n,m),4,0) ;  
-        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
-        break; 
-        case "SUBI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
-        case "SBA": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break ;
-        case "SBAI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
-        case "CMPI": res=util.compareHexValues(n,m) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "ORI": res=util.remplirZero(util.OrHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "ANDI":res=util.remplirZero(util.AndHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "LOADI": res= util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
-        default: ins= "-1"; break;
-      }
-      return res.slice(-4);
-      
+   operation = function(code,n,m ) {
+    let res=0 ; 
+    switch (code.toUpperCase()) {
+      case "MOV": res=util.remplirZero(m,4,0); this.mettreAjourIndicateur(res);  break; 
+      case "ADD": res=util.remplirZero(util.additionHexa(n,m),4,0); 
+      util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
+      break;
+      case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; 
+      break;
+      case "CMP": res=util.compareHexValues(n,m) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+      case "OR": res=util.remplirZero(util.OrHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+      case "AND": res=util.remplirZero(util.AndHex(n,m),4,0) ;  util.setIndicateursAccumulateur(res.slice(-4)); break; 
+      case "SHR": res=util.remplirZero(util.decalageLogiqueHexadecDroit(n,m),4,0); util.setIndicateursAccumulateur(res.slice(-4));   break; 
+      case "SHL": res=util.remplirZero(util.decalageLogiqueHexadecGauche(n,m),4,0); util.setIndicateursAccumulateur(res.slice(-4));   break; 
+      case "ROL": res=rotationHexadecimal("ROL",n,m); util.setIndicateursAccumulateur(res.slice(-4));   break;
+      case "ROR": res=rotationHexadecimal("ROR",n,m); util.setIndicateursAccumulateur(res.slice(-4));  break;
+      case "JZ": ins = "001100"; this.mettreAjourIndicateur(res); break;
+      case "JNZ": ins = "001101"; this.mettreAjourIndicateur(res); break;
+      case "JC": ins = "001110"; this.mettreAjourIndicateur(res); break;
+      case "JS": ins = "010000"; this.mettreAjourIndicateur(res); break;
+      case "JNC": ins = "001111"; this.mettreAjourIndicateur(res); break;
+      case "JNS": ins = "010001"; this.mettreAjourIndicateur(res);  break;
+      case "JO": ins = "010010"; this.mettreAjourIndicateur(res); break;
+      case "JNO": ins = "010011"; this.mettreAjourIndicateur(res);  break;
+      case "JE": ins = "010100"; this.mettreAjourIndicateur(res); break;
+      case "JNE": ins = "010101"; this.mettreAjourIndicateur(res); break;
+      case "LOAD": res= util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
+      case "STORE": ins = "010111"; this.mettreAjourIndicateur(res); break;
+      case "INC": ins = "011000";  this.mettreAjourIndicateur(res); break;
+      case "DEC": ins = "011001";  this.mettreAjourIndicateur(res);break;
+      case "NOT":  res= util.remplirZero(util.NotHex(n),4,0) ;  break;
+      case "JMP": ins = "011011"; this.mettreAjourIndicateur(res); break;
+      case "IN": ins = "011100"; this.mettreAjourIndicateur(res); break;
+      case "OUT": ins = "011101"; break;
+      case "START": ins = "011111"; break;
+      case "STOP": ins = "011110"; break;
+      case "MOVI": res=util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
+      case "ADDI": res=util.remplirZero(util.additionHexa(n,m),4,0); 
+      util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
+      break;
+      case "ADAI": res=util.remplirZero(util.additionHexa(n,m),4,0); 
+      util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
+      break;
+      case "ADA": res=util.remplirZero(util.additionHexa(n,m),4,0) ;  
+      util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
+      break; 
+      case "SUBI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
+      case "SBA": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break ;
+      case "SBAI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
+      case "CMPI": res=util.compareHexValues(n,m) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+      case "ORI": res=util.remplirZero(util.OrHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+      case "ANDI":res=util.remplirZero(util.AndHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+      case "LOADI": res= util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
+      default: ins= "-1"; break;
     }
+    return res.slice(-4);
+    
+  }
   
   
 }
