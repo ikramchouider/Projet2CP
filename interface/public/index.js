@@ -1407,7 +1407,7 @@ class UAL {
     let m = 0;
     let i=0 ; 
     let tab=[];
-    
+    let d=0;
     if(codeIns[0]== "J") {
       return {p1: this.jmp(codeIns,indicateurTab,cpt),p2: delay}  ; 
     }
@@ -1416,25 +1416,35 @@ class UAL {
      }
     else if(codeIns== "CMP") {
       if ((modeAdr == "00") && dest == "1" && format == "0") {
-        this.cmpDirect(codeIns,param1,param2); 
+        delay+=3000;
+        d= this.cmpDirect(codeIns,param1,param2); 
+       delay=d+3000;
         return {p1: cpt+1 ,p2: delay};}
       if ((modeAdr == "01") && dest == "1" && format == "0") {
-        this.cmpIndiret(codeIns,param1,param2); 
+        delay+=3000;
+         d =this.cmpIndiret(codeIns,param1,param2); 
+        delay = d+3000;
         return {p1: cpt+1,p2: delay };}
 
     }
     else if(codeIns== "CMPI") {
       if ((modeAdr == "00") && dest == "1" && format == "1") {
-        this.cmpImm(codeIns,param1,instrTab,cpt); 
+        delay+=3000;
+         d= this.cmpImm(codeIns,param1,instrTab,cpt); 
+        delay=d+3000;
         return {p1: cpt+2,p2: delay };}
     }
     else if(codeIns== "SHR" || codeIns== "SHL" || codeIns== "ROR" || codeIns== "ROL" ) {
-      this.decalageRotationLogique(codeIns,param1,instrTab,cpt) ; 
+      delay+=3000;
+      d= this.decalageRotationLogique(codeIns,param1,instrTab,cpt) ; 
+     delay=d+3000;
       return {p1: cpt+2,p2: delay }; 
     }
     else if(codeIns== "ADA" || codeIns== "SBA" || codeIns== "LOAD") {
       if((modeAdr == "00") && dest == "1" && format == "0" ){
-        this.immediaAccDirectCourt(codeIns,param1) ; 
+        delay+=3000;
+        let d =this.immediaAccDirectCourt(codeIns,param1) ; 
+        delay=d+3000;
         return {p1: cpt+1,p2: delay };
   
       }
@@ -1478,14 +1488,15 @@ class UAL {
     }
     else if ((modeAdr == "00") && dest == "1" && format == "0") {
       delay+=3000;
-      delay= this.directCourtDist(codeIns,param1,param2,delay) ; 
+       d=  this.directCourtDist(codeIns,param1,param2,delay) ; 
+      delay =  d+3000;          
       return { p1: cpt+1 ,p2: delay};
 
     } 
     else if (modeAdr == "00" && format == "1") {
       delay+=3000;
-           this.directLong(codeIns,param1,param2,dataTab,instrTab,cpt,dest,delay) ; 
-          
+            d = this.directLong(codeIns,param1,param2,dataTab,instrTab,cpt,dest,delay) ; 
+           delay =  d+3000; 
            return {p1: cpt+2,p2: delay };
 
     }
@@ -1521,7 +1532,7 @@ class UAL {
 
   
   // Mode direct format court distination =1 
-  directCourtDist = function(code,param1,param2,delay) {
+  directCourtDist = function(code,param1,param2,delay) {     // F=0 , D=1(reg 1 destination)
     let n = 0;
     let m = 0;
     let i=0 ; 
@@ -1550,9 +1561,9 @@ class UAL {
           delay+=2000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(dataEUAL1el,delay,0);
+          selectElement(dataEUAL2el,delay,0);
           delay+=3000;
-          selectElement(ual1,delay,n);
+          selectElement(ual2,delay,n);
           delay+=3000;
           selectElement(acc,delay,n);          //chargement vers l'acc
           main.ACC.setContenu(n);
@@ -1565,7 +1576,7 @@ class UAL {
           delay+=3000;
           selectElement(dataC3el,delay,0);
           delay+=3000;
-          switch (param2) {
+          switch (param2) {             // on récoupère le contenu de deuxième registre
               case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
               case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
               case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
@@ -1579,9 +1590,9 @@ class UAL {
             delay+=3000;
             selectElement(dataEUAL2el,delay,0);
             delay+=3000;
-            selectElement(ual2,delay,n);
+            selectElement(ual2,delay,m);
             delay+=3000;
-            selectElement(acc,delay,n);
+            selectElement(acc,delay,m);
             delay+=3000;
             selectElement(dataC5el,delay,0);
             delay+=3000;
@@ -1591,8 +1602,8 @@ class UAL {
             delay+=3000;
             selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
-          selectElement(instname,delay,code);
-          selectElement(acc,delay,this.operation(code,n,m));
+        //  selectElement(instname,delay,code);
+          selectElement(acc,delay,main.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -1600,19 +1611,20 @@ class UAL {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(ax,delay,this.operation(code,n,m));
+          selectElement(ax,delay,main.ACC.getContenu());
           main.AX.setContenu(main.ACC.getContenu());
           break;
         case "001":
           n = main.BX.getContenu();
           selectElement(bx,delay,n);
+          delay+=2000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(dataEUAL1el,delay,0);
+          selectElement(dataEUAL2el,delay,0);
           delay+=3000;
-          selectElement(ual1,delay,n);
+          selectElement(ual2,delay,n);
           delay+=3000;
-          selectElement(acc,delay,n);
+          selectElement(acc,delay,n);          //chargement vers l'acc
           main.ACC.setContenu(n);
           this.mettreAjourIndicateur(main.ACC.getContenu()) ;
           selectElement(dataREG2el,delay,0);
@@ -1623,7 +1635,7 @@ class UAL {
           delay+=3000;
           selectElement(dataC3el,delay,0);
           delay+=3000;
-          switch (param2) {
+          switch (param2) {             // on récoupère le contenu de deuxième registre
               case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
               case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
               case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
@@ -1635,11 +1647,11 @@ class UAL {
             }
             selectElement(dataREGel,delay,0);
             delay+=3000;
-            selectElement(dataEUAL1el,delay,0);
+            selectElement(dataEUAL2el,delay,0);
             delay+=3000;
-            selectElement(ual2,delay,n);
+            selectElement(ual2,delay,m);
             delay+=3000;
-            selectElement(acc,delay,n);
+            selectElement(acc,delay,m);
             delay+=3000;
             selectElement(dataC5el,delay,0);
             delay+=3000;
@@ -1649,8 +1661,8 @@ class UAL {
             delay+=3000;
             selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
-          selectElement(instname,delay,code);
-          selectElement(acc,delay,this.operation(code,n,m));
+        //  selectElement(instname,delay,code);
+          selectElement(acc,delay,main.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -1658,19 +1670,20 @@ class UAL {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(bx,delay,this.operation(code,n,m));
+          selectElement(bx,delay,main.ACC.getContenu());
           main.BX.setContenu(main.ACC.getContenu());
           break;
         case "010":
           n = main.CX.getContenu();
           selectElement(cx,delay,n);
+          delay+=2000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(dataEUAL1el,delay,0);
+          selectElement(dataEUAL2el,delay,0);
           delay+=3000;
-          selectElement(ual1,delay,n);
+          selectElement(ual2,delay,n);
           delay+=3000;
-          selectElement(acc,delay,n);
+          selectElement(acc,delay,n);          //chargement vers l'acc
           main.ACC.setContenu(n);
           this.mettreAjourIndicateur(main.ACC.getContenu()) ;
           selectElement(dataREG2el,delay,0);
@@ -1681,7 +1694,7 @@ class UAL {
           delay+=3000;
           selectElement(dataC3el,delay,0);
           delay+=3000;
-          switch (param2) {
+          switch (param2) {             // on récoupère le contenu de deuxième registre
               case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
               case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
               case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
@@ -1693,11 +1706,11 @@ class UAL {
             }
             selectElement(dataREGel,delay,0);
             delay+=3000;
-            selectElement(dataEUAL1el,delay,0);
+            selectElement(dataEUAL2el,delay,0);
             delay+=3000;
-            selectElement(ual2,delay,n);
+            selectElement(ual2,delay,m);
             delay+=3000;
-            selectElement(acc,delay,n);
+            selectElement(acc,delay,m);
             delay+=3000;
             selectElement(dataC5el,delay,0);
             delay+=3000;
@@ -1707,8 +1720,8 @@ class UAL {
             delay+=3000;
             selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
-          selectElement(instname,delay,code);
-          selectElement(acc,delay,this.operation(code,n,m));
+        //  selectElement(instname,delay,code);
+          selectElement(acc,delay,main.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -1716,19 +1729,20 @@ class UAL {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(cx,delay,this.operation(code,n,m));
+          selectElement(cx,delay,main.ACC.getContenu());
           main.CX.setContenu(main.ACC.getContenu());
           break;
         case "011":
           n = main.DX.getContenu();
           selectElement(dx,delay,n);
+          delay+=2000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(dataEUAL1el,delay,0);
+          selectElement(dataEUAL2el,delay,0);
           delay+=3000;
-          selectElement(ual1,delay,n);
+          selectElement(ual2,delay,n);
           delay+=3000;
-          selectElement(acc,delay,n);
+          selectElement(acc,delay,n);          //chargement vers l'acc
           main.ACC.setContenu(n);
           this.mettreAjourIndicateur(main.ACC.getContenu()) ;
           selectElement(dataREG2el,delay,0);
@@ -1739,7 +1753,7 @@ class UAL {
           delay+=3000;
           selectElement(dataC3el,delay,0);
           delay+=3000;
-          switch (param2) {
+          switch (param2) {             // on récoupère le contenu de deuxième registre
               case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
               case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
               case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
@@ -1751,11 +1765,11 @@ class UAL {
             }
             selectElement(dataREGel,delay,0);
             delay+=3000;
-            selectElement(dataEUAL1el,delay,0);
+            selectElement(dataEUAL2el,delay,0);
             delay+=3000;
-            selectElement(ual2,delay,n);
+            selectElement(ual2,delay,m);
             delay+=3000;
-            selectElement(acc,delay,n);
+            selectElement(acc,delay,m);
             delay+=3000;
             selectElement(dataC5el,delay,0);
             delay+=3000;
@@ -1765,8 +1779,8 @@ class UAL {
             delay+=3000;
             selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
-          selectElement(instname,delay,code);
-          selectElement(acc,delay,this.operation(code,n,m));
+        //  selectElement(instname,delay,code);
+          selectElement(acc,delay,main.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -1774,19 +1788,20 @@ class UAL {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(dx,delay,this.operation(code,n,m));
+          selectElement(dx,delay,main.ACC.getContenu());
           main.DX.setContenu(main.ACC.getContenu());
           break;
         case "100":
           n = main.EX.getContenu();
           selectElement(ex,delay,n);
+          delay+=2000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(dataEUAL1el,delay,0);
+          selectElement(dataEUAL2el,delay,0);
           delay+=3000;
-          selectElement(ual1,delay,n);
+          selectElement(ual2,delay,n);
           delay+=3000;
-          selectElement(acc,delay,n);
+          selectElement(acc,delay,n);          //chargement vers l'acc
           main.ACC.setContenu(n);
           this.mettreAjourIndicateur(main.ACC.getContenu()) ;
           selectElement(dataREG2el,delay,0);
@@ -1797,7 +1812,7 @@ class UAL {
           delay+=3000;
           selectElement(dataC3el,delay,0);
           delay+=3000;
-          switch (param2) {
+          switch (param2) {             // on récoupère le contenu de deuxième registre
               case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
               case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
               case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
@@ -1809,11 +1824,11 @@ class UAL {
             }
             selectElement(dataREGel,delay,0);
             delay+=3000;
-            selectElement(dataEUAL1el,delay,0);
+            selectElement(dataEUAL2el,delay,0);
             delay+=3000;
-            selectElement(ual2,delay,n);
+            selectElement(ual2,delay,m);
             delay+=3000;
-            selectElement(acc,delay,n);
+            selectElement(acc,delay,m);
             delay+=3000;
             selectElement(dataC5el,delay,0);
             delay+=3000;
@@ -1823,8 +1838,8 @@ class UAL {
             delay+=3000;
             selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
-          selectElement(instname,delay,code);
-          selectElement(acc,delay,this.operation(code,n,m));
+        //  selectElement(instname,delay,code);
+          selectElement(acc,delay,main.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -1832,19 +1847,20 @@ class UAL {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(ex,delay,this.operation(code,n,m));
+          selectElement(ex,delay,main.ACC.getContenu());
           main.EX.setContenu(main.ACC.getContenu());
           break;
         case "101":
           n = main.FX.getContenu();
           selectElement(fx,delay,n);
+          delay+=2000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(dataEUAL1el,delay,0);
+          selectElement(dataEUAL2el,delay,0);
           delay+=3000;
-          selectElement(ual1,delay,n);
+          selectElement(ual2,delay,n);
           delay+=3000;
-          selectElement(acc,delay,n);
+          selectElement(acc,delay,n);          //chargement vers l'acc
           main.ACC.setContenu(n);
           this.mettreAjourIndicateur(main.ACC.getContenu()) ;
           selectElement(dataREG2el,delay,0);
@@ -1855,7 +1871,7 @@ class UAL {
           delay+=3000;
           selectElement(dataC3el,delay,0);
           delay+=3000;
-          switch (param2) {
+          switch (param2) {             // on récoupère le contenu de deuxième registre
               case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
               case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
               case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
@@ -1867,11 +1883,11 @@ class UAL {
             }
             selectElement(dataREGel,delay,0);
             delay+=3000;
-            selectElement(dataEUAL1el,delay,0);
+            selectElement(dataEUAL2el,delay,0);
             delay+=3000;
-            selectElement(ual2,delay,n);
+            selectElement(ual2,delay,m);
             delay+=3000;
-            selectElement(acc,delay,n);
+            selectElement(acc,delay,m);
             delay+=3000;
             selectElement(dataC5el,delay,0);
             delay+=3000;
@@ -1881,8 +1897,8 @@ class UAL {
             delay+=3000;
             selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
-          selectElement(instname,delay,code);
-          selectElement(acc,delay,this.operation(code,n,m));
+        //  selectElement(instname,delay,code);
+          selectElement(acc,delay,main.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -1890,19 +1906,20 @@ class UAL {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(fx,delay,this.operation(code,n,m));
+          selectElement(fx,delay,main.ACC.getContenu());
           main.FX.setContenu(main.ACC.getContenu());
           break;
         case "110":
           n = main.SI.getContenu();
           selectElement(si,delay,n);
+          delay+=2000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(dataEUAL1el,delay,0);
+          selectElement(dataEUAL2el,delay,0);
           delay+=3000;
-          selectElement(ual1,delay,n);
+          selectElement(ual2,delay,n);
           delay+=3000;
-          selectElement(acc,delay,n);
+          selectElement(acc,delay,n);          //chargement vers l'acc
           main.ACC.setContenu(n);
           this.mettreAjourIndicateur(main.ACC.getContenu()) ;
           selectElement(dataREG2el,delay,0);
@@ -1913,7 +1930,7 @@ class UAL {
           delay+=3000;
           selectElement(dataC3el,delay,0);
           delay+=3000;
-          switch (param2) {
+          switch (param2) {             // on récoupère le contenu de deuxième registre
               case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
               case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
               case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
@@ -1925,11 +1942,11 @@ class UAL {
             }
             selectElement(dataREGel,delay,0);
             delay+=3000;
-            selectElement(dataEUAL1el,delay,0);
+            selectElement(dataEUAL2el,delay,0);
             delay+=3000;
-            selectElement(ual2,delay,n);
+            selectElement(ual2,delay,m);
             delay+=3000;
-            selectElement(acc,delay,n);
+            selectElement(acc,delay,m);
             delay+=3000;
             selectElement(dataC5el,delay,0);
             delay+=3000;
@@ -1939,8 +1956,8 @@ class UAL {
             delay+=3000;
             selectElement(ual1,delay,m);
           main.ACC.setContenu(this.operation(code,n,m));
-          selectElement(instname,delay,code);
-          selectElement(acc,delay,this.operation(code,n,m));
+        //  selectElement(instname,delay,code);
+          selectElement(acc,delay,main.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -1948,82 +1965,84 @@ class UAL {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(si,delay,this.operation(code,n,m));
+          selectElement(si,delay,main.ACC.getContenu());
           main.SI.setContenu(main.ACC.getContenu());
-          break;
-        case "111":
-          n = main.DI.getContenu();
-          selectElement(di,delay,n);
-          selectElement(dataREGel,delay,0);
-          delay+=3000;
-          selectElement(dataEUAL1el,delay,0);
-          delay+=3000;
-          selectElement(ual1,delay,n);
-          delay+=3000;
-          selectElement(acc,delay,n);
-          main.ACC.setContenu(n);
-          this.mettreAjourIndicateur(main.ACC.getContenu()) ;
-          selectElement(dataREG2el,delay,0);
-          delay+=3000;
-          selectElement(dataC1el,delay,0);
-          delay+=3000;
-          selectElement(dataC2el,delay,0);
-          delay+=3000;
-          selectElement(dataC3el,delay,0);
-          delay+=3000;
-          switch (param2) {
-              case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
-              case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
-              case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
-              case "011":  m = main.DX.getContenu(); selectElement(dx,delay,m);break;
-              case "100":  m = main.EX.getContenu();selectElement(ex,delay,m); break;
-              case "101":  m = main.FX.getContenu();selectElement(fx,delay,m); break;
-              case "110":  m = main.SI.getContenu();selectElement(si,delay,m); break;
-              case "111":  m = main.DI.getContenu(); selectElement(di,delay,m); break;
-            }
-            selectElement(dataREGel,delay,0);
-            delay+=3000;
-            selectElement(dataEUAL1el,delay,0);
-            delay+=3000;
-            selectElement(ual2,delay,n);
-            delay+=3000;
-            selectElement(acc,delay,n);
-            delay+=3000;
-            selectElement(dataC5el,delay,0);
-            delay+=3000;
-            selectElement(dataC4el,delay,0);
-            delay+=3000;
-            selectElement(dataEUAL1el,delay,0);
-            delay+=3000;
-            selectElement(ual1,delay,m);
-          main.ACC.setContenu(this.operation(code,n,m));
-          selectElement(instname,delay,code);
-          selectElement(acc,delay,this.operation(code,n,m));
-          delay+=3000;
-          selectElement(dataC5el,delay,0);
-          delay+=3000;
-          selectElement(dataC4el,delay,0);
-          delay+=3000;
-          selectElement(dataREGel,delay,0);
-          delay+=3000;
-          selectElement(di,delay,this.operation(code,n,m));
-          main.DI.setContenu(main.ACC.getContenu());
-          break;
+         break;
+         case "111": 
+         n = main.DI.getContenu();
+         selectElement(di,delay,n);
+         delay+=2000;
+         selectElement(dataREGel,delay,0);
+         delay+=3000;
+         selectElement(dataEUAL2el,delay,0);
+         delay+=3000;
+         selectElement(ual2,delay,n);
+         delay+=3000;
+         selectElement(acc,delay,n);          //chargement vers l'acc
+         main.ACC.setContenu(n);
+         this.mettreAjourIndicateur(main.ACC.getContenu()) ;
+         selectElement(dataREG2el,delay,0);
+         delay+=3000;
+         selectElement(dataC1el,delay,0);
+         delay+=3000;
+         selectElement(dataC2el,delay,0);
+         delay+=3000;
+         selectElement(dataC3el,delay,0);
+         delay+=3000;
+         switch (param2) {             // on récoupère le contenu de deuxième registre
+             case "000":  m = main.AX.getContenu(); selectElement(ax,delay,m); break;
+             case "001":  m = main.BX.getContenu();selectElement(bx,delay,m); break;
+             case "010":  m = main.CX.getContenu();selectElement(cx,delay,m); break;
+             case "011":  m = main.DX.getContenu(); selectElement(dx,delay,m);break;
+             case "100":  m = main.EX.getContenu();selectElement(ex,delay,m); break;
+             case "101":  m = main.FX.getContenu();selectElement(fx,delay,m); break;
+             case "110":  m = main.SI.getContenu();selectElement(si,delay,m); break;
+             case "111":  m = main.DI.getContenu(); selectElement(di,delay,m); break;
+           }
+           selectElement(dataREGel,delay,0);
+           delay+=3000;
+           selectElement(dataEUAL2el,delay,0);
+           delay+=3000;
+           selectElement(ual2,delay,m);
+           delay+=3000;
+           selectElement(acc,delay,m);
+           delay+=3000;
+           selectElement(dataC5el,delay,0);
+           delay+=3000;
+           selectElement(dataC4el,delay,0);
+           delay+=3000;
+           selectElement(dataEUAL1el,delay,0);
+           delay+=3000;
+           selectElement(ual1,delay,m);
+         main.ACC.setContenu(this.operation(code,n,m));
+       //  selectElement(instname,delay,code);
+         selectElement(acc,delay,main.ACC.getContenu());
+         delay+=3000;
+         selectElement(dataC5el,delay,0);
+         delay+=3000;
+         selectElement(dataC4el,delay,0);
+         delay+=3000;
+         selectElement(dataREGel,delay,0);
+         delay+=3000;
+         selectElement(di,delay,main.ACC.getContenu());
+         main.DI.setContenu(main.ACC.getContenu());
+         break; 
       }
         return delay;
 
     } // Finnnn Mode direct format court(f=0) distination =1 
 
     // Mode direct format Long distination =0 
-    directLong = function(code,param1,param2,dataTab,instrTab,cpt,dest,delay) {
+    directLong = function(code,param1,param2,dataTab,instrTab,cpt,dest,delay) { 
       let n = 0;
       let m = 0;
       let i = util.chercherAdr(dataTab,(instrTab[cpt+1].getVal()).slice(1)) ;
              if(i==dataTab.length) {dataTab.push(new CaseMc((instrTab[cpt+1].getVal()).slice(1),0,"")); }
 
-       m = dataTab[i].getVal() ; 
+       m = dataTab[i].getVal() ;              // la valeur de la donnée 
+       let adr = dataTab[i].getAdr();          // l'adr de la donnée dans le segment de données 
             
-
+        
 
            if(dest == "0"){
             switch (param1) {
@@ -2036,8 +2055,13 @@ class UAL {
               case "110": m = main.SI.getContenu(); selectElement(si,delay,m);  main.ACC.setContenu(m); break;
               case "111": m = main.DI.getContenu(); selectElement(di,delay,m);  main.ACC.setContenu(m); break;
             }
+            delay+=3000;
+            delay = premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+            delay+=3000;
+            delay= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
+            delay+=3000;
             if(code=="MOV"){
-               ecriturememoiremov(dataTab[i].getAdr(),delay,m);
+              delay= ecriturememoiremov(dataTab[i].getAdr(),delay,m);
             }
             else{
               delay+=3000;
@@ -2050,42 +2074,76 @@ class UAL {
               selectElement(ual2,delay,m);
               delay+=3000;
               selectElement(acc,delay,m);
+              delay+=3000; 
+              selectElement(dataRIMel,delay,0);
+              delay+=3000;
+              selectElement(dataDATAel,delay,0);
+              delay+=3000;
+              selectElement(dataEUAL2el,delay,0);
+              delay+=3000;
+              selectElement(ual2,delay,dataTab[i].getVal());
+              delay+=3000;
+              selectElement(dataC5el,delay,0);
+              delay+=3000;
+              selectElement(dataC4el,delay,0);
+              delay+=3000;
+              selectElement(dataACCel,delay,0);
+              delay+=3000;
+              selectElement(dataC6el,delay,0);
+              delay+=3000;
+              selectElement(ual1,delay,main.ACC.getContenu());
+
+
               main.ACC.setContenu(this.operation(code,dataTab[i].getVal(),m));
+              delay+=3000;
+              selectElement(acc,delay,main.ACC.getContenu());
               delay+=3000;
               delay = ecriturememoire(dataTab[i].getAdr(),delay,main.ACC.getContenu());
 
             }
             
-            main.ACC.setContenu(this.operation(code,dataTab[i].getVal(),m));s
+            main.ACC.setContenu(this.operation(code,dataTab[i].getVal(),m));
             dataTab[i].setVal(main.ACC.getContenu()) ;
             
            } 
-            else {                       // dest==1 (reg1 destination) 
+            else {    
+              let d;                   // dest==1 (reg1 destination) 
               switch (param1) {
                 case "000":
                   n = main.AX.getContenu();
-                  selectElement(ax,delay,n);
+                  if(code=="MOV"){
+                    selectElement(ax,delay,main.AX.getContenu());
+                    delay+=3000;
+                  }
+                  else{
                   selectElement(dataREGel,delay,0);
                   delay+=3000;
-                  selectElement(dataEUAL1el,delay,0);
+                  selectElement(dataEUAL2el,delay,0);
                   delay+=3000;
-                  selectElement(ual1,delay,n);
+                  selectElement(ual2,delay,n);
                   delay+=3000;
                   selectElement(acc,delay,n);
                   delay+=3000;
+                  }
               main.ACC.setContenu(n);
               // on lit le mot memoire 
-              selectElement(ram,delay,dataTab[i].getAdr());
-              delay+=3000;
-              selectElement(caseMemoire,delay,dataTab[i].getVal());
-              delay+=3000;
-              selectElement(rim,delay,dataTab[i].getVal());
-              delay+=3000;
-              selectElement(dataRIMel,delay,0);
-                delay+=3000;
-                //ff
+              d = premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+              delay=d+3000;
+              d= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
+              delay=d+3000;
+              //ff
                 selectElement(dataDATAel,delay,0);
                 delay+=3000;
+                if(code=="MOV"){
+                  selectElement(dataREGel,delay,0);
+                  delay+=3000;
+                  selectElement(ax,delay,dataTab[i].getVal());
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.AX.setContenu(main.ACC.getContenu());
+
+
+                }
+                else {
                 selectElement(ual2,delay,dataTab[i].getVal());
                 delay+=3000;
                 selectElement(dataC5el,delay,0);
@@ -2112,85 +2170,45 @@ class UAL {
                 delay+=3000;
                   main.AX.setContenu(main.ACC.getContenu());
                   selectElement(ax,delay,main.ACC.getContenu());
+                }
 
                   break;
 
                 case "001":
-                   n = main.BX.getContenu();
-                  selectElement(bx,delay,n);
+                  n = main.BX.getContenu();
+                  if(code=="MOV"){
+                    selectElement(bx,delay,main.BX.getContenu());
+                    delay+=3000;
+                  }
+                  else{
                   selectElement(dataREGel,delay,0);
                   delay+=3000;
-                  selectElement(dataEUAL1el,delay,0);
+                  selectElement(dataEUAL2el,delay,0);
                   delay+=3000;
-                  selectElement(ual1,delay,n);
+                  selectElement(ual2,delay,n);
                   delay+=3000;
                   selectElement(acc,delay,n);
                   delay+=3000;
+                  }
               main.ACC.setContenu(n);
-  // on lit le mot memoire 
-  selectElement(ram,delay,dataTab[i].getAdr());
-  delay+=3000;
-  selectElement(caseMemoire,delay,dataTab[i].getVal());
-  delay+=3000;
-  selectElement(rim,delay,dataTab[i].getVal());
-  delay+=3000;
-  selectElement(dataRIMel,delay,0);
-    delay+=3000;
-    //ff                
+              // on lit le mot memoire 
+               d = premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+              delay=d+3000;
+              d= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
+              delay=d+3000;
+              //ff
                 selectElement(dataDATAel,delay,0);
                 delay+=3000;
-                selectElement(ual2,delay,dataTab[i].getVal());
-                delay+=3000;
-                selectElement(dataC5el,delay,0);
-                delay+=3000;
-                selectElement(dataC4el,delay,0);
-                delay+=3000;
-                selectElement(dataC6el,delay,0);
-                delay+=3000;
-                selectElement(ual1,delay,main.ACC.getContenu());
-                
+                if(code=="MOV"){
+                  selectElement(dataREGel,delay,0);
+                  delay+=3000;
+                  selectElement(bx,delay,dataTab[i].getVal());
                   main.ACC.setContenu(this.operation(code,n,m));
-                  delay+=3000;
-                  selectElement(acc,delay,main.ACC.getContenu());
-                  delay+=3000;
-                selectElement(dataC5el,delay,0);
-                delay+=3000;
-                selectElement(dataC4el,delay,0);
-                delay+=3000;
-                selectElement(dataACCel,delay,0);
-                delay+=3000;
-                selectElement(dataDATAel,delay,0);
-                delay+=3000;
-                selectElement(dataREGel,delay,0);
-                delay+=3000;
-                  main.AX.setContenu(main.ACC.getContenu());
-                  selectElement(bx,delay,main.ACC.getContenu());
-                  
-                  break;
-                case "010":
-                  n = main.CX.getContenu();
-                  selectElement(cx,delay,n);
-                  selectElement(dataREGel,delay,0);
-                  delay+=3000;
-                  selectElement(dataEUAL1el,delay,0);
-                  delay+=3000;
-                  selectElement(ual1,delay,n);
-                  delay+=3000;
-                  selectElement(acc,delay,n);
-                  delay+=3000;
-              main.ACC.setContenu(n);
-                // on lit le mot memoire 
-                selectElement(ram,delay,dataTab[i].getAdr());
-                delay+=3000;
-                selectElement(caseMemoire,delay,dataTab[i].getVal());
-                delay+=3000;
-                selectElement(rim,delay,dataTab[i].getVal());
-                delay+=3000;
-                selectElement(dataRIMel,delay,0);
-                  delay+=3000;
-                  //ff
-                selectElement(dataDATAel,delay,0);
-                delay+=3000;
+                  main.BX.setContenu(main.ACC.getContenu());
+
+
+                }
+                else {
                 selectElement(ual2,delay,dataTab[i].getVal());
                 delay+=3000;
                 selectElement(dataC5el,delay,0);
@@ -2215,34 +2233,109 @@ class UAL {
                 delay+=3000;
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  main.AX.setContenu(main.ACC.getContenu());
+                  main.BX.setContenu(main.ACC.getContenu());
+                  selectElement(bx,delay,main.ACC.getContenu());
+                }
+                  break;
+                case "010":
+                  n = main.CX.getContenu();
+                  if(code=="MOV"){
+                    selectElement(cx,delay,main.CX.getContenu());
+                    delay+=3000;
+                  }
+                  else{
+                  selectElement(dataREGel,delay,0);
+                  delay+=3000;
+                  selectElement(dataEUAL2el,delay,0);
+                  delay+=3000;
+                  selectElement(ual2,delay,n);
+                  delay+=3000;
+                  selectElement(acc,delay,n);
+                  delay+=3000;
+                  }
+              main.ACC.setContenu(n);
+              // on lit le mot memoire 
+              let d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+              delay=d+3000;
+              d= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
+              delay=d+3000;
+              //ff
+                selectElement(dataDATAel,delay,0);
+                delay+=3000;
+                if(code=="MOV"){
+                  selectElement(dataREGel,delay,0);
+                  delay+=3000;
+                  selectElement(cx,delay,dataTab[i].getVal());
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.CX.setContenu(main.ACC.getContenu());
+
+
+                }
+                else {
+                selectElement(ual2,delay,dataTab[i].getVal());
+                delay+=3000;
+                selectElement(dataC5el,delay,0);
+                delay+=3000;
+                selectElement(dataC4el,delay,0);
+                delay+=3000;
+                selectElement(dataC6el,delay,0);
+                delay+=3000;
+                selectElement(ual1,delay,main.ACC.getContenu());
+               
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  delay+=3000;
+                  selectElement(acc,delay,main.ACC.getContenu());
+                  delay+=3000;
+                selectElement(dataC5el,delay,0);
+                delay+=3000;
+                selectElement(dataC4el,delay,0);
+                delay+=3000;
+                selectElement(dataACCel,delay,0);
+                delay+=3000;
+                selectElement(dataDATAel,delay,0);
+                delay+=3000;
+                selectElement(dataREGel,delay,0);
+                delay+=3000;
+                  main. CX.setContenu(main.ACC.getContenu());
                   selectElement(cx,delay,main.ACC.getContenu());
+                }
                   
                   break;
                 case "011":
                   n = main.DX.getContenu();
-                  selectElement(dx,delay,n);
+                  if(code=="MOV"){
+                    selectElement(dx,delay,main.DX.getContenu());
+                    delay+=3000;
+                  }
+                  else{
                   selectElement(dataREGel,delay,0);
                   delay+=3000;
-                  selectElement(dataEUAL1el,delay,0);
+                  selectElement(dataEUAL2el,delay,0);
                   delay+=3000;
-                  selectElement(ual1,delay,n);
+                  selectElement(ual2,delay,n);
                   delay+=3000;
                   selectElement(acc,delay,n);
                   delay+=3000;
+                  }
               main.ACC.setContenu(n);
-                // on lit le mot memoire 
-                selectElement(ram,delay,dataTab[i].getAdr());
-                delay+=3000;
-                selectElement(caseMemoire,delay,dataTab[i].getVal());
-                delay+=3000;
-                selectElement(rim,delay,dataTab[i].getVal());
-                delay+=3000;
-                selectElement(dataRIMel,delay,0);
-                  delay+=3000;
-                  //ff
+              // on lit le mot memoire 
+               d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+              delay=d+3000;
+              d= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
+              delay=d+3000;
+              //ff
                 selectElement(dataDATAel,delay,0);
                 delay+=3000;
+                if(code=="MOV"){
+                  selectElement(dataREGel,delay,0);
+                  delay+=3000;
+                  selectElement(dx,delay,dataTab[i].getVal());
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.DX.setContenu(main.ACC.getContenu());
+
+
+                }
+                else {
                 selectElement(ual2,delay,dataTab[i].getVal());
                 delay+=3000;
                 selectElement(dataC5el,delay,0);
@@ -2267,34 +2360,46 @@ class UAL {
                 delay+=3000;
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  main.AX.setContenu(main.ACC.getContenu());
+                  main.DX.setContenu(main.ACC.getContenu());
                   selectElement(dx,delay,main.ACC.getContenu());
+                }
                   
                   break;
                 case "100":
                   n = main.EX.getContenu();
-                  selectElement(ex,delay,n);
+                  if(code=="MOV"){
+                    selectElement(ex,delay,main.EX.getContenu());
+                    delay+=3000;
+                  }
+                  else{
                   selectElement(dataREGel,delay,0);
                   delay+=3000;
-                  selectElement(dataEUAL1el,delay,0);
+                  selectElement(dataEUAL2el,delay,0);
                   delay+=3000;
-                  selectElement(ual1,delay,n);
+                  selectElement(ual2,delay,n);
                   delay+=3000;
                   selectElement(acc,delay,n);
                   delay+=3000;
+                  }
               main.ACC.setContenu(n);
-                // on lit le mot memoire 
-                selectElement(ram,delay,dataTab[i].getAdr());
-                delay+=3000;
-                selectElement(caseMemoire,delay,dataTab[i].getVal());
-                delay+=3000;
-                selectElement(rim,delay,dataTab[i].getVal());
-                delay+=3000;
-                selectElement(dataRIMel,delay,0);
-                  delay+=3000;
-                  //ff
+              // on lit le mot memoire 
+               d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+              delay=d+3000;
+              d= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
+              delay=d+3000;
+              //ff
                 selectElement(dataDATAel,delay,0);
                 delay+=3000;
+                if(code=="MOV"){
+                  selectElement(dataREGel,delay,0);
+                  delay+=3000;
+                  selectElement(ex,delay,dataTab[i].getVal());
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.EX.setContenu(main.ACC.getContenu());
+
+
+                }
+                else {
                 selectElement(ual2,delay,dataTab[i].getVal());
                 delay+=3000;
                 selectElement(dataC5el,delay,0);
@@ -2319,34 +2424,47 @@ class UAL {
                 delay+=3000;
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  main.AX.setContenu(main.ACC.getContenu());
+                  main.EX.setContenu(main.ACC.getContenu());
                   selectElement(ex,delay,main.ACC.getContenu());
+                
+                }
                   
                   break;
                 case "101":
                   n = main.FX.getContenu();
-                  selectElement(fx,delay,n);
+                  if(code=="MOV"){
+                    selectElement(fx,delay,main.AX.getContenu());
+                    delay+=3000;
+                  }
+                  else{
                   selectElement(dataREGel,delay,0);
                   delay+=3000;
-                  selectElement(dataEUAL1el,delay,0);
+                  selectElement(dataEUAL2el,delay,0);
                   delay+=3000;
-                  selectElement(ual1,delay,n);
+                  selectElement(ual2,delay,n);
                   delay+=3000;
                   selectElement(acc,delay,n);
                   delay+=3000;
+                  }
               main.ACC.setContenu(n);
-                // on lit le mot memoire 
-                selectElement(ram,delay,dataTab[i].getAdr());
-                delay+=3000;
-                selectElement(caseMemoire,delay,dataTab[i].getVal());
-                delay+=3000;
-                selectElement(rim,delay,dataTab[i].getVal());
-                delay+=3000;
-                selectElement(dataRIMel,delay,0);
-                  delay+=3000;
-                  //ff
+              // on lit le mot memoire 
+               d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+              delay=d+3000;
+              d= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
+              delay=d+3000;
+              //ff
                 selectElement(dataDATAel,delay,0);
                 delay+=3000;
+                if(code=="MOV"){
+                  selectElement(dataREGel,delay,0);
+                  delay+=3000;
+                  selectElement(fx,delay,dataTab[i].getVal());
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.FX.setContenu(main.ACC.getContenu());
+
+
+                }
+                else {
                 selectElement(ual2,delay,dataTab[i].getVal());
                 delay+=3000;
                 selectElement(dataC5el,delay,0);
@@ -2371,86 +2489,47 @@ class UAL {
                 delay+=3000;
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  main.AX.setContenu(main.ACC.getContenu());
+                  main.FX.setContenu(main.ACC.getContenu());
                   selectElement(fx,delay,main.ACC.getContenu());
+                
+                }
                   
                   break;
                 case "110":
                   n = main.SI.getContenu();
-                  selectElement(si,delay,n);
+                  if(code=="MOV"){
+                    selectElement(si,delay,main.SI.getContenu());
+                    delay+=3000;
+                  }
+                  else{
                   selectElement(dataREGel,delay,0);
                   delay+=3000;
-                  selectElement(dataEUAL1el,delay,0);
+                  selectElement(dataEUAL2el,delay,0);
                   delay+=3000;
-                  selectElement(ual1,delay,n);
+                  selectElement(ual2,delay,n);
                   delay+=3000;
                   selectElement(acc,delay,n);
                   delay+=3000;
-              main.ACC.setContenu(n);
-                 // on lit le mot memoire 
-              selectElement(ram,delay,dataTab[i].getAdr());
-              delay+=3000;
-              selectElement(caseMemoire,delay,dataTab[i].getVal());
-              delay+=3000;
-              selectElement(rim,delay,dataTab[i].getVal());
-              delay+=3000;
-              selectElement(dataRIMel,delay,0);
-                delay+=3000;
-                //ff
-                selectElement(dataDATAel,delay,0);
-                delay+=3000;
-                selectElement(ual2,delay,dataTab[i].getVal());
-                delay+=3000;
-                selectElement(dataC5el,delay,0);
-                delay+=3000;
-                selectElement(dataC4el,delay,0);
-                delay+=3000;
-                selectElement(dataC6el,delay,0);
-                delay+=3000;
-                selectElement(ual1,delay,main.ACC.getContenu());
-                
-                  main.ACC.setContenu(this.operation(code,n,m));
-                  delay+=3000;
-                  selectElement(acc,delay,main.ACC.getContenu());
-                  delay+=3000;
-                selectElement(dataC5el,delay,0);
-                delay+=3000;
-                selectElement(dataC4el,delay,0);
-                delay+=3000;
-                selectElement(dataACCel,delay,0);
-                delay+=3000;
-                selectElement(dataDATAel,delay,0);
-                delay+=3000;
-                selectElement(dataREGel,delay,0);
-                delay+=3000;
-                  main.AX.setContenu(main.ACC.getContenu());
-                  selectElement(si,delay,main.ACC.getContenu());
-                  
-                  break;
-                case "111":
-                  n = main.DI.getContenu();
-                  selectElement(di,delay,n);
-                  selectElement(dataREGel,delay,0);
-                  delay+=3000;
-                  selectElement(dataEUAL1el,delay,0);
-                  delay+=3000;
-                  selectElement(ual1,delay,n);
-                  delay+=3000;
-                  selectElement(acc,delay,n);
-                  delay+=3000;
+                  }
               main.ACC.setContenu(n);
               // on lit le mot memoire 
-              selectElement(ram,delay,dataTab[i].getAdr());
-              delay+=3000;
-              selectElement(caseMemoire,delay,dataTab[i].getVal());
-              delay+=3000;
-              selectElement(rim,delay,dataTab[i].getVal());
-              delay+=3000;
-              selectElement(dataRIMel,delay,0);
-                delay+=3000;
-                //ff
+              d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+              delay=d+3000;
+              d= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
+              delay=d+3000;
+              //ff
                 selectElement(dataDATAel,delay,0);
                 delay+=3000;
+                if(code=="MOV"){
+                  selectElement(dataREGel,delay,0);
+                  delay+=3000;
+                  selectElement(si,delay,dataTab[i].getVal());
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.SI.setContenu(main.ACC.getContenu());
+
+
+                }
+                else {
                 selectElement(ual2,delay,dataTab[i].getVal());
                 delay+=3000;
                 selectElement(dataC5el,delay,0);
@@ -2475,13 +2554,79 @@ class UAL {
                 delay+=3000;
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  main.AX.setContenu(main.ACC.getContenu());
+                  main.SI.setContenu(main.ACC.getContenu());
+                  selectElement(si,delay,main.ACC.getContenu());
+                }
+                  
+                  break;
+                case "111":
+                  n = main.DI.getContenu();
+                  if(code=="MOV"){
+                    selectElement(di,delay,main.DI.getContenu());
+                    delay+=3000;
+                  }
+                  else{
+                  selectElement(dataREGel,delay,0);
+                  delay+=3000;
+                  selectElement(dataEUAL2el,delay,0);
+                  delay+=3000;
+                  selectElement(ual2,delay,n);
+                  delay+=3000;
+                  selectElement(acc,delay,n);
+                  delay+=3000;
+                  }
+              main.ACC.setContenu(n);
+              // on lit le mot memoire 
+               d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+              delay=d+3000;
+              d= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
+              delay=d+3000;
+              //ff
+                selectElement(dataDATAel,delay,0);
+                delay+=3000;
+                if(code=="MOV"){
+                  selectElement(dataREGel,delay,0);
+                  delay+=3000;
+                  selectElement(di,delay,dataTab[i].getVal());
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.DI.setContenu(main.ACC.getContenu());
+
+
+                }
+                else {
+                selectElement(ual2,delay,dataTab[i].getVal());
+                delay+=3000;
+                selectElement(dataC5el,delay,0);
+                delay+=3000;
+                selectElement(dataC4el,delay,0);
+                delay+=3000;
+                selectElement(dataC6el,delay,0);
+                delay+=3000;
+                selectElement(ual1,delay,main.ACC.getContenu());
+               
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  delay+=3000;
+                  selectElement(acc,delay,main.ACC.getContenu());
+                  delay+=3000;
+                selectElement(dataC5el,delay,0);
+                delay+=3000;
+                selectElement(dataC4el,delay,0);
+                delay+=3000;
+                selectElement(dataACCel,delay,0);
+                delay+=3000;
+                selectElement(dataDATAel,delay,0);
+                delay+=3000;
+                selectElement(dataREGel,delay,0);
+                delay+=3000;
+                  main.DI.setContenu(main.ACC.getContenu());
                   selectElement(di,delay,main.ACC.getContenu());
+                }
                   
                   break;
               }
                
            }
+       //    console.log("end instruct delay:"+delay);
            return delay; 
     }
 
@@ -3512,9 +3657,9 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
     console.log("********************** ");
     messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";
 
-   delay +=3000;
+  // delay +=3000;
    //console.log(delay);
-    this.Execute(main.getinstrTab(),delay);
+    this.Execute(main.getinstrTab());
 
     main.afficherRegistres() ;
     main.afficherRegistresHTML();
@@ -3538,16 +3683,17 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
 
 
 
-  Execute: function (instrTab,delay) {
+  Execute: function (instrTab) {
     let j = 0 ;
     let i = 0 ;
+    let delay=0;
       while (j < instrTab.length) {
         let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
         this.setRI(instrBin) ;
        let adr=instrTab[j].getAdr();
         let d = premierePhase(adr,delay,instrTab[j].getVal());  
         delay=d+3000;
-       
+       console.log("instruct:"+j+" delay="+delay);
         selectElement(cop,delay,this.getRI().getCOP());
         selectElement(MA,delay,this.getRI().getMA());
         selectElement(F,delay,this.getRI().getF());
@@ -3559,18 +3705,19 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
         switch (this.getRI().getCOP()) {
           case "000000": 
           selectElement(instname,delay,"MOV");
-          i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay).p1;
-          delay=this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay).p2;
-          j = i ; break ;
+          i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+          delay = i.p2;
+          console.log("operation.p2="+i.p2);
+          j = i.p1 ; break ;
           case "100000": 
           selectElement(instname,delay,"MOVI");
           i = this.ual.opeRation("MOVI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
           j = i ; break ;
           case "000001":
             selectElement(instname,delay,"ADD");
-          i = this.ual.opeRation("ADD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay).p1;
-          delay = this.ual.opeRation("ADD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay).p2;
-          j=i ; break ;
+          i = this.ual.opeRation("ADD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+          delay=i.p2
+          j=i.p1 ; break ;
           case "000011":
             selectElement(instname,delay,"SUB");
           i = this.ual.opeRation("SUB",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
@@ -3684,10 +3831,9 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
                 break ; 
   
         }
-      delay+=3000;
+      delay+=10000;
       //j++ ;
     }
-    return delay ;
     
   },
 
@@ -3971,7 +4117,22 @@ function ecriturememoire(adr,delay,info){
   
   return delay;
 }
+function lecturememoire(adr,delay,info){
+  
+  selectElement(dataDATAel,delay,0);
+  delay+=3000;
+  selectElement(dataTDAel,delay,0);
+  delay+=3000;
+  selectElement(ram,delay,adr);
+  delay+=3000;
+  selectElement(caseMemoire,delay,info);
+  delay+=3000;
+  selectElement(rim,delay,info);
+  return delay;
+
+}
 function ecriturememoiremov(adr,delay,info){
+
   selectElement(ram,delay,adr);
   selectElement(dataREGel,delay,0);
   delay+=3000;
