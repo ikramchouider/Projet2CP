@@ -1414,7 +1414,7 @@ class UAL {
     let tab=[];
     let d=0;
     if(codeIns[0]== "J") {
-      return {p1: this.jmp(codeIns,indicateurTab,cpt),p2: delay}  ; 
+      return {p1: this.jmp(codeIns,indicateurTab,cpt,delay),p2: delay}  ; 
     }
     else if(codeIns == "STORE") {
       this.store(cpt) ; 
@@ -3120,21 +3120,47 @@ class UAL {
       i= util.chercherAdr(main.getinstrTab(),i.slice(1)) ; 
     switch ( code.toUpperCase())  {
     case "JMP": return i;   
-    case "JZ": if( main.getIndicateurZero() == "1")
-        return i; else return cpt+2 ; 
-    case "JNZ": if(main.getIndicateurZero() != "1")
-    return i; else return cpt+2 ;
-    case "JC": if(main.getIndicateurRetenue() == "1")
-    return i; else return cpt+2 ; 
-    case "JNC": if(main.getIndicateurRetenue() != "1") 
-    return i; else return cpt+2 ; 
+    case "JZ": if( main.getIndicateurZero() == "1"){
+        selectElement(indZ,delay,"1");
+        return i; }
+        else {return cpt+2 ; 
+          
+        }
+    case "JNZ": if(main.getIndicateurZero() != "1"){
+      selectElement(indZ,delay,"0");
+    return i; 
+    }else return cpt+2 ;
+    case "JC": if(main.getIndicateurRetenue() == "1"){
+      selectElement(indR,delay,"1");
+    return i; 
+    }else return cpt+2 ; 
+    case "JNC": if(main.getIndicateurRetenue() != "1") {
+      selectElement(indR,delay,"0");
+    return i; 
+    }else return cpt+2 ; 
 
-    case "JS": if(main.getIndicateurSigne() == "1") return i; else return cpt+2 ;
-    case "JNS": if(main.getIndicateurSigne() != "1")  return i; else return cpt+2 ;
-    case "JO": if(main.getIndicateurDebord() == "1")  return i; else return cpt+2 ;
-    case "JNO": if(main.getIndicateurDebord() != "1")  return i ; else return cpt+2 ;
-    case "JE": if(main.getIndicateurZero() == "1" )  return i ; else return cpt+2 ; 
-    case "JNE": if(main.getIndicateurZero() != "1" ) return i ; else return cpt+2 ;  
+    case "JS": if(main.getIndicateurSigne() == "1") {
+      selectElement(indS,delay,"1");
+      return i; 
+    }else return cpt+2 ;
+    case "JNS": if(main.getIndicateurSigne() != "1") { 
+      selectElement(indS,delay,"0");
+      return i;
+     } else return cpt+2 ;
+    case "JO": if(main.getIndicateurDebord() == "1") { 
+      selectElement(indD,delay,"1");
+      return i; 
+    }else return cpt+2 ;
+    case "JNO": if(main.getIndicateurDebord() != "1"){
+      selectElement(indD,delay,"0");
+       return i ;} else return cpt+2 ;
+    case "JE": if(main.getIndicateurZero() == "1" )  {
+      selectElement(indZ,delay,"1");
+      return i ;} else return cpt+2 ; 
+    case "JNE": if(main.getIndicateurZero() != "1" ){ 
+      selectElement(indZ,delay,"0");
+      return i ;}
+     else return cpt+2 ;  
   }
   return delay;
 } //JMP 
@@ -4200,43 +4226,53 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
               case "001100":
                 selectElement(instname,delay,"JZ");
                 i = this.ual.opeRation("JZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ; 
+                delay=i.p2;
+                j=i.p1 ; break ; 
               case "001101":
                 selectElement(instname,delay,"JNZ");
                 i = this.ual.opeRation("JNZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
+                delay=i.p2;
+                j=i.p1 ; break ;
               case "001110":
                 selectElement(instname,delay,"JC");
                 i = this.ual.opeRation("JC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
+                delay=i.p2;
+                j=i.p1 ; break ;
               case "001111":
                 selectElement(instname,delay,"JNC");
                 i = this.ual.opeRation("JNC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
+                delay=i.p2;
+                j=i.p1 ; break ;
               case "010000":
                 selectElement(instname,delay,"JS");
                 i = this.ual.opeRation("JS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
+                delay=i.p2;
+                j=i.p1 ; break ;
               case "010001":
                 selectElement(instname,delay,"JNS");
                 i = this.ual.opeRation("JNS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
+                delay=i.p2;
+                j=i.p1 ; break ;
               case "010010":
                 selectElement(instname,delay,"JO");
                 i = this.ual.opeRation("JO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
+                delay=i.p2;
+                j=i.p1 ; break ;
               case "010011":
                 selectElement(instname,delay,"JNO");
                 i = this.ual.opeRation("JNO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
+                delay=i.p2;
+                j=i.p1 ; break ;
               case "010100":
                 selectElement(instname,delay,"JE");
                 i = this.ual.opeRation("JE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
+                delay=i.p2;
+                j=i.p1 ; break ;
               case "010101":
                 selectElement(instname,delay,"JNE");
                 i = this.ual.opeRation("JNE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
+                delay=i.p2;
+                j=i.p1 ; break ;
               case "010110":
                 selectElement(instname,delay,"LOAD");
                 i = this.ual.opeRation("LOAD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
