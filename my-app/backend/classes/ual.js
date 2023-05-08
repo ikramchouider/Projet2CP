@@ -55,9 +55,9 @@ class UAL {
         this.LoadinDirectCourt(param1) ; 
         return cpt+1 ; 
       }
-      else if((modeAdr == "11") && dest == "0" && format == "1")
+      else if((modeAdr == "11") && dest == "0" && format == "1") {
       this.LoadDirectIndexe(param1,dataTab,instrTab,cpt) 
-      return cpt +3 ;
+      return cpt +main.nbMot[main.Nbinst][1] ;}
     }
     else if(codeIns== "ADAI" || codeIns== "SBAI" ||  codeIns== "LOADI"){
   main.ACC.setContenu(this.operation(codeIns,main.ACC.getContenu(),instrTab[cpt+1].getVal())) ; 
@@ -86,8 +86,8 @@ class UAL {
       return cpt+3 ; 
     }
     else if((modeAdr == "11") && dest == "0" ) {
-      this.immDirectIndexeLongNonDest(codeIns,param2,dataTab,instrTab,cpt) 
-      return cpt+4 ; 
+      this.immDirectIndexeLongNonDest(codeIns,param1,dataTab,instrTab,cpt) 
+      return cpt+main.nbMot[main.Nbinst][1] ; 
     }
     }
     else if ((modeAdr == "00") && dest == "1" && format == "0") {
@@ -124,7 +124,7 @@ class UAL {
    }else{
     this.directIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
    }
-   return cpt+3 ; 
+   return cpt+main.nbMot[main.Nbinst][1] ; 
     
   }
 
@@ -455,8 +455,10 @@ class UAL {
     } // Fin Mode BaseIndexe format Long  distination =0
     // Mode direct indexe format Long  distination =0
     directIndexeLongNonDest = function(code,param1,param2,dataTab,instrTab,cpt) {
-      let m = instrTab[cpt+1].getVal() ; 
-      
+      let m=0 ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+       m = instrTab[cpt+1].getVal() ; } else m=0 ;
+       
       let n=0 ;
       
       switch (param2) {
@@ -464,8 +466,10 @@ class UAL {
         case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
         case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
       }
-    
-      let adretiq = instrTab[cpt+2].getVal() ; 
+      
+      let adretiq =0 ; 
+      if(main.nbMot[main.Nbinst] == 3) {
+      adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
       let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
       i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
       m=dataTab[i].getVal() ;  
@@ -493,7 +497,10 @@ class UAL {
     // Mode direct indexe format Long  distination =1
 
     directIndexeLongDest = function(code,param1,param2,dataTab,instrTab,cpt) {
-      let n = instrTab[cpt+1].getVal() ; 
+      let n=0 ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+        n = instrTab[cpt+1].getVal() ; } else n=0 ;
+  
       let m=0 ; 
       let i=0 ; 
       switch (param2) {
@@ -505,11 +512,12 @@ class UAL {
           main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
       }
       
-      let adretiq = instrTab[cpt+2].getVal() ; 
+      let adretiq =0 ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+      adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
       i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
       i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);  
-      m=dataTab[i].getVal() ;  
-      console.log(m);  
+      m=dataTab[i].getVal() ;    
       switch (param1) {
         case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
           break;
@@ -660,22 +668,29 @@ class UAL {
     }  // Fin Mode immediate BaseIndexe  format Long  distination =0 
 
 
-    immDirectIndexeLongNonDest = function(code,param2,dataTab,instrTab,cpt) {
-      let m = instrTab[cpt+1].getVal() ; 
+    immDirectIndexeLongNonDest = function(code,param1,dataTab,instrTab,cpt) {
+
+       let m=0 ; 
+      if(main.nbMot[main.Nbinst][1] == 4) {
+       m = instrTab[cpt+1].getVal() ; } else m=0 ;
       
       let n=0 ;
       
-      switch (param2) {
+      switch (param1) {
         case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
         case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
         case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
       }
-    
-      let adretiq = instrTab[cpt+2].getVal() ; 
+      
+      
+      let adretiq ; 
+      if(main.nbMot[main.Nbinst][1] == 4) {
+        adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
       let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
       i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
       m=dataTab[i].getVal() ;  
-      n= instrTab[cpt+3].getVal() ; 
+      if(main.nbMot[main.Nbinst][1] == 4) {
+        n= instrTab[cpt+3].getVal() ;  } else n= instrTab[cpt+2].getVal() ; 
       main.ACC.setContenu(this.operation(code,m,n))
       dataTab[i].setVal(main.ACC.getContenu()) ; 
     } 
@@ -735,7 +750,10 @@ class UAL {
     }
 
     LoadDirectIndexe = function(param1,dataTab,instrTab,cpt) {
-      let n = instrTab[cpt+1].getVal() ; 
+      let n=0 ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+       n = instrTab[cpt+1].getVal() ; } else n=0 ;
+  
       let m=0 ; 
       let i=0 ; 
       switch (param1) {
@@ -747,9 +765,13 @@ class UAL {
           main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
       }
       
-      let adretiq = instrTab[cpt+2].getVal() ; 
+      let adretiq ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+        adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
+
       i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16) ;   
+      
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16) ;   
       m=dataTab[i].getVal() ;  
       main.ACC.setContenu(m);
     }
@@ -889,7 +911,6 @@ class UAL {
         break;
     }
 
-   // console.log(n," ",m);
     if(util.compareHexValues(n,m)>0) { 
       main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
     }else if(util.compareHexValues(n,m)<0) {
@@ -1028,6 +1049,7 @@ class UAL {
          main.ACC.setContenu(this.operation("SUB",n,m));
          break;
      }
+     
      if(util.compareHexValues(n,m)>0) {
       main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
     }else if(util.compareHexValues(n,m)<0) {

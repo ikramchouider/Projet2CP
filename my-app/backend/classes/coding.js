@@ -11,13 +11,15 @@ var coding = {
       let instrTab = new Array();
       if (strLigne[0][strLigne[0].length - 1] == ":") {
         if(main.tabEtiq.length > 0) {
-          let indice  = util.chercherDansTableau(main.tabEtiq,strLigne[0].slice(0,strLigne[0].length-1)) ; 
+          let indice  = util.chercherDansTableau2(main.tabEtiq,strLigne[0].slice(0,strLigne[0].length-1),adr) ; 
+        /*  console.log(strLigne[0].slice(0,strLigne[0].length-1));
+          console.log(main.tabEtiq.length);
           if(indice<main.tabEtiq.length){
             let adresse = main.tabEtiq[indice].getAdr();
             let indice2 = util.chercherAdr(main.instrTab,adresse)
             main.instrTab[indice2].setVal(util.remplirZero(adr,4,0)) ;
             
-          }
+          }*/
         }
         str = strLigne[0].slice(0,strLigne[0].length-1);
         strLigne.shift();
@@ -86,8 +88,9 @@ var coding = {
           let depl = "";
           if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
           else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
+          if(strLigne[1].indexOf("+") != -1){
           adr = util.incrementHex(adr, 1);
-          instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+          instrTab.push(new CaseMc(adr, depl.toString(16), ""));}
           let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
            adr = util.incrementHex(adr, 1);
            instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
@@ -148,8 +151,9 @@ var coding = {
           let depl = "";
           if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
           else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
-          adr = util.incrementHex(adr, 1);
-          instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+          if(strLigne[2].indexOf("+") != -1){
+            adr = util.incrementHex(adr, 1);
+            instrTab.push(new CaseMc(adr, depl.toString(16), ""));}
           let indice = util.chercherDansTableau(dataTab, strLigne[2].slice(0,strLigne[2].indexOf("[")));
           adr = util.incrementHex(adr, 1);
           instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
@@ -159,8 +163,9 @@ var coding = {
           let depl = "";
           if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
           else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
-          adr = util.incrementHex(adr, 1);
-          instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+          if(strLigne[1].indexOf("+") != -1){
+            adr = util.incrementHex(adr, 1);
+            instrTab.push(new CaseMc(adr, depl.toString(16), ""));}
           let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
            adr = util.incrementHex(adr, 1);
            instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
@@ -175,6 +180,7 @@ var coding = {
         if ((strLigne[0])[0] == "J"){
            adr = util.incrementHex(adr, 1);
              let indice = util.chercherDansTableau(main.instrTab,strLigne[1]) ; 
+        //     console.log(strLigne[1]);
              if(indice<(main.instrTab).length){
                instrTab.push(new CaseMc(adr,util.remplirZero(main.instrTab[indice].getAdr(),3,0),""));
              }else{
@@ -186,15 +192,16 @@ var coding = {
           if(strLigne[0][strLigne[0].length - 1].toUpperCase() != "I"){
           if (strLigne[1].indexOf("[") != -1 ) {
             if(strLigne[1][0] != "[") {
-              let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
-              adr = util.incrementHex(adr, 1);
-              instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
               let regEtDepl = strLigne[1].slice(strLigne[1].indexOf("[")+1, strLigne[1].length - 1) ;
                let depl = "";
               if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
                else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
-               adr = util.incrementHex(adr, 1);
-               instrTab.push(new CaseMc(adr, depl.toString(16), ""));
+               if(strLigne[1].indexOf("+") != -1){
+                adr = util.incrementHex(adr, 1);
+                instrTab.push(new CaseMc(adr, depl.toString(16), ""));}
+                let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
+              adr = util.incrementHex(adr, 1);
+              instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
 
             }
             else{
@@ -255,7 +262,12 @@ var coding = {
               code = this.getCop(str[0]).concat(modeAdr,this.getFormat(str),this.getDest(str),this.getReg(str[2]),this.getReg(reg));
             }
             }
-            else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[2]),"000");}
+            else {
+              if(str[1][0] != "[" && (str[1].indexOf("[") != -1 )) {
+                let reg = str[1].slice(str[1].indexOf("[")+1,str[1].length-1);
+                code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[2]),this.getReg(reg));
+              }
+              else code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[2]),"000");}
           }
           else if(this.regexi(str[1]) && !this.regexi(str[2]))
           {
@@ -279,12 +291,21 @@ var coding = {
               code = this.getCop(str[0]).concat(modeAdr,this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(reg));
            }
             }
-            else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),"000");} 
+            else {
+              if(str[2][0] != "[" && (str[2].indexOf("[") != -1 )) {
+                let reg = str[2].slice(str[2].indexOf("[")+1,str[2].length-1);
+                code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),this.getReg(reg));
+              }
+              else code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1]),"000");} 
       
           }
           else{
             if((str[1].indexOf("+") == -1)&&(str[2].indexOf("+") == -1)) {
-            code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),"000");
+               if((str[1].indexOf("[") != -1 ) && str[1][0] != "[" ){
+                let reg = str[1].slice(str[1].indexOf("[")+1,str[1].length-1);
+                code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),"000");
+              }
+           else  code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),"000");
           }
             
               else if ((str[1].indexOf("[") != -1 ) && (str[1].indexOf("+") != -1)) {
@@ -317,12 +338,17 @@ var coding = {
             code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(str[1].slice(1,str[1].length-1)),"000");
           } 
           else if(str[1][0] != "[" && str[1].indexOf("[") != -1) {
+            if(str[1].indexOf("+") != -1) {
             let reg = "";
             let regEtDepl = (str[1].slice(str[1].indexOf("["),str[1].length)) .slice(1, str[1].length - 1) ;
             if (this.regexi(regEtDepl.substring(0,2))){ reg = regEtDepl.substring(0,2); }
             else {reg = regEtDepl.slice(-2);}
             code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),"000");
-            
+            }
+            else {
+              let reg = str[1].slice(str[1].indexOf("[")+1,str[1].length-1);
+                code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),this.getReg(reg),"000");
+            }
            }
             
           else {code = this.getCop(str[0]).concat(this.modeAdr(str),this.getFormat(str),this.getDest(str),"000","000");

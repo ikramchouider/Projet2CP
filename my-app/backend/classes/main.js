@@ -13,6 +13,8 @@ var main = {
   dataTab: [],
   instrTab :[],
   tabEtiq : [],
+  nbMot : [] ,
+  Nbinst :0 ,
   indic: new registre("INDIC","0000") , 
   ual: new UAL("0", "0"),
   AX: new registre("AX", "0000"),
@@ -167,7 +169,7 @@ var main = {
  //     } else if (ligne_str[0] == "STOP") {
       } else {
         let tab = coding.coderInst(ligne_str, co, this.getDataTab());
-       // instrTab = instrTab.concat(tab);
+       main.nbMot.push([main.instrTab.length,tab.length]) ; //+co 
         main.instrTab=main.getinstrTab().concat(tab) ;
         co = util.incrementHex(co, tab.length);
       } 
@@ -198,9 +200,12 @@ var main = {
   Execute: function (instrTab) {
     let j = 0 ;
     let i = 0 ;
+    this.Nbinst=0 ; 
     while (j < instrTab.length) {
       let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
       this.setRI(instrBin) ;
+      this.Nbinst =  main.nbMot[util.chercherDansTableauDeuxDimension(main.nbMot,j)][1] ; 
+     
       switch (this.getRI().getCOP()) {
         case "000000": i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
         j = i ; break ;
@@ -307,8 +312,8 @@ var main = {
 
       }
       //j++ ;
-    }
-    
+      //this.Nbinst ++ ; 
+    } 
   },
 
   afficherIndicateurs: function () {

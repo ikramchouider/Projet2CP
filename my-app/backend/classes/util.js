@@ -14,6 +14,30 @@ var util = {
     return i;
   }, // fin  chercherDansTableau
 
+  chercherDansTableau2: function (tableau, valeur,adr) {
+    // change the name to chercherEtiq
+    let i = 0;
+    while (i < tableau.length ) {
+      if(tableau[i].getEtiq() == valeur) {
+        let adresse = main.tabEtiq[i].getAdr();
+        let indice2 = util.chercherAdr(main.instrTab,adresse)
+        main.instrTab[indice2].setVal(util.remplirZero(adr,4,0)) ;
+      }
+      i++;
+    }
+    return i;
+  }, // fin  chercherDansTableau
+
+  chercherDansTableauDeuxDimension: function (tableau, valeur) {
+    // change the name to chercherEtiq
+    let i = 0;
+    while (i < tableau.length && tableau[i][0] != valeur) {
+      i++;
+    }
+    return i;
+  }, // fin  chercherDansTableau
+
+
    // return element de tableau contant adr 
   chercherAdr: function (tableau, adr) {
     let i = 0;
