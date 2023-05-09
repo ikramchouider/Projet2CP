@@ -1,6 +1,6 @@
 /*************************************************************************
-Ce fichier contient des opérations elementaires à notre appliquation que ca 
-soit la logique de l'exécution ou encore les evenements
+Ce fichier contient des opérations elementaires à notre appliquation, que ca 
+soit la logique de l'exécution ou encore les evenements (event listeners)
 *************************************************************************/
 
 const dataCOel=  document.getElementById('dataCO');
@@ -28,6 +28,7 @@ const indR = document.getElementById("R");
 const indD = document.getElementById("D");
 
 
+//------------------------- Fonction qui traite et detecte les erreurs dans les programmes des utilisateurs --------------------
 
 
 // l'objet dans lequel on a la fonction des erreurs 
@@ -438,11 +439,17 @@ export var assembler = {
     
   },
 
-}
-// fin obj assembler
+}// fin obj assembler
 
 
 
+ //-------------------------------------  Fin erreur function and all related stuff with it -------------------------------------
+
+
+
+
+   
+//____________________________________  All used Classes  ____________________________________________//
 
 // class case mémoire
 class CaseMc {
@@ -489,10 +496,485 @@ class CaseMc {
 
 
 
+// l'objet registre du fichier registre.js
+class registre {
+  #nom;
+  #contenu; //en hexa
+
+  constructor(nom, contenu) {
+    this.#nom = nom;
+    this.#contenu = contenu;
+  }
+  setNom(nom) {
+    this.#nom = nom;
+  }
+  getNom() {
+    return this.#nom ; 
+  }
+  setContenu(contenu) {
+      this.#contenu = contenu;
+    }
+  getContenu() {
+      return this.#contenu ; 
+    }
+  afficher() {
+    console.log(`nom ${this.#nom}  contenu ${this.#contenu}`);
+  }
+}
+// fin objet registre 
+
+
+
+class RI {
+  #cop;
+  #ma;
+  #f;
+  #d;
+  #reg1;
+  #reg2;
+  constructor() {
+    
+  }
+  setRI = (code) => {
+    this.#cop = code.substring(0, 6); // capable de changer le 5 à 6 etc ..
+    this.#ma = code.substring(6, 8);
+    this.#f = code.substring(8, 9);
+    this.#d = code.substring(9, 10);
+    this.#reg1 = code.substring(10, 13);
+    this.#reg2 = code.substring(13, 16);
+  };
+  getCOP() {
+    return this.#cop;
+  };
+  getMA = () => {
+    return this.#ma;
+  };
+  getF = () => {
+    return this.#f;
+  };
+  getD = () => {
+    return this.#d;
+  };
+  getReg1 = () => {
+    return this.#reg1;
+  };
+  getreg2 = () => {
+    return this.#reg2;
+  };
+}
+
+
+
+// le variable util 
+var util = {
+  
+
+
+  chercherDansTableau: function (tableau, valeur) {
+    // change the name to chercherEtiq
+    let i = 0;
+    while (i < tableau.length && tableau[i].getEtiq() != valeur) {
+      i++;
+    }
+    return i;
+  }, // fin  chercherDansTableau
+
+  chercherDansTableau2: function (tableau, valeur,adr) {
+    // change the name to chercherEtiq
+    let i = 0;
+    while (i < tableau.length ) {
+      if(tableau[i].getEtiq() == valeur) {
+        let adresse = main.tabEtiq[i].getAdr();
+        let indice2 = util.chercherAdr(main.instrTab,adresse)
+        main.instrTab[indice2].setVal(util.remplirZero(adr,4,0)) ;
+      }
+      i++;
+    }
+    return i;
+  }, // fin  chercherDansTableau
+
+  chercherDansTableauDeuxDimension: function (tableau, valeur) {
+    // change the name to chercherEtiq
+    let i = 0;
+    while (i < tableau.length && tableau[i][0] != valeur) {
+      i++;
+    }
+    return i;
+  }, // fin  chercherDansTableau
+
+
+   // return element de tableau contant adr 
+  chercherAdr: function (tableau, adr) {
+    let i = 0;
+    while (i < tableau.length && tableau[i].getAdr() != adr) {
+      i++;
+    }
+    return i;
+  },// chercherAdr
+
+  // supprimer les espaces dans une chaine de caractere 
+  removeExtraSpaces: function (str) {
+    return str.replace(/\s+/g, " ");
+  }, // fin removeExtraSpaces 
+
+  // incrementer n fois  hex en hexadecimal 
+  incrementHex: function (hex, n) {
+    let decimal = parseInt(hex, 16);
+    for (let i = 0; i < n; i++) { decimal = decimal + 1; }
+    return decimal.toString(16).toUpperCase();
+  }, //  fin incrementHex
+
+// 
+  remplirZero: function (str, n, gd) {   
+    //gd=0 -> des zeros à gauche , gd=1 -> à droite
+    var s = "";
+    const length = str.length;
+    if (gd == 0) {
+      for (let k = 0; k < n - length; k++) { s += "0";}
+      return s + str;
+    } else {
+      if (gd == 1) {
+        for (let k = 0; k < n - length; k++) {str += "0"; }
+        return str;
+      } else { throw new Error("Le troisieme parametre doit etre 0 ou 1."); } }
+  }, // fin remplirZero
+
+ // Find position of delimiter
+  getDel: function (str, delimiter) {
+    let position = str.indexOf(delimiter); 
+    if (position !== -1) { // Check if delimiter is found
+      str = str.substring(0, position); }// Delete characters after delimiter
+    return str;
+  }, //fin  getDel
+  
+  // faire l'addition en hexadecemal 
+  additionHexa: function (x1,x2) {
+    let a = util.hexEnBinaire(util.remplirZero(x1,4,0));
+    let b = util.hexEnBinaire(util.remplirZero(x2,4,0));
+    let sum = '';
+    let carry = 0;
+    let i = a.length - 1;
+    let j = b.length - 1;
+  
+    while (i >= 0 || j >= 0 || carry > 0) {
+    let digitA = i >= 0 ? parseInt(a.charAt(i), 2) : 0;
+    let digitB = j >= 0 ? parseInt(b.charAt(j), 2) : 0;
+    let digitSum = digitA + digitB + carry;
+  
+    carry = digitSum >= 2 ? 1 : 0;
+    digitSum = digitSum % 2;
+    sum = digitSum + sum;
+
+    i--;
+      j--;
+    }
+    return util.binaryToHex(sum) ;
+  }, // fin  additionHexa
+
+  /**
++   * elle place l'indicateur zero selon l'operation de l'addition 
++   * @param {1} x1 
++   * @param {2} x2 
++   */
+  setIndZeroAddition: function (x1, x2) {
+    x1 = (util.remplirZero(x1,4,0)).slice(-4) ;
+    x2 = (util.remplirZero(x2,4,0)).slice(-4) ;
+      let resultat = this.additionHexa(x1,x2) ;
+      resultat = resultat.slice(-4) ;
+      let resultatBin = util.hexEnBinaire(resultat); 
+      if(resultatBin.slice(-15)=="000000000000000") {main.setIndicateurZero("1");}
+      else {main.setIndicateurZero("0");}
+    }  ,
+  
+    /**
+     * place l'indicateur du signe selon l'operation de l'addition
+     * @param {*} x1 
+     * @param {*} x2 
+    */
+    setIndSigneAddition: function(x1,x2) {
+
+    x1 = (util.remplirZero(x1,4,0)).slice(-4) ;
+    x2 = (util.remplirZero(x2,4,0)).slice(-4) ;
+    let x1bin = util.hexEnBinaire(x1) ;
+    let x2bin = util.hexEnBinaire(x2) ;
+
+    if ((x1bin[0]=="0")&&(x2bin[0]=="0")) {main.setIndicateurSigne("0"); return ;}
+    if ((x1bin[0]=="1")&&(x2bin[0]=="1")) {main.setIndicateurSigne("1"); return ;}
+   if (((x1bin[0]=="1")&&(x2bin[0]=="0"))) {
+     //le signe dans ce cas sera du signe du nombre dont la valeur absolue est la plus grande 
+      let x2bin_ = util.remplirZero(x2bin.slice(-15),16,0) ;
+      if (parseInt(util.positiveComplementADeux(x1bin),2)>parseInt(x2bin_,2)) //le signe sera du signe de x1bin
+      {main.setIndicateurSigne(x1bin[0]); return ;}
+      else {main.setIndicateurSigne(x2bin[0]); return ;}
+    }
+  if ((x1bin[0]=="0")&&(x2bin[0]=="1")) {
+      let x1bin_ = util.remplirZero(x1bin.slice(-15),16,0) ;
+       if (parseInt(util.positiveComplementADeux(x2bin),2)>parseInt(x1bin_,2)) //le signe sera du signe de x2bin
+      {main.setIndicateurSigne(x2bin[0]); return ;}
+       else {main.setIndicateurSigne(x1bin[0]); return ;}
+  }},
+
+  setIndDebordAddition: function(x1,x2) {
+
+x1 = (util.remplirZero(x1,4,0)).slice(-4) ;
+x2 = (util.remplirZero(x2,4,0)).slice(-4) ;
+let x1bin = util.hexEnBinaire(x1) ;
+let x2bin = util.hexEnBinaire(x2) ;
+let resultat = (this.additionHexa(x1,x2)).slice(-4) ; //slice(-4) car on doit comparer avec le premier bit du resultat ecrit sur 16bits
+resultat = util.remplirZero((util.hexEnBinaire(resultat)),16,0) ;
+if ((x1bin[0]=="1")&&(x2bin[0]=="1")&&(resultat[0]=="0")) {main.setIndicateurDebord("1") ; return ;}
+else if ((x1bin[0]=="0")&&(x2bin[0]=="0")&&(resultat[0]=="1")) {main.setIndicateurDebord("1"); return ;}
+else {main.setIndicateurDebord("0"); return ;}
+},
+    
+setIndRetenueAddition: function(x1,x2) {
+  x1 = (util.remplirZero(x1,4,0)).slice(-1) ;
+  x2 = (util.remplirZero(x2,4,0)).slice(-1) ;
+let resultat = this.additionHexa(x1,x2) ;
+if (resultat.length>4) {main.setIndicateurRetenue("1"); return ;}
+else {main.setIndicateurRetenue("0"); return ;}
+},
+
+/**
+ * elle place les indicateurs di signe et zero selon le contenu de l'accumulateur qui est en hexa
+ * @param {1} contenuAcc le contenu de l'accumulateur en hexadecimal
+ */
+setIndicateursAccumulateur: function(contenuAcc) {
+let contenuAccBin = util.hexEnBinaire(contenuAcc) ;
+if (contenuAccBin[0]=="1") {main.setIndicateurSigne("1");}
+else {main.setIndicateurSigne("0");}
+if (contenuAcc=="0000"){main.setIndicateurZero("1");}
+else {main.setIndicateurZero("0");}
+},
+
+getSubstringBetweenChars: function (str, startChar, endChar) {
+    let startIndex = str.indexOf(startChar);
+    if (startIndex === -1) { return ""; }
+    startIndex += 1;
+    const endIndex = str.indexOf(endChar, startIndex);
+    if (endIndex === -1) { return "";   }
+    return str.substring(startIndex, endIndex);
+  }, // fin getSubstringBetweenChars
+
+  // convertir un nombre binaire en hexadecimal 
+  binaryToHex: function (binary) {
+    const decimal = parseInt(binary, 2);
+    const hex = decimal.toString(16);
+    return hex.toUpperCase();
+  }, // fin  binaryToHex
+  
+  hexEnBinaire: function (hex) {
+    let binary = "";
+    for (let i = 0; i < hex.length; i++) {
+      const char = parseInt(hex[i], 16).toString(2);
+      binary += char.padStart(4, "0");
+    }
+    return binary;
+  },
+
+   // verifie si un nombre est en hexadecimal 
+   estHexadecimal: function (chaine) {
+    return !isNaN(parseInt(chaine, 16));
+  }, // fin estHexadecimal
+
+  
+ isVariableNameValid: function (str,nbLigne) {
+  let messageError= [] ; 
+  if (!str) {  messageError.push(nbLigne+" Il faut que le nom de la variable soit valide  ") ;  } // Vérifier si la chaîne est vide ou null
+
+  // Vérifier si le premier caractère est une lettre, un underscore ou un dollar
+  let firstChar = str.charAt(0);
+  if (!/^[a-zA-Z_$]/.test(firstChar)) { messageError.push(nbLigne+" Il faut que le nom de la variable soit valide ");  }
+
+  // Vérifier si les autres caractères sont des lettres, des chiffres, des underscores ou des dollars
+  for (let i = 1; i < str.length; i++) {
+    let char = str.charAt(i);
+    if (!/^[a-zA-Z0-9_$]/.test(char)) {  messageError.push(nbLigne+" Il faut que le nom de la variable soit valide ");  } }
+  if ( coding.regexi(str)) {   messageError.push(nbLigne+" Il faut que le nom de la variable soit valide , il faut pas que ça soit un nom de registre ");  ; }
+  /* La chaîne est valide */
+  return messageError ;    },
+
+checkNumber: function(ligne_str,nbLigne) {
+  let messageError= [] ; 
+  if (ligne_str.indexOf("H") ==  -1 ) {  messageError.push(nbLigne+" Il faut ecrire 'H' qui signifie la base hexadecimal ");    } 
+         else { ligne_str = ligne_str.slice(0,ligne_str.length-1) ; 
+          if (! this.estHexadecimal(ligne_str)) {  messageError.push(nbLigne+" Il faut donner une valeur hexadecimal"); } }
+     return messageError ; 
+},
+instUnSeulOp: function(str) {
+     str = str.toUpperCase() ; 
+     if (str== 'ADA' || str == 'ADAI' ||str=="SBA" || str=="SBAI" || str=='STOP' || str=='START' || str=='IN' || str=='OUT' || str=='JMP' || 
+     str=='NOT' || str=='DEC' || str=='INC' || str=='STORE' || str=='LOAD' || str=='LOADI' || str=='JNE' || str=='JE' ||
+     str== 'JNO' || str == 'JO' || str=='JNS' || str=='JS' || str=='JNC' || str=='JC' || str=='JNZ' || str== 'JZ' ) return true ; 
+     else return false ; 
+},
+
+getCodeASCIIHex: function(caractere) {
+  return caractere.charCodeAt(0).toString(16);
+},
+/**
++ * fait la soustraction de n-m tq n et m sont representés en complement à 2, et positionne les indicateurs
++ * @param {1} n 
++ * @param {2} m 
++ */
+
+SoustractionHex: function(n,m) {
+   
+let resultat ="" ;
+let m_ = "" ; //soit m convertit en negatif ou positif selon le cas
+m = util.hexEnBinaire(util.remplirZero(m,4,0)) ;
+//cas1: si m est positif cela revient a l'addition signée de n + (-m)
+if (m[0]=="0") 
+{
+m_ = (util.negationComplementADeux(m)).slice(-16) ;
+resultat = util.additionHexa(util.remplirZero(n,4,0),(util.binaryToHex(m_)).slice(-4)) ;
+}
+else //cas2: si m negatif ie: le bit le plus a gauche est à 1 cela revient a l'addition de n + m
+{
+m_ = (util.positiveComplementADeux(m)).slice(-16) ;
+resultat = util.additionHexa(util.remplirZero(n,4,0),(util.binaryToHex(m_)).slice(-4)) ;
+}
+//positionner les indicateurs
+util.setIndDebordAddition(n,(util.binaryToHex(m_)).slice(-4)) ;
+util.setIndRetenueAddition(n,(util.binaryToHex(m_)).slice(-4)) ; 
+util.setIndZeroAddition(n,(util.binaryToHex(m_)).slice(-4)) ; 
+util.setIndSigneAddition(n,(util.binaryToHex(m_)).slice(-4)) ; 
+       
+return resultat ;
+
+},
+
+/**
+* convertit un nombre binaire negatif (sur 16bits) en sa valeur positive representée en CA2
+* @param {1} binaryNum 
+* @returns 
+*/
+positiveComplementADeux: function(binaryNum) {
+// inverser les bits
+let onesComplement = "";
+for (let i = 0; i < binaryNum.length; i++) {
+onesComplement += binaryNum[i] === "0" ? "1" : "0";
+}
+let absValue = parseInt(onesComplement, 2) + 1;
+let absBinary = absValue.toString(2).padStart(16, "0");
+return absBinary;},
+
+negationComplementADeux: function(binaryNum) {
+// Convertir binaryNum en decimal
+let decimalNum = parseInt(binaryNum, 2);
+
+// Calculer le nombre negatif et sa representation en CA2
+let negation = -decimalNum;
+let twosComplement = (negation >>> 0).toString(2).padStart(16, '0');
+  
+return twosComplement;  
+},
+
+AndHex: function(n, m) {
+  const decimalN = parseInt(n, 16);
+  const decimalM = parseInt(m, 16);
+  const result = decimalN & decimalM;
+  const hexResult = result.toString(16).toUpperCase();
+  return hexResult;
+},
+
+OrHex: function(n, m) {
+  const decimalN = parseInt(n, 16);
+  const decimalM = parseInt(m, 16);
+  const result = decimalN | decimalM;
+  const hexResult = result.toString(16).toUpperCase();
+  return hexResult;
+},
+
+NotHex: function(n) {
+const decimalN = parseInt(n, 16);
+const result = ~decimalN;
+const hexResult = result.toString(16).toUpperCase();
+return hexResult;
+},
+
+decalageLogiqueHexadecDroit: function(hexa, n) {
+let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
+let resultat = decimal >>> n; // décalage logique de n positions vers la droite
+main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[16-n]) ; 
+
+return resultat.toString(16); // conversion du résultat en hexadécimal
+},
+
+decalageLogiqueHexadecGauche: function(hexa, n) {
+let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
+let resultat = decimal << n; // décalage logique de n positions vers la gauche
+main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[0+n-1]) ; 
+return resultat.toString(16); // conversion du résultat en hexadécimal
+},
+
+rotationHexadecimal: function (code,hexa, n) {
+let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
+let resultat;
+if (code == "ROL") {
+  resultat = (decimal << n) | (decimal >>> (32 - n)); // rotation à gauche de n positions
+  main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[0+n-1]) ;
+} else {
+  resultat = (decimal >>> -n) | (decimal << (32 + n)); // rotation à droite de n positions
+  main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[16-n]) ; 
+}
+return resultat.toString(16); // conversion du résultat en hexadécimal
+},
+
+compareHexValues: function (x, y) {
+let decimalX = "";// conversion hexadécimale en décimal
+let decimalY = ""; // conversion hexadécimale en décimal
+let xBin = (this.hexEnBinaire(util.remplirZero(x,4,0))).slice(-16); 
+let yBin = (this.hexEnBinaire(util.remplirZero(y,4,0))).slice(-16);
+if(xBin[0]=="0"){decimalX = parseInt(x, 16);} else {decimalX = parseInt(((util.binaryToHex(this.positiveComplementADeux(x))).slice(-4)),16)*(-1);}
+if(yBin[0]=="0"){decimalY = parseInt(y, 16);} else {decimalY = parseInt(((util.binaryToHex(this.positiveComplementADeux(y))).slice(-4)),16)*(-1);}
+
+
+if (decimalX < decimalY) {
+  return -1
+} else if (decimalX > decimalY) {
+  return 1
+} else {
+  return 0
+}
+},
+
+hexSigne: function(op) {
+      op = util.hexEnBinaire(op) ; 
+      if (op[0] == "1")  return "-1" ; 
+      else return "1" ; 
+ 
+},
+/*
+convertToAscii: function(string) {
+  let asciiCode = [];
+  let str ; 
+  for (let i = 0; i < string.length; i++) {
+    asciiCode.push((string.charCodeAt(i)).toString(16));
+    str=str+asciiCode[i]
+  }
+  return asciiCode;
+} */
+
+test: function (x) {
+  x.concat("nour")
+}
+
+
+}
+
+//________________________________________ End of used classes _______________________________________________
 
 
 
 
+
+
+
+//_______________________________________ Needed Function in Execute ______________________________________________________
+
+
+// la variable coding qui sera utilisé pour l'execution seulemnt 
 var codingExecute = {
   // debut coderInst "codage des instructions " return tableau des mots memoir apres codage de l'instruction 
   coderInst: function (strLigne, adr, dataTab) 
@@ -1024,11 +1506,1561 @@ return instrTab;
     }, // fin getFormat 
 
 
+} // fin  codingExecute
+
+
+
+// used in execute function 
+class UAL {
+  #eUal1;
+  #eUal2;
+  constructor(eUal1, eUal2) {
+    this.#eUal1 = eUal1;
+    this.#eUal2 = eUal2;
+  }
+  
+  opeRation = function (codeIns,dataTab,indicateurTab,instrTab,modeAdr,cpt, dest, format, param1, param2) {
+ 
+    //addition registre registre et le resultat sera dans reg1 000000 00 0 1 REG1   REG2
+    let somme = 0;
+    let n = 0;
+    let m = 0;
+    let i=0 ; 
+    if(codeIns == "STOP") return cpt+1 ; 
+    if(codeIns[0]== "J") {
+      return this.jmp(codeIns,indicateurTab,cpt)  ; 
+    }
+    else if(codeIns == "STORE") {
+      this.store(cpt) ; 
+      return cpt +2 ;
+     }
+    else if(codeIns== "CMP") {
+      if ((modeAdr == "00") && dest == "1" && format == "0") {
+        this.cmpDirect(codeIns,param1,param2); 
+        return cpt+1 ;}
+      if ((modeAdr == "01") && dest == "1" && format == "0") {
+        this.cmpIndiret(codeIns,param1,param2); 
+        return cpt+1 ;}
+
+    }
+    else if(codeIns== "CMPI") {
+      if ((modeAdr == "00") && dest == "1" && format == "1") {
+        this.cmpImm(codeIns,param1,instrTab,cpt); 
+        return cpt+2 ;}
+    }
+    else if(codeIns== "SHR" || codeIns== "SHL" || codeIns== "ROR" || codeIns== "ROL" ) {
+      this.decalageRotationLogique(codeIns,param1,instrTab,cpt) ; 
+      return cpt+2 ; 
+    }
+    else if(codeIns== "ADA" || codeIns== "SBA" || codeIns== "LOAD") {
+      if((modeAdr == "00") && dest == "1" && format == "0" ){
+        this.immediaAccDirectCourt(codeIns,param1) ; 
+        return cpt+1 ; 
+  
+      }
+      else if((modeAdr == "00") && dest == "0" && format == "1"){
+        this.immediaAccDirectLong(codeIns,dataTab,instrTab,cpt) ; 
+        return cpt+2 ; 
+      }else if((modeAdr == "01") && dest == "0" && format == "0"){
+        this.LoadinDirectCourt(param1) ; 
+        return cpt+1 ; 
+      }
+      else if((modeAdr == "11") && dest == "0" && format == "1") {
+      this.LoadDirectIndexe(param1,dataTab,instrTab,cpt) 
+      return cpt +main.nbMot[main.Nbinst][1] ;}
+    }
+    else if(codeIns== "ADAI" || codeIns== "SBAI" ||  codeIns== "LOADI"){
+  main.ACC.setContenu(this.operation(codeIns,main.ACC.getContenu(),instrTab[cpt+1].getVal())) ; 
+      return cpt +2 ;
+    }
+    else if(codeIns[codeIns.length-1] == "I"  || codeIns=="INC" || codeIns=="DEC" ){
+    if((modeAdr == "00") && dest == "1"  ){
+      if(codeIns=="INC" || codeIns=="DEC") {
+        this.immediaDirectLongDest(codeIns,param1,instrTab,cpt) ; 
+        return cpt+1 ; }
+      else{ 
+        this.immediaDirectLongDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt)
+        return cpt+2 ; }
+
+    }
+    else if((modeAdr == "00") && dest == "0" ){
+      this.immediaDirectLongNonDest(codeIns.slice(0,codeIns.length-1),instrTab,cpt)
+      return cpt+3 ; 
+    }
+    else if((modeAdr == "01") && dest == "0" ) {
+      this.immediaInDirectLongNonDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt) ; 
+      return cpt+2
+    }
+    else if((modeAdr == "10") && dest == "0" ) {
+      this.immediaBaseIndexeLongNonDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt) ; 
+      return cpt+3 ; 
+    }
+    else if((modeAdr == "11") && dest == "0" ) {
+      this.immDirectIndexeLongNonDest(codeIns,param1,dataTab,instrTab,cpt) 
+      return cpt+main.nbMot[main.Nbinst][1] ; 
+    }
+    }
+    else if ((modeAdr == "00") && dest == "1" && format == "0") {
+      this.directCourtDist(codeIns,param1,param2) ; 
+      return cpt+1 ;
+
+    } 
+    else if (modeAdr == "00" && format == "1") {
+           this.directLong(codeIns,param1,param2,dataTab,instrTab,cpt,dest) ; 
+           return cpt+2 ; 
+
+    }
+     else if(modeAdr == "01" && format == "0") { 
+          if(dest == "0") {
+           this.indirectCourtNonDest(codeIns,param1,param2,dataTab) ; 
+        }
+
+        else {
+        this.indirectCourtDest(codeIns,param1,param2,dataTab) ; 
+        }
+        return cpt+1
+    
+    }
+    else if(modeAdr == "10" && format == "1"){
+    if(dest == "1") {
+      this.BaseIndexeLongDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
+   }else{
+    this.BaseIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ;
+   }
+   return cpt+2 ; 
+  } else if(modeAdr == "11" && format == "1") {
+    if(dest == "1") {
+      this.directIndexeLongDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
+   }else{
+    this.directIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
+   }
+   return cpt+main.nbMot[main.Nbinst][1] ; 
+    
+  }
+
+  }; 
+
+  
+  // Mode direct format court distination =1 
+  directCourtDist = function(code,param1,param2) {
+    let n = 0;
+    let m = 0;
+    let i=0 ; 
+    switch (param2) {
+        case "000":  m = main.AX.getContenu(); break;
+        case "001":  m = main.BX.getContenu(); break;
+        case "010":  m = main.CX.getContenu(); break;
+        case "011":  m = main.DX.getContenu(); break;
+        case "100":  m = main.EX.getContenu(); break;
+        case "101":  m = main.FX.getContenu(); break;
+        case "110":  m = main.SI.getContenu(); break;
+        case "111": m = main.DI.getContenu();  break;
+      }
+      switch (param1) {
+        case "000":
+          n = main.AX.getContenu();
+          main.ACC.setContenu(n);
+          this.mettreAjourIndicateur(main.ACC.getContenu()) ;
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.AX.setContenu(main.ACC.getContenu());
+          break;
+        case "001":
+          n = main.BX.getContenu();
+          main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.BX.setContenu(main.ACC.getContenu());
+          break;
+        case "010":
+          n = main.CX.getContenu();
+          main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.CX.setContenu(main.ACC.getContenu());
+          break;
+        case "011":
+          n = main.DX.getContenu();
+          main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.DX.setContenu(main.ACC.getContenu());
+          break;
+        case "100":
+          n = main.EX.getContenu();
+          main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.EX.setContenu(main.ACC.getContenu());
+          break;
+        case "101":
+          n = main.FX.getContenu();
+          main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.FX.setContenu(main.ACC.getContenu());
+          break;
+        case "110":
+          n = main.SI.getContenu();
+          main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.SI.setContenu(main.ACC.getContenu());
+          break;
+        case "111":
+          n = main.DI.getContenu();
+          main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.DI.setContenu(main.ACC.getContenu());
+          break;
+      }
+
+    } // Finnnn Mode direct format court distination =1 
+
+    // Mode direct format Long destination =0 
+    directLong = function(code,param1,param2,dataTab,instrTab,cpt,dest) {
+      let n = 0;
+      let m = 0;
+      let i = util.chercherAdr(dataTab,(instrTab[cpt+1].getVal()).slice(-3)) ;
+      if(i==dataTab.length) {dataTab.push(new CaseMc((instrTab[cpt+1].getVal()).slice(1),"0000",""));} 
+       m = dataTab[i].getVal() ; 
+           if(dest == "0"){
+            switch (param1) {
+              case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); break;
+              case "001": m = main.BX.getContenu(); main.ACC.setContenu(m); break;
+              case "010": m = main.CX.getContenu(); main.ACC.setContenu(m); break;
+              case "011": m = main.DX.getContenu(); main.ACC.setContenu(m); break;
+              case "100": m = main.EX.getContenu(); main.ACC.setContenu(m); break;
+              case "101": m = main.FX.getContenu(); main.ACC.setContenu(m); break;
+              case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); break;
+              case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); break;
+            }
+          //  console.log("mmm = "+dataTab[i].getVal()+"      "+m);
+            main.ACC.setContenu(this.operation(code,dataTab[i].getVal(),m));
+            dataTab[i].setVal(main.ACC.getContenu()) ; 
+           } 
+            else { 
+              switch (param1) {
+                case "000":
+                  n = main.AX.getContenu();
+                  main.ACC.setContenu(n);
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.AX.setContenu(main.ACC.getContenu());
+                  break;
+                case "001":
+                  n = main.BX.getContenu();
+                  main.ACC.setContenu(n);
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.BX.setContenu(main.ACC.getContenu());
+                  break;
+                case "010":
+                  n = main.CX.getContenu();main.ACC.setContenu(n);
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.CX.setContenu(main.ACC.getContenu());
+                  break;
+                case "011":
+                  n = main.DX.getContenu();
+                  main.ACC.setContenu(n);
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.DX.setContenu(main.ACC.getContenu());
+                  break;
+                case "100":
+                  n = main.EX.getContenu();
+                  main.ACC.setContenu(n);
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.EX.setContenu(main.ACC.getContenu());
+                  break;
+                case "101":
+                  n = main.FX.getContenu();
+                  main.ACC.setContenu(n);
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.FX.setContenu(main.ACC.getContenu());
+                  break;
+                case "110":
+                  n = main.SI.getContenu();
+                  main.ACC.setContenu(n);
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.SI.setContenu(main.ACC.getContenu());
+                  break;
+                case "111":
+                  n = main.DI.getContenu();
+                  main.ACC.setContenu(n);
+                  main.ACC.setContenu(this.operation(code,n,m));
+                  main.DI.setContenu(main.ACC.getContenu());
+                  break;
+              }
+               
+           }
+    }
+
+    // Mode indirect format Court distination =0 
+    indirectCourtNonDest = function(code,param1,param2,dataTab) {
+      let m = 0 ; 
+      let n = 0; 
+      switch (param1) {
+        case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); break;
+        case "001": m = main.BX.getContenu(); main.ACC.setContenu(m); break;
+        case "010": m = main.CX.getContenu(); main.ACC.setContenu(m); break;
+        case "011": m = main.DX.getContenu(); main.ACC.setContenu(m); break;
+        case "100": m = main.EX.getContenu(); main.ACC.setContenu(m); break;
+        case "101": m = main.FX.getContenu(); main.ACC.setContenu(m); break;
+        case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); break;
+        case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); break;
+
+    }
+    let i  ; 
+    switch (param2) {
+      case "001":
+        i = util.chercherAdr(dataTab,(main.BX.getContenu()).slice(-3)) ; 
+        if(i==dataTab.length) {dataTab.push(new CaseMc((main.BX.getContenu()).slice(1),"0000",""));}
+        main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
+        break;
+      
+      case "110":
+        i = util.chercherAdr(dataTab,(main.SI.getContenu()).slice(-3)) ;
+        if(i==dataTab.length) {dataTab.push(new CaseMc((main.SI.getContenu()).slice(1),"0000",""));}
+        main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
+        break;
+      case "111":
+        i = util.chercherAdr(dataTab,(main.DI.getContenu()).slice(-3)) ;
+        if(i==dataTab.length) {dataTab.push(new CaseMc((main.DI.getContenu()).slice(1),"0000",""));}
+        main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
+        break;
+    }
+    dataTab[i].setVal(main.ACC.getContenu()) ; 
+    } //Fin Mode indirect format Court distination =0 
+
+    //Mode indirect format Court distination =1
+    indirectCourtDest = function(code,param1,param2,dataTab) {
+      let n=0 ; 
+      let m=0 ; 
+      let i=0 ; 
+      switch (param2) {
+        case "001":
+          i = util.chercherAdr(dataTab,(main.BX.getContenu()).slice(-3)) ;
+          if(i==dataTab.length) {dataTab.push(new CaseMc((main.BX.getContenu()).slice(1),"0000",""));}
+          m = (dataTab[i].getVal()).slice(1)  
+          break;
+        
+        case "110":
+          i = util.chercherAdr(dataTab,(main.SI.getContenu()).slice(-3)) ;
+          if(i==dataTab.length) {dataTab.push(new CaseMc((main.SI.getContenu()).slice(1),"0000",""));}
+          m = (dataTab[i].getVal()).slice(1) 
+          break;
+        case "111":
+          i = util.chercherAdr(dataTab,(main.DI.getContenu()).slice(-3)) ;
+          if(i==dataTab.length) {dataTab.push(new CaseMc((main.DI.getContenu()).slice(1),"0000",""));}
+          m = (dataTab[i].getVal()).slice(1) 
+          break;
+      }
+
+      switch (param1) {
+        case "000":
+          n = main.AX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.AX.setContenu(main.ACC.getContenu());
+          break;
+        case "001":
+          n = main.BX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.BX.setContenu(main.ACC.getContenu());
+          break;
+        case "010":
+          n = main.CX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.CX.setContenu(main.ACC.getContenu());
+          break;
+        case "011":
+          n = main.DX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.DX.setContenu(main.ACC.getContenu());
+          break;
+        case "100":
+          n = main.EX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.EX.setContenu(main.ACC.getContenu());
+          break;
+        case "101":
+          n = main.FX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.FX.setContenu(main.ACC.getContenu());
+          break;
+        case "110":
+          n = main.SI.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.SI.setContenu(main.ACC.getContenu());
+          break;
+        case "111":
+          n = main.DI.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.DI.setContenu(main.ACC.getContenu());
+          break;
+      }
+
+    } // fin Mode indirect format Court distination =1
+
+    //Mode BaseIndexe format Long  distination =1
+    BaseIndexeLongDest = function(code,param1,param2,dataTab,instrTab,cpt) {
+      let n = instrTab[cpt+1].getVal() ; 
+      let m=0 ; 
+      let i=0 ; 
+      switch (param2) {
+        case "001":
+          main.ACC.setContenu(main.BX.getContenu());  m=util.additionHexa(n,main.BX.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+        case "110":
+          main.ACC.setContenu(main.SI.getContenu());  m=util.additionHexa(n,main.SI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+        case "111":
+          main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+      }
+      
+      i = util.chercherAdr(main.getDataTab(),util.remplirZero(m,3,0)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc((util.remplirZero(m,3,0)).slice(-3),"0000",""));}
+      m=main.getDataTab()[i].getVal() ; 
+      switch (param1) {
+        case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
+          break;
+        case "001": n = main.BX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.BX.setContenu(main.ACC.getContenu());
+          break;
+        case "010": n = main.CX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.CX.setContenu(main.ACC.getContenu());
+          break;
+        case "011": n = main.DX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DX.setContenu(main.ACC.getContenu());
+          break;
+        case "100": n = main.EX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.EX.setContenu(main.ACC.getContenu());
+          break;
+        case "101": n = main.FX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.FX.setContenu(main.ACC.getContenu());
+          break;
+        case "110": n = main.SI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.SI.setContenu(main.ACC.getContenu());
+          break;
+        case "111": n = main.DI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DI.setContenu(main.ACC.getContenu());
+          break;
+      }
+
+    } // FinMode BaseIndexe format Long  distination =1
+    //Mode BaseIndexe format Long  distination =0
+    BaseIndexeLongNonDest = function(code,param1,param2,dataTab,instrTab,cpt) {
+      let m = instrTab[cpt+1].getVal() ; 
+      
+      let n=0 ;
+      
+      switch (param2) {
+        case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
+      }
+      let i = util.chercherAdr(dataTab,util.remplirZero(m,3,0)) ;
+      if(i==dataTab.length) {dataTab.push(new CaseMc((util.remplirZero(m,3,0)).slice(-3),"0000",""));}
+      m=dataTab[i].getVal() ;  
+      switch (param1) {
+        case "000": n = main.AX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "001": n = main.BX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "010": n = main.CX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "011": n = main.DX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "100": n = main.EX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "101": n = main.FX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "110": n = main.SI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "111": n = main.DI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+      }
+      dataTab[i].setVal(main.ACC.getContenu()) ; 
+    } // Fin Mode BaseIndexe format Long  distination =0
+    // Mode direct indexe format Long  distination =0
+    directIndexeLongNonDest = function(code,param1,param2,dataTab,instrTab,cpt) {
+      let m=0 ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+       m = instrTab[cpt+1].getVal() ; } else m=0 ;
+       
+      let n=0 ;
+      
+      switch (param2) {
+        case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
+      }
+      
+      let adretiq =0 ; 
+      if(main.nbMot[main.Nbinst] == 3) {
+      adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
+      let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
+      m=dataTab[i].getVal() ;  
+      switch (param1) {
+        case "000": n = main.AX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "001": n = main.BX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "010": n = main.CX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "011": n = main.DX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "100": n = main.EX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "101": n = main.FX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "110": n = main.SI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+        case "111": n = main.DI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
+          break;
+      }
+      dataTab[i].setVal(main.ACC.getContenu()) ; 
+    } // FIN  Mode direct indexe format Long  distination =0
+
+    // Mode direct indexe format Long  distination =1
+
+    directIndexeLongDest = function(code,param1,param2,dataTab,instrTab,cpt) {
+      let n=0 ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+        n = instrTab[cpt+1].getVal() ; } else n=0 ;
+  
+      let m=0 ; 
+      let i=0 ; 
+      switch (param2) {
+        case "001":
+          main.ACC.setContenu(main.BX.getContenu());  m=util.additionHexa(n,main.BX.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+        case "110":
+          main.ACC.setContenu(main.SI.getContenu());  m=util.additionHexa(n,main.SI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+        case "111":
+          main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+      }
+      
+      let adretiq =0 ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+      adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
+      i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);  
+      m=dataTab[i].getVal() ;    
+      switch (param1) {
+        case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
+          break;
+        case "001": n = main.BX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.BX.setContenu(main.ACC.getContenu());
+          break;
+        case "010": n = main.CX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.CX.setContenu(main.ACC.getContenu());
+          break;
+        case "011": n = main.DX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DX.setContenu(main.ACC.getContenu());
+          break;
+        case "100": n = main.EX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.EX.setContenu(main.ACC.getContenu());
+          break;
+        case "101": n = main.FX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.FX.setContenu(main.ACC.getContenu());
+          break;
+        case "110": n = main.SI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.SI.setContenu(main.ACC.getContenu());
+          break;
+        case "111": n = main.DI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DI.setContenu(main.ACC.getContenu());
+          break;
+      }
+
+    }  // FIN Mode direct indexe format Long  distination =1
+    
+
+
+    //Mode immediate direct  format Long  distination =1
+    immediaDirectLongDest = function(code,param1,instrTab,cpt) {
+      let m=0 ; 
+      if(code == "INC"){
+        m=1 ; 
+        code ="ADDI"
+      }else if(code == "DEC"){
+        m=1 ; 
+        code ="SUBI"
+      }
+      else{
+       m = instrTab[cpt+1].getVal() ;
+      }
+      let n=0 ;
+      switch (param1) {
+        case "000":
+          n = main.AX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.AX.setContenu(main.ACC.getContenu());
+          break;
+        case "001":
+          n = main.BX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.BX.setContenu(main.ACC.getContenu());
+          break;
+        case "010":
+          n = main.CX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.CX.setContenu(main.ACC.getContenu());
+          break;
+        case "011":
+          n = main.DX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.DX.setContenu(main.ACC.getContenu());
+          break;
+        case "100":
+          n = main.EX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.EX.setContenu(main.ACC.getContenu());
+          break;
+        case "101":
+          n = main.FX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.FX.setContenu(main.ACC.getContenu());
+          break;
+        case "110":
+          n = main.SI.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.SI.setContenu(main.ACC.getContenu());
+          break;
+        case "111":
+          n = main.DI.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.DI.setContenu(main.ACC.getContenu());
+          break;
+      }
+ 
+
+    }  //Mode immediate direct  format Long  distination =1
+     //Mode immediate direct  format Long  distination =0
+    immediaDirectLongNonDest = function(code,instrTab,cpt) {
+      let m = instrTab[cpt+1].getVal() ;
+      let i = util.chercherAdr(main.getDataTab(),m.slice(1)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc((instrTab[cpt+1].getVal()).slice(-3),"0000",""));}
+      m=main.getDataTab()[i].getVal() ;
+      main.ACC.setContenu(m);
+      let n= instrTab[cpt+2].getVal() ; ; 
+      main.ACC.setContenu(this.operation(code,m,n)); 
+      main.getDataTab()[i].setVal(main.ACC.getContenu()) ;
+    }  // Fin Mode immediate direct  format Long  distination =0 
+
+      //Mode immediate indirect  format Long  distination =0 
+    immediaInDirectLongNonDest = function(code,param1,instrTab,cpt) {
+      let n = instrTab[cpt+1].getVal() ;
+      let i ; 
+      let m=0 ; 
+      switch (param1) {
+        case "001":
+          i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
+           m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+           m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
+         break;
+        case "110": 
+        i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
+        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+        m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
+        break ; 
+        case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
+        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+        m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m); break ; 
+      } 
+    } // FIN Mode immediate indirect  format Long  distination =0 
+
+    //  Mode immediate BaseIndexe  format Long  distination =0 
+    immediaBaseIndexeLongNonDest = function(code,param1,instrTab,cpt) {
+      let m=0 ; 
+      let i=0 ;
+      let n=instrTab[cpt+2].getVal() ;
+      switch (param1) {
+        case "001": main.ACC.setContenu(main.BX.getContenu().slice(1));
+          m = util.additionHexa(main.BX.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
+          i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
+          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
+           m=main.dataTab[i].getVal() ; main.ACC.setContenu(m); 
+           m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
+         break;
+        case "110": 
+        main.ACC.setContenu(main.SI.getContenu().slice(1));
+        m = util.additionHexa(main.SI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
+        i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
+         m=main.dataTab[i].getVal() ; main.ACC.setContenu(m);
+         m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
+        break ; 
+        case "111": main.ACC.setContenu(main.DI.getContenu().slice(1));
+        m = util.additionHexa(main.DI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
+        i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
+         m=main.dataTab[i].getVal() ; main.ACC.setContenu(m); 
+         m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
+      } 
+    }  // Fin Mode immediate BaseIndexe  format Long  distination =0 
+
+
+    immDirectIndexeLongNonDest = function(code,param1,dataTab,instrTab,cpt) {
+
+       let m=0 ; 
+      if(main.nbMot[main.Nbinst][1] == 4) {
+       m = instrTab[cpt+1].getVal() ; } else m=0 ;
+      
+      let n=0 ;
+      
+      switch (param1) {
+        case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
+      }
+      
+      
+      let adretiq ; 
+      if(main.nbMot[main.Nbinst][1] == 4) {
+        adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
+      let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
+      m=dataTab[i].getVal() ;  
+      if(main.nbMot[main.Nbinst][1] == 4) {
+        n= instrTab[cpt+3].getVal() ;  } else n= instrTab[cpt+2].getVal() ; 
+      main.ACC.setContenu(this.operation(code,m,n))
+      dataTab[i].setVal(main.ACC.getContenu()) ; 
+    } 
+
+    //  Mode immediate AccDirect  format COURT  
+    immediaAccDirectCourt = function(code,param1) {
+      switch (param1) {
+        case "000": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.AX.getContenu()));
+         break;
+        case "001": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.BX.getContenu()));
+         break;
+         case "010": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.CX.getContenu()));
+         break; 
+         case "011": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.DX.getContenu()));
+         break;
+         case "100": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.EX.getContenu()));
+         break;
+         case "101": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.FX.getContenu()));
+         break ; 
+        case "110": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.SI.getContenu()));
+        break;
+        case "111": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.DI.getContenu()));
+         break;
+        
+      } 
+    } // FIN  Mode immediate AccDirect  format COURT  
+
+    //  Mode immediate AccDirect  format Long  
+    immediaAccDirectLong = function(code,dataTab,instrTab,cpt) {
+      let n = instrTab[cpt+1].getVal() ;
+      let i = util.chercherAdr(dataTab,n.slice(1)) ;
+      if(i==dataTab.length) {dataTab.push(new CaseMc(n.slice(-3),"0000",""));}
+      n=dataTab[i].getVal() ; 
+       main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),n)); 
+
+    } //  FIN Mode immediate AccDirect  format Long 
+    
+
+    LoadinDirectCourt = function(param1) {
+      let i=0 ; let m=0 ; 
+      switch (param1) {
+        case "001":
+          i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+          if(i==dataTab.length) {dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
+           m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+         break;
+        case "110": 
+        i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+        if(i==dataTab.length) {dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
+        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+        break ; 
+        case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+        if(i==dataTab.length) {dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
+        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m);  break ; 
+      } 
+
+    }
+
+    LoadDirectIndexe = function(param1,dataTab,instrTab,cpt) {
+      let n=0 ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+       n = instrTab[cpt+1].getVal() ; } else n=0 ;
+  
+      let m=0 ; 
+      let i=0 ; 
+      switch (param1) {
+        case "001":
+          main.ACC.setContenu(main.BX.getContenu());  m=util.additionHexa(n,main.BX.getContenu().slice(1)) ; main.ACC.setContenu(m);  break;
+        case "110":
+          main.ACC.setContenu(main.SI.getContenu());  m=util.additionHexa(n,main.SI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+        case "111":
+          main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
+      }
+      
+      let adretiq ; 
+      if(main.nbMot[main.Nbinst][1] == 3) {
+        adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
+
+      i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
+      
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16) ;   
+      m=dataTab[i].getVal() ;  
+      main.ACC.setContenu(m);
+    }
+    //  decalage / Rotation Logique
+    decalageRotationLogique= function(code,param1,instrTab,cpt) {
+      switch (param1) {
+        case "000": main.ACC.setContenu(main.AX.getContenu()) ;
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+        main.AX.setContenu(main.ACC.getContenu() ) ; 
+        
+         break;
+        case "001": main.ACC.setContenu(main.BX.getContenu()) ; 
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+        main.BX.setContenu(main.ACC.getContenu() ) ;
+         break;
+         case "010": main.ACC.setContenu(main.CX.getContenu()) ; 
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+         main.CX.setContenu(main.ACC.getContenu() ) ;
+         break; 
+         case "011":main.ACC.setContenu(main.DX.getContenu()) ; 
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+         main.DX.setContenu(main.ACC.getContenu() ) ;
+         break;
+         case "100": main.ACC.setContenu(main.EX.getContenu()) ; 
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+         main.EX.setContenu(main.ACC.getContenu() ) ;
+         break;
+         case "101": main.ACC.setContenu(main.FX.getContenu()) ; 
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+         main.FX.setContenu(main.ACC.getContenu() ) ;
+         break ; 
+        case "110": main.ACC.setContenu(main.SI.getContenu()) ; 
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+        main.SI.setContenu(main.ACC.getContenu() ) ;
+        break;
+        case "111": main.ACC.setContenu(main.DI.getContenu()) ; 
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+        main.DI.setContenu(main.ACC.getContenu() ) ;
+         break;
+        
+      } 
+   //   console.log(main.getIndicateurRetenue());
+    }   //  FIN decalage / Rotation Logique
+     // JMP 
+     jmp = function (code,indicateurTab,cpt) {
+      let i = main.getinstrTab()[cpt+1].getVal() ; 
+      i= util.chercherAdr(main.getinstrTab(),i.slice(1)) ; 
+    switch ( code.toUpperCase())  {
+    case "JMP": return i;   
+    case "JZ": if( main.getIndicateurZero() == "1")
+        return i; else return cpt+2 ; 
+    case "JNZ": if(main.getIndicateurZero() != "1")
+    return i; else return cpt+2 ;
+    case "JC": if(main.getIndicateurRetenue() == "1")
+    return i; else return cpt+2 ; 
+    case "JNC": if(main.getIndicateurRetenue() != "1") 
+    return i; else return cpt+2 ; 
+
+    case "JS": if(main.getIndicateurSigne() == "1") return i; else return cpt+2 ;
+    case "JNS": if(main.getIndicateurSigne() != "1")  return i; else return cpt+2 ;
+    case "JO": if(main.getIndicateurDebord() == "1")  return i; else return cpt+2 ;
+    case "JNO": if(main.getIndicateurDebord() != "1")  return i ; else return cpt+2 ;
+    case "JE": if(main.getIndicateurZero() == "1" )  {return i ;} else return cpt+2 ; 
+    case "JNE": if(main.getIndicateurZero() != "1" ) return i ; else return cpt+2 ;  
+  }
+} //JMP 
+   //  comparaison direct 
+  cmpDirect = function (code,param1,param2) {
+   let m=0 ;
+   let n=0 ; 
+    switch (param2) {
+      case "000":
+        m = main.AX.getContenu();
+        break;
+      case "001":
+        m = main.BX.getContenu();
+        break;
+      case "010":
+        m = main.CX.getContenu();
+        break;
+      case "011":
+        m = main.DX.getContenu();
+        break;
+      case "100":
+        m = main.EX.getContenu();
+        break;
+      case "101":
+        m = main.FX.getContenu();
+        break;
+      case "110":
+       m = main.SI.getContenu();
+         break;
+        case "111":
+        m = main.DI.getContenu();
+        break;
+    }
+    switch (param1) {
+      case "000":
+        n = main.AX.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "001":
+        n = main.BX.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "010":
+        n = main.CX.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "011":
+        n = main.DX.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "100":
+        n = main.EX.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "101":
+        n = main.FX.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "110":
+        n = main.SI.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "111":
+        n = main.DI.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m)); 
+        break;
+    }
+
+    if(util.compareHexValues(n,m)>0) { 
+      main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+    }else if(util.compareHexValues(n,m)<0) {
+      main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
+    }
+    else { 
+      main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+      main.setIndicateurDebord("0"); 
+    }
+
+      
+  }  // FIN   comparaison direct
+
+
+
+  cmpIndiret = function (code,param1,param2) {
+    let m=0 ;
+     let i=0 ; 
+     let n=0 ; 
+    switch (param2) {
+      case "001":
+        i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
+         m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+       break;
+      case "110": 
+      i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
+      m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+      break ; 
+      case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
+      m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+      break;
+    } 
+
+     switch (param1) {
+       case "000":
+         n = main.AX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "001":
+         n = main.BX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "010":
+         n = main.CX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "011":
+         n = main.DX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "100":
+         n = main.EX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "101":
+         n = main.FX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "110":
+         n = main.SI.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "111":
+         n = main.DI.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m)); 
+         break;
+     }
+     if(util.compareHexValues(n,m)>0) {
+       main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+     }else if(util.compareHexValues(n,m)<0) {
+       main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
+     }
+     else { 
+       main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+       main.setIndicateurDebord("0"); 
+     }
+ 
+       
+   } 
+
+
+   //  comparaison Imm
+  cmpImm = function (code,param1,instrTab,cpt) {
+    let m= instrTab[cpt+1].getVal() ; 
+    let n=0 ; 
+     switch(param1) {
+       case "000":
+         n = main.AX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "001":
+         n = main.BX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "010":
+         n = main.CX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "011":
+         n = main.DX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "100":
+         n = main.EX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m)); 
+         break;
+       case "101":
+         n = main.FX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "110":
+         n = main.SI.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "111":
+         n = main.DI.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+     }
+     
+     if(util.compareHexValues(n,m)>0) {
+      main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+    }else if(util.compareHexValues(n,m)<0) {
+      main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
+    }
+    else { 
+      main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+      main.setIndicateurDebord("0"); 
+    }
+       
+   } //  DIN comparaison Imm
+
+   store = function(cpt) {
+    let i = main.getinstrTab()[cpt+1].getVal() ; 
+    i= util.chercherAdr(main.getDataTab(),i.slice(1)) ; 
+    if(i==dataTab.length) {dataTab.push(new CaseMc(i,"0000",""));}
+    main.getDataTab()[i].setVal(main.ACC.getContenu())  ; 
+   } 
+
+   NotDirect = function(code,param1) {
+    let m = 0 ; 
+    let n = 0;   
+    switch (param1) { 
+      case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu()); break;
+      case "001": m = main.BX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.BX.setContenu(main.ACC.getContenu()); break;
+      case "010": m = main.CX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.CX.setContenu(main.ACC.getContenu()); break;
+      case "011": m = main.DX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.DX.setContenu(main.ACC.getContenu()); break;
+      case "100": m = main.EX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.EX.setContenu(main.ACC.getContenu()); break;
+      case "101": m = main.FX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.FX.setContenu(main.ACC.getContenu()); break;
+      case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.SI.setContenu(main.ACC.getContenu()); break;
+      case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.DI.setContenu(main.ACC.getContenu()); break;
+
+  }
+   }
+
+   // mettre a jour les indicateurs          
+   mettreAjourIndicateur = function(val) {   
+    let binaryRes = (util.remplirZero(util.hexEnBinaire(val),16,0)).slice(-16) ;
+    if(val=="0000"){main.setIndicateurZero("1") ;}
+    else {main.setIndicateurZero("0");}
+    if (val.length>4){main.setIndicateurDebord("1"); main.setIndicateurRetenue("1");}
+    else {
+      main.setIndicateurDebord("0"); 
+      main.setIndicateurRetenue("0");
+      
+    }
+    if (binaryRes[0]== "1") {main.setIndicateurSigne("1");}
+    else {main.setIndicateurSigne("0");}
+
+   } // FIN mettre a jour les indicateurs 
+    operation = function(code,n,m ) {
+      let res=0 ; 
+      switch (code.toUpperCase()) {
+        case "MOV": res=util.remplirZero(m,4,0); this.mettreAjourIndicateur(res);  break; 
+        case "ADD": res=util.remplirZero(util.additionHexa(n,m),4,0); 
+        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
+        break;
+        case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; 
+        break;
+        case "CMP": res=util.compareHexValues(n,m) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "OR": res=util.remplirZero(util.OrHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "AND": res=util.remplirZero(util.AndHex(n,m),4,0) ;  util.setIndicateursAccumulateur(res.slice(-4)); break; 
+        case "SHR": res=util.remplirZero(util.decalageLogiqueHexadecDroit(n,m),4,0); util.setIndicateursAccumulateur(res.slice(-4));   break; 
+        case "SHL": res=util.remplirZero(util.decalageLogiqueHexadecGauche(n,m),4,0); util.setIndicateursAccumulateur(res.slice(-4));   break; 
+        case "ROL": res=rotationHexadecimal("ROL",n,m); util.setIndicateursAccumulateur(res.slice(-4));   break;
+        case "ROR": res=rotationHexadecimal("ROR",n,m); util.setIndicateursAccumulateur(res.slice(-4));  break;
+        case "JZ": ins = "001100"; this.mettreAjourIndicateur(res); break;
+        case "JNZ": ins = "001101"; this.mettreAjourIndicateur(res); break;
+        case "JC": ins = "001110"; this.mettreAjourIndicateur(res); break;
+        case "JS": ins = "010000"; this.mettreAjourIndicateur(res); break;
+        case "JNC": ins = "001111"; this.mettreAjourIndicateur(res); break;
+        case "JNS": ins = "010001"; this.mettreAjourIndicateur(res);  break;
+        case "JO": ins = "010010"; this.mettreAjourIndicateur(res); break;
+        case "JNO": ins = "010011"; this.mettreAjourIndicateur(res);  break;
+        case "JE": ins = "010100"; this.mettreAjourIndicateur(res); break;
+        case "JNE": ins = "010101"; this.mettreAjourIndicateur(res); break;
+        case "LOAD": res= util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "STORE": ins = "010111"; this.mettreAjourIndicateur(res); break;
+        case "INC": ins = "011000";  this.mettreAjourIndicateur(res); break;
+        case "DEC": ins = "011001";  this.mettreAjourIndicateur(res);break;
+        case "NOT":  res= util.remplirZero(util.NotHex(n),4,0) ;  break;
+        case "JMP": ins = "011011"; this.mettreAjourIndicateur(res); break;
+        case "IN": ins = "011100"; this.mettreAjourIndicateur(res); break;
+        case "OUT": ins = "011101"; break;
+        case "START": ins = "011111"; break;
+        case "STOP": ins = "011110"; break;
+        case "MOVI": res=util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "ADDI": res=util.remplirZero(util.additionHexa(n,m),4,0); 
+        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
+        break;
+        case "ADAI": res=util.remplirZero(util.additionHexa(n,m),4,0); 
+        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
+        break;
+        case "ADA": res=util.remplirZero(util.additionHexa(n,m),4,0) ;  
+        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
+        break; 
+        case "SUBI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
+        case "SBA": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break ;
+        case "SBAI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
+        case "CMPI": res=util.compareHexValues(n,m) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "ORI": res=util.remplirZero(util.OrHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "ANDI":res=util.remplirZero(util.AndHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
+        case "LOADI": res= util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
+        default: ins= "-1"; break;
+      }
+      return res.slice(-4);
+      
+    }
+  
+  
 }
 
 
 
-// coding.js for execute function 
+// Le main qui est dans execute 
+export var main = {
+  dataTab: [],
+  instrTab :[],
+  tabEtiq : [],
+  nbMot : [] ,
+  Nbinst :0 ,
+  indic: new registre("INDIC","0000") , 
+  ual: new UAL("0", "0"),
+  AX: new registre("AX", "0000"),
+  BX: new registre("BX", "0000"),
+  CX: new registre("CX", "0000"),
+  DX: new registre("DX", "0000"),
+  EX: new registre("EX", "0000"),
+  FX: new registre("FX", "0000"),
+  SI: new registre("SI", "0000"),
+  DI: new registre("DI", "0000"),
+  CO: new registre("CO", "000"),
+  ACC: new registre("ACC", "0000"),
+  ri: new RI(),
+
+  
+  getinstrTab: function () {
+    return this.instrTab;
+  },
+  getDataTab: function () {
+    return this.dataTab;
+  },
+  getIndic: function () {
+    return this.indic;
+  },
+  getRI: function () {
+    return this.ri;
+  },
+  getCO: function () {
+    return this.CO;
+  },
+  setCO: function (val) {
+    this.CO = this.CO;
+  },
+  setRI: function (val) {
+    this.ri.setRI(val);
+  },
+  getAX: function () {
+    return this.AX;
+  },
+  getBX: function () {
+    return this.BX;
+  },
+  getCX: function () {
+    return this.CX;
+  },
+  getDX: function () {
+    return this.DX;
+  },
+  getEX: function () {
+    return this.EX;
+  },
+  getFX: function () {
+    return this.FX;
+  },
+  getSI: function () {
+    return this.SI;
+  },
+  getDI: function () {
+    return this.DI;
+  },
+  getACC: function () {
+    return this.ACC;
+  },
+  getIndicateurZero: function () {
+    return util.hexEnBinaire(this.getIndic().getContenu()).slice(-1);
+  },
+  getIndicateurSigne: function () {
+    return util.hexEnBinaire(this.getIndic().getContenu())[14];
+  },
+  getIndicateurDebord: function () {
+    return util.hexEnBinaire(this.getIndic().getContenu())[12];
+  },
+  getIndicateurRetenue: function () {
+    return util.hexEnBinaire(this.getIndic().getContenu())[13];  
+  },
+  setIndicateurZero: function (val) {
+    let contenuBin = util.hexEnBinaire(this.getIndic().getContenu()) ;
+    contenuBin = (contenuBin.substring(0,15)).concat(val) ;
+    this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ; 
+  },
+  setIndicateurSigne: function (val) {
+    let contenuBin = util.hexEnBinaire(this.getIndic().getContenu()) ;
+    contenuBin = (contenuBin.substring(0,14)).concat(val,contenuBin.slice(-1)) ;
+    this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ;
+  },
+  setIndicateurRetenue: function (val) {
+    let contenuBin = util.hexEnBinaire(this.getIndic().getContenu()) ;
+    contenuBin = (contenuBin.substring(0,13)).concat(val,contenuBin.slice(-2)) ;
+    this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ;
+  },
+  setIndicateurDebord: function (val) {
+    let contenuBin = util.hexEnBinaire(this.getIndic().getContenu()) ;
+    contenuBin = (contenuBin.substring(0,12)).concat(val,contenuBin.slice(-3)) ;
+    this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ;
+  },
+  
+  coder: function (contents) {
+
+    const messageDiv= document.getElementById("messageDiv");
+    messageDiv.innerHTML = ""; 
+    let indice = 0;
+    let co;
+    let adr = "";
+    let lines = contents.split('\n');
+    console.log(contents);
+    lines = lines.filter(line => line.trim() !== '');    // remove the empty lines from my filecontents : the table lines which represents the lines of the file 
+    let fileLength = lines.length;  
+    let nbLigne = 0;                     // file length without  the empty lines 
+    for (const line of lines) {
+      nbLigne++;
+      if (line != "") {
+      console.log("********************");
+      let ligne_str = line.toString().trim();
+      ligne_str = ligne_str.replace(",", " ");
+      ligne_str = util.removeExtraSpaces(ligne_str);
+      ligne_str = ligne_str.split(" ");
+      if (ligne_str[0] == "ORG") {
+        if (ligne_str[1].indexOf("H") != -1) {
+          adr = ligne_str[1].slice(0, ligne_str[1].length - 1);
+        } 
+        co = adr;
+        this.setCO(co);
+      } else if (ligne_str[0] == "START") {
+      }else if (ligne_str[0] == "SETZ") {
+          this.getDataTab().push(
+            new CaseMc(
+              util.remplirZero(indice.toString(16),3,0),"0000",
+              ligne_str[1]
+            )
+          );
+          indice++;
+          for (let k=1; k < parseInt(ligne_str[2]); k++) {
+            this.getDataTab().push(
+              new CaseMc(
+                util.remplirZero(indice.toString(16),3,0),"0000",
+                ""
+              )
+            );
+            indice++;
+          }
+        }
+       else if (ligne_str[0] == "SET") {
+        this.getDataTab().push(
+          new CaseMc(
+            util.remplirZero(indice.toString(16),3,0),
+            util.remplirZero( ligne_str[2].slice(0, ligne_str[2].length - 1),4,0),
+            ligne_str[1]
+          )
+        );
+        indice++;
+      } else {
+        let tab = codingExecute.coderInst(ligne_str, co, this.getDataTab());
+        main.nbMot.push([main.instrTab.length,tab.length]) ; //+co
+        main.instrTab=main.getinstrTab().concat(tab) ;
+        co = util.incrementHex(co, tab.length);
+      } 
+    }
+   }
+
+
+/*messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  Data Segment *** </span></p>";
+    console.log("***  Data Segment *** ");
+
+    for (let i = 0; i < this.getDataTab().length; i++){
+      this.getDataTab()[i].afficher();
+      this.getDataTab()[i].afficherHTML();}
+
+    console.log(" ********************** ");
+    //messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";
+    console.log("");
+
+    console.log("***  Code Segment *** ");
+    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: white;'>***  Code Segment *** </span></p>";
+
+    for (let i = 0; i < main.getinstrTab().length; i++) {
+    main.getinstrTab()[i].afficher();
+    main.getinstrTab()[i].afficherHTML();}
+
+    console.log("********************** ");
+    messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";*/
+
+
+
+    this.Execute(main.getinstrTab());
+
+    main.afficherRegistres() ;
+    main.afficherRegistresHTML();
+
+    main.afficherIndicateurs() ;
+    main.afficherIndicateursHTML();
+
+    console.log("*** LES DONNEES **** ");
+    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***   LES DONNEES *** </span></p>";
+
+    for (let i = 0; i < this.getDataTab().length; i++){
+      this.getDataTab()[i].afficher();
+      this.getDataTab()[i].afficherHTML();}
+
+    console.log("********************** ");
+    messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";
+    console.log(""); 
+
+
+  },
+
+  Execute: function (instrTab) {
+    let j = 0 ;
+    let i = 0 ;
+    this.Nbinst=0 ; 
+    while (j < instrTab.length) {
+      let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
+      this.setRI(instrBin) ;
+      this.Nbinst =  main.nbMot[util.chercherDansTableauDeuxDimension(main.nbMot,j)][1] ; 
+     
+      switch (this.getRI().getCOP()) {
+        case "000000": i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j = i ; break ;
+        case "100000": i = this.ual.opeRation("MOVI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j = i ; break ;
+        case "000001":
+        i = this.ual.opeRation("ADD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j=i ; break ;
+        case "000011":
+        i = this.ual.opeRation("SUB",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j=i ; break ;
+          case "000111":
+            i = this.ual.opeRation("AND",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+          case "000110":
+            i = this.ual.opeRation("OR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+          case "011010":
+            i = this.ual.opeRation("NOT",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+          case "100001":
+            i = this.ual.opeRation("ADDI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+          case "100011":
+            i = this.ual.opeRation("SUBI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+            case "001001":
+              i = this.ual.opeRation("SHL",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "001000":
+              i = this.ual.opeRation("SHR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "100100":
+              i = this.ual.opeRation("SBAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "011000":
+              i = this.ual.opeRation("INC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "011001":
+              i = this.ual.opeRation("DEC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "000101":
+              i = this.ual.opeRation("CMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "100101":
+              i = this.ual.opeRation("CMPI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "011011":
+              i = this.ual.opeRation("JMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "001100":
+              i = this.ual.opeRation("JZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ; 
+            case "001101":
+              i = this.ual.opeRation("JNZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "001110":
+              i = this.ual.opeRation("JC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "001111":
+              i = this.ual.opeRation("JNC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "010000":
+              i = this.ual.opeRation("JS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "010001":
+              i = this.ual.opeRation("JNS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "010010":
+              i = this.ual.opeRation("JO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "010011":
+              i = this.ual.opeRation("JNO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "010100":
+              i = this.ual.opeRation("JE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "010101":
+              i = this.ual.opeRation("JNE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "010110":
+              i = this.ual.opeRation("LOAD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "110110":
+              i = this.ual.opeRation("LOADI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "010111":
+              i = this.ual.opeRation("STORE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "000010":
+              i = this.ual.opeRation("ADA",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "100010":
+              i = this.ual.opeRation("ADAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+              j=i ; break ;
+            case "000100": 
+            i = this.ual.opeRation("SBA",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+            case "011110": 
+            i = this.ual.opeRation("STOP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+            j=i ; break ;
+            default:
+              break ; 
+
+      }
+      //j++ ;
+      //this.Nbinst ++ ; 
+    } 
+  },
+
+  afficherIndicateurs: function () {
+    console.log("I_ZERO: ", this.getIndicateurZero());
+    console.log("I_SIGNE: ", this.getIndicateurSigne());
+    console.log("I_RETENUE: ", this.getIndicateurRetenue());
+    console.log("I_DEBORD: ", this.getIndicateurDebord());
+  },
+  afficherIndicateursHTML: function (){
+    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_ZERO: </span>"+"<span style='color: white;'>"+ this.getIndicateurZero() +"</span></p>";
+    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_SIGNE: </span>"+"<span style='color: white;'>"+ this.getIndicateurSigne() +"</span></p>";
+    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_RETENUE: </span>"+"<span style='color: white;'>"+ this.getIndicateurRetenue() +"</span></p>";
+    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_DEBORD: </span>"+"<span style='color: white;'>"+ this.getIndicateurDebord() +"</span></p>";
+
+  },
+
+    afficherRegistres: function () {
+    console.log("AX: ", this.getAX().getContenu());
+    console.log("BX: ", this.getBX().getContenu());
+    console.log("CX: ", this.getCX().getContenu());
+    console.log("DX: ", this.getDX().getContenu());
+    console.log("EX: ", this.getEX().getContenu());
+    console.log("FX: ", this.getFX().getContenu());
+    console.log("SI: ", this.getSI().getContenu());
+    console.log("DI: ", this.getDI().getContenu());
+    console.log("ACC: ", this.getACC().getContenu());
+
+  },
+
+  afficherRegistresHTML: function () {
+   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> AX: </span>"+"<span style='color: white;'>"+this.getAX().getContenu() +"</span></p>";
+   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> BX: </span>"+"<span style='color: white;'>"+ this.getBX().getContenu() +"</span></p>";
+   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> CX: </span>"+"<span style='color: white;'>"+ this.getCX().getContenu()+"</span></p>";
+   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> DX: </span>"+"<span style='color: white;'>"+ this.getDX().getContenu() +"</span></p>";
+   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> EX: </span>"+"<span style='color: white;'>"+ this.getEX().getContenu() +"</span></p>";
+   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> FX: </span>"+"<span style='color: white;'>"+ this.getFX().getContenu() +"</span></p>";
+   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> SI: </span>"+"<span style='color: white;'>"+ this.getSI().getContenu()+"</span></p>";
+   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> DI: </span>"+"<span style='color: white;'>"+ this.getDI().getContenu() +"</span></p>";
+   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> ACC: </span>"+"<span style='color: white;'>"+ this.getACC().getContenu() +"</span></p>";
+
+  },
+  
+ 
+};
+
+
+//________________________________________ End of functions of Execute  _________________________________________________
+
+
+
+
+
+
+
+
+
+//__________________________________________ Needed Functions in simulation __________________________________________
+
 export var coding = {
   // debut coderInst "codage des instructions " return tableau des mots memoir apres codage de l'instruction 
   coderInst: function (strLigne, adr, dataTab) 
@@ -1561,442 +3593,6 @@ return instrTab;
 
 
 }
-
-
-
-
-
-
-// l'objet registre du fichier registre.js
-class registre {
-  #nom;
-  #contenu; //en hexa
-
-  constructor(nom, contenu) {
-    this.#nom = nom;
-    this.#contenu = contenu;
-  }
-  setNom(nom) {
-    this.#nom = nom;
-  }
-  getNom() {
-    return this.#nom ; 
-  }
-  setContenu(contenu) {
-      this.#contenu = contenu;
-    }
-  getContenu() {
-      return this.#contenu ; 
-    }
-  afficher() {
-    console.log(`nom ${this.#nom}  contenu ${this.#contenu}`);
-  }
-}
-// fin objet registre 
-
-
-
-
-
-var util = {
-  
-
-
-  chercherDansTableau: function (tableau, valeur) {
-    // change the name to chercherEtiq
-    let i = 0;
-    while (i < tableau.length && tableau[i].getEtiq() != valeur) {
-      i++;
-    }
-    return i;
-  }, // fin  chercherDansTableau
-
-  chercherDansTableau2: function (tableau, valeur,adr) {
-    // change the name to chercherEtiq
-    let i = 0;
-    while (i < tableau.length ) {
-      if(tableau[i].getEtiq() == valeur) {
-        let adresse = main.tabEtiq[i].getAdr();
-        let indice2 = util.chercherAdr(main.instrTab,adresse)
-        main.instrTab[indice2].setVal(util.remplirZero(adr,4,0)) ;
-      }
-      i++;
-    }
-    return i;
-  }, // fin  chercherDansTableau
-
-  chercherDansTableauDeuxDimension: function (tableau, valeur) {
-    // change the name to chercherEtiq
-    let i = 0;
-    while (i < tableau.length && tableau[i][0] != valeur) {
-      i++;
-    }
-    return i;
-  }, // fin  chercherDansTableau
-
-
-   // return element de tableau contant adr 
-  chercherAdr: function (tableau, adr) {
-    let i = 0;
-    while (i < tableau.length && tableau[i].getAdr() != adr) {
-      i++;
-    }
-    return i;
-  },// chercherAdr
-
-  // supprimer les espaces dans une chaine de caractere 
-  removeExtraSpaces: function (str) {
-    return str.replace(/\s+/g, " ");
-  }, // fin removeExtraSpaces 
-
-  // incrementer n fois  hex en hexadecimal 
-  incrementHex: function (hex, n) {
-    let decimal = parseInt(hex, 16);
-    for (let i = 0; i < n; i++) { decimal = decimal + 1; }
-    return decimal.toString(16).toUpperCase();
-  }, //  fin incrementHex
-
-// 
-  remplirZero: function (str, n, gd) {   
-    //gd=0 -> des zeros à gauche , gd=1 -> à droite
-    var s = "";
-    const length = str.length;
-    if (gd == 0) {
-      for (let k = 0; k < n - length; k++) { s += "0";}
-      return s + str;
-    } else {
-      if (gd == 1) {
-        for (let k = 0; k < n - length; k++) {str += "0"; }
-        return str;
-      } else { throw new Error("Le troisieme parametre doit etre 0 ou 1."); } }
-  }, // fin remplirZero
-
- // Find position of delimiter
-  getDel: function (str, delimiter) {
-    let position = str.indexOf(delimiter); 
-    if (position !== -1) { // Check if delimiter is found
-      str = str.substring(0, position); }// Delete characters after delimiter
-    return str;
-  }, //fin  getDel
-  
-  // faire l'addition en hexadecemal 
-  additionHexa: function (x1,x2) {
-    let a = util.hexEnBinaire(util.remplirZero(x1,4,0));
-    let b = util.hexEnBinaire(util.remplirZero(x2,4,0));
-    let sum = '';
-    let carry = 0;
-    let i = a.length - 1;
-    let j = b.length - 1;
-  
-    while (i >= 0 || j >= 0 || carry > 0) {
-    let digitA = i >= 0 ? parseInt(a.charAt(i), 2) : 0;
-    let digitB = j >= 0 ? parseInt(b.charAt(j), 2) : 0;
-    let digitSum = digitA + digitB + carry;
-  
-    carry = digitSum >= 2 ? 1 : 0;
-    digitSum = digitSum % 2;
-    sum = digitSum + sum;
-
-    i--;
-      j--;
-    }
-    return util.binaryToHex(sum) ;
-  }, // fin  additionHexa
-
-  /**
-+   * elle place l'indicateur zero selon l'operation de l'addition 
-+   * @param {1} x1 
-+   * @param {2} x2 
-+   */
-  setIndZeroAddition: function (x1, x2) {
-    x1 = (util.remplirZero(x1,4,0)).slice(-4) ;
-    x2 = (util.remplirZero(x2,4,0)).slice(-4) ;
-      let resultat = this.additionHexa(x1,x2) ;
-      resultat = resultat.slice(-4) ;
-      let resultatBin = util.hexEnBinaire(resultat); 
-      if(resultatBin.slice(-15)=="000000000000000") {main.setIndicateurZero("1");}
-      else {main.setIndicateurZero("0");}
-    }  ,
-  
-    /**
-     * place l'indicateur du signe selon l'operation de l'addition
-     * @param {*} x1 
-     * @param {*} x2 
-    */
-    setIndSigneAddition: function(x1,x2) {
-
-    x1 = (util.remplirZero(x1,4,0)).slice(-4) ;
-    x2 = (util.remplirZero(x2,4,0)).slice(-4) ;
-    let x1bin = util.hexEnBinaire(x1) ;
-    let x2bin = util.hexEnBinaire(x2) ;
-
-    if ((x1bin[0]=="0")&&(x2bin[0]=="0")) {main.setIndicateurSigne("0"); return ;}
-    if ((x1bin[0]=="1")&&(x2bin[0]=="1")) {main.setIndicateurSigne("1"); return ;}
-   if (((x1bin[0]=="1")&&(x2bin[0]=="0"))) {
-     //le signe dans ce cas sera du signe du nombre dont la valeur absolue est la plus grande 
-      let x2bin_ = util.remplirZero(x2bin.slice(-15),16,0) ;
-      if (parseInt(util.positiveComplementADeux(x1bin),2)>parseInt(x2bin_,2)) //le signe sera du signe de x1bin
-      {main.setIndicateurSigne(x1bin[0]); return ;}
-      else {main.setIndicateurSigne(x2bin[0]); return ;}
-    }
-  if ((x1bin[0]=="0")&&(x2bin[0]=="1")) {
-      let x1bin_ = util.remplirZero(x1bin.slice(-15),16,0) ;
-       if (parseInt(util.positiveComplementADeux(x2bin),2)>parseInt(x1bin_,2)) //le signe sera du signe de x2bin
-      {main.setIndicateurSigne(x2bin[0]); return ;}
-       else {main.setIndicateurSigne(x1bin[0]); return ;}
-  }},
-
-  setIndDebordAddition: function(x1,x2) {
-
-x1 = (util.remplirZero(x1,4,0)).slice(-4) ;
-x2 = (util.remplirZero(x2,4,0)).slice(-4) ;
-let x1bin = util.hexEnBinaire(x1) ;
-let x2bin = util.hexEnBinaire(x2) ;
-let resultat = (this.additionHexa(x1,x2)).slice(-4) ; //slice(-4) car on doit comparer avec le premier bit du resultat ecrit sur 16bits
-resultat = util.remplirZero((util.hexEnBinaire(resultat)),16,0) ;
-if ((x1bin[0]=="1")&&(x2bin[0]=="1")&&(resultat[0]=="0")) {main.setIndicateurDebord("1") ; return ;}
-else if ((x1bin[0]=="0")&&(x2bin[0]=="0")&&(resultat[0]=="1")) {main.setIndicateurDebord("1"); return ;}
-else {main.setIndicateurDebord("0"); return ;}
-},
-    
-setIndRetenueAddition: function(x1,x2) {
-  x1 = (util.remplirZero(x1,4,0)).slice(-1) ;
-  x2 = (util.remplirZero(x2,4,0)).slice(-1) ;
-let resultat = this.additionHexa(x1,x2) ;
-if (resultat.length>4) {main.setIndicateurRetenue("1"); return ;}
-else {main.setIndicateurRetenue("0"); return ;}
-},
-
-/**
- * elle place les indicateurs di signe et zero selon le contenu de l'accumulateur qui est en hexa
- * @param {1} contenuAcc le contenu de l'accumulateur en hexadecimal
- */
-setIndicateursAccumulateur: function(contenuAcc) {
-let contenuAccBin = util.hexEnBinaire(contenuAcc) ;
-if (contenuAccBin[0]=="1") {main.setIndicateurSigne("1");}
-else {main.setIndicateurSigne("0");}
-if (contenuAcc=="0000"){main.setIndicateurZero("1");}
-else {main.setIndicateurZero("0");}
-},
-
-getSubstringBetweenChars: function (str, startChar, endChar) {
-    let startIndex = str.indexOf(startChar);
-    if (startIndex === -1) { return ""; }
-    startIndex += 1;
-    const endIndex = str.indexOf(endChar, startIndex);
-    if (endIndex === -1) { return "";   }
-    return str.substring(startIndex, endIndex);
-  }, // fin getSubstringBetweenChars
-
-  // convertir un nombre binaire en hexadecimal 
-  binaryToHex: function (binary) {
-    const decimal = parseInt(binary, 2);
-    const hex = decimal.toString(16);
-    return hex.toUpperCase();
-  }, // fin  binaryToHex
-  
-  hexEnBinaire: function (hex) {
-    let binary = "";
-    for (let i = 0; i < hex.length; i++) {
-      const char = parseInt(hex[i], 16).toString(2);
-      binary += char.padStart(4, "0");
-    }
-    return binary;
-  },
-
-   // verifie si un nombre est en hexadecimal 
-   estHexadecimal: function (chaine) {
-    return !isNaN(parseInt(chaine, 16));
-  }, // fin estHexadecimal
-
-  
- isVariableNameValid: function (str,nbLigne) {
-  let messageError= [] ; 
-  if (!str) {  messageError.push(nbLigne+" Il faut que le nom de la variable soit valide  ") ;  } // Vérifier si la chaîne est vide ou null
-
-  // Vérifier si le premier caractère est une lettre, un underscore ou un dollar
-  let firstChar = str.charAt(0);
-  if (!/^[a-zA-Z_$]/.test(firstChar)) { messageError.push(nbLigne+" Il faut que le nom de la variable soit valide ");  }
-
-  // Vérifier si les autres caractères sont des lettres, des chiffres, des underscores ou des dollars
-  for (let i = 1; i < str.length; i++) {
-    let char = str.charAt(i);
-    if (!/^[a-zA-Z0-9_$]/.test(char)) {  messageError.push(nbLigne+" Il faut que le nom de la variable soit valide ");  } }
-  if ( coding.regexi(str)) {   messageError.push(nbLigne+" Il faut que le nom de la variable soit valide , il faut pas que ça soit un nom de registre ");  ; }
-  /* La chaîne est valide */
-  return messageError ;    },
-
-checkNumber: function(ligne_str,nbLigne) {
-  let messageError= [] ; 
-  if (ligne_str.indexOf("H") ==  -1 ) {  messageError.push(nbLigne+" Il faut ecrire 'H' qui signifie la base hexadecimal ");    } 
-         else { ligne_str = ligne_str.slice(0,ligne_str.length-1) ; 
-          if (! this.estHexadecimal(ligne_str)) {  messageError.push(nbLigne+" Il faut donner une valeur hexadecimal"); } }
-     return messageError ; 
-},
-instUnSeulOp: function(str) {
-     str = str.toUpperCase() ; 
-     if (str== 'ADA' || str == 'ADAI' ||str=="SBA" || str=="SBAI" || str=='STOP' || str=='START' || str=='IN' || str=='OUT' || str=='JMP' || 
-     str=='NOT' || str=='DEC' || str=='INC' || str=='STORE' || str=='LOAD' || str=='LOADI' || str=='JNE' || str=='JE' ||
-     str== 'JNO' || str == 'JO' || str=='JNS' || str=='JS' || str=='JNC' || str=='JC' || str=='JNZ' || str== 'JZ' ) return true ; 
-     else return false ; 
-},
-
-getCodeASCIIHex: function(caractere) {
-  return caractere.charCodeAt(0).toString(16);
-},
-/**
-+ * fait la soustraction de n-m tq n et m sont representés en complement à 2, et positionne les indicateurs
-+ * @param {1} n 
-+ * @param {2} m 
-+ */
-
-SoustractionHex: function(n,m) {
-   
-let resultat ="" ;
-let m_ = "" ; //soit m convertit en negatif ou positif selon le cas
-m = util.hexEnBinaire(util.remplirZero(m,4,0)) ;
-//cas1: si m est positif cela revient a l'addition signée de n + (-m)
-if (m[0]=="0") 
-{
-m_ = (util.negationComplementADeux(m)).slice(-16) ;
-resultat = util.additionHexa(util.remplirZero(n,4,0),(util.binaryToHex(m_)).slice(-4)) ;
-}
-else //cas2: si m negatif ie: le bit le plus a gauche est à 1 cela revient a l'addition de n + m
-{
-m_ = (util.positiveComplementADeux(m)).slice(-16) ;
-resultat = util.additionHexa(util.remplirZero(n,4,0),(util.binaryToHex(m_)).slice(-4)) ;
-}
-//positionner les indicateurs
-util.setIndDebordAddition(n,(util.binaryToHex(m_)).slice(-4)) ;
-util.setIndRetenueAddition(n,(util.binaryToHex(m_)).slice(-4)) ; 
-util.setIndZeroAddition(n,(util.binaryToHex(m_)).slice(-4)) ; 
-util.setIndSigneAddition(n,(util.binaryToHex(m_)).slice(-4)) ; 
-       
-return resultat ;
-
-},
-
-/**
-* convertit un nombre binaire negatif (sur 16bits) en sa valeur positive representée en CA2
-* @param {1} binaryNum 
-* @returns 
-*/
-positiveComplementADeux: function(binaryNum) {
-// inverser les bits
-let onesComplement = "";
-for (let i = 0; i < binaryNum.length; i++) {
-onesComplement += binaryNum[i] === "0" ? "1" : "0";
-}
-let absValue = parseInt(onesComplement, 2) + 1;
-let absBinary = absValue.toString(2).padStart(16, "0");
-return absBinary;},
-
-negationComplementADeux: function(binaryNum) {
-// Convertir binaryNum en decimal
-let decimalNum = parseInt(binaryNum, 2);
-
-// Calculer le nombre negatif et sa representation en CA2
-let negation = -decimalNum;
-let twosComplement = (negation >>> 0).toString(2).padStart(16, '0');
-  
-return twosComplement;  
-},
-
-AndHex: function(n, m) {
-  const decimalN = parseInt(n, 16);
-  const decimalM = parseInt(m, 16);
-  const result = decimalN & decimalM;
-  const hexResult = result.toString(16).toUpperCase();
-  return hexResult;
-},
-
-OrHex: function(n, m) {
-  const decimalN = parseInt(n, 16);
-  const decimalM = parseInt(m, 16);
-  const result = decimalN | decimalM;
-  const hexResult = result.toString(16).toUpperCase();
-  return hexResult;
-},
-
-NotHex: function(n) {
-const decimalN = parseInt(n, 16);
-const result = ~decimalN;
-const hexResult = result.toString(16).toUpperCase();
-return hexResult;
-},
-
-decalageLogiqueHexadecDroit: function(hexa, n) {
-let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
-let resultat = decimal >>> n; // décalage logique de n positions vers la droite
-main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[16-n]) ; 
-
-return resultat.toString(16); // conversion du résultat en hexadécimal
-},
-
-decalageLogiqueHexadecGauche: function(hexa, n) {
-let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
-let resultat = decimal << n; // décalage logique de n positions vers la gauche
-main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[0+n-1]) ; 
-return resultat.toString(16); // conversion du résultat en hexadécimal
-},
-
-rotationHexadecimal: function (code,hexa, n) {
-let decimal = parseInt(hexa, 16); // conversion hexadécimale en décimal
-let resultat;
-if (code == "ROL") {
-  resultat = (decimal << n) | (decimal >>> (32 - n)); // rotation à gauche de n positions
-  main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[0+n-1]) ;
-} else {
-  resultat = (decimal >>> -n) | (decimal << (32 + n)); // rotation à droite de n positions
-  main.setIndicateurRetenue(this.hexEnBinaire(util.remplirZero(hexa,4,0))[16-n]) ; 
-}
-return resultat.toString(16); // conversion du résultat en hexadécimal
-},
-
-compareHexValues: function (x, y) {
-let decimalX = "";// conversion hexadécimale en décimal
-let decimalY = ""; // conversion hexadécimale en décimal
-let xBin = (this.hexEnBinaire(util.remplirZero(x,4,0))).slice(-16); 
-let yBin = (this.hexEnBinaire(util.remplirZero(y,4,0))).slice(-16);
-if(xBin[0]=="0"){decimalX = parseInt(x, 16);} else {decimalX = parseInt(((util.binaryToHex(this.positiveComplementADeux(x))).slice(-4)),16)*(-1);}
-if(yBin[0]=="0"){decimalY = parseInt(y, 16);} else {decimalY = parseInt(((util.binaryToHex(this.positiveComplementADeux(y))).slice(-4)),16)*(-1);}
-
-
-if (decimalX < decimalY) {
-  return -1
-} else if (decimalX > decimalY) {
-  return 1
-} else {
-  return 0
-}
-},
-
-hexSigne: function(op) {
-      op = util.hexEnBinaire(op) ; 
-      if (op[0] == "1")  return "-1" ; 
-      else return "1" ; 
- 
-},
-/*
-convertToAscii: function(string) {
-  let asciiCode = [];
-  let str ; 
-  for (let i = 0; i < string.length; i++) {
-    asciiCode.push((string.charCodeAt(i)).toString(16));
-    str=str+asciiCode[i]
-  }
-  return asciiCode;
-} */
-
-test: function (x) {
-  x.concat("nour")
-}
-
-
-}
-
-
-
 
 
 class UALsimulation {
@@ -4481,1595 +6077,6 @@ class UALsimulation {
 }
 
 
-
-class UAL {
-  #eUal1;
-  #eUal2;
-  constructor(eUal1, eUal2) {
-    this.#eUal1 = eUal1;
-    this.#eUal2 = eUal2;
-  }
-  
-  opeRation = function (codeIns,dataTab,indicateurTab,instrTab,modeAdr,cpt, dest, format, param1, param2) {
- 
-    //addition registre registre et le resultat sera dans reg1 000000 00 0 1 REG1   REG2
-    let somme = 0;
-    let n = 0;
-    let m = 0;
-    let i=0 ; 
-    if(codeIns == "STOP") return cpt+1 ; 
-    if(codeIns[0]== "J") {
-      return this.jmp(codeIns,indicateurTab,cpt)  ; 
-    }
-    else if(codeIns == "STORE") {
-      this.store(cpt) ; 
-      return cpt +2 ;
-     }
-    else if(codeIns== "CMP") {
-      if ((modeAdr == "00") && dest == "1" && format == "0") {
-        this.cmpDirect(codeIns,param1,param2); 
-        return cpt+1 ;}
-      if ((modeAdr == "01") && dest == "1" && format == "0") {
-        this.cmpIndiret(codeIns,param1,param2); 
-        return cpt+1 ;}
-
-    }
-    else if(codeIns== "CMPI") {
-      if ((modeAdr == "00") && dest == "1" && format == "1") {
-        this.cmpImm(codeIns,param1,instrTab,cpt); 
-        return cpt+2 ;}
-    }
-    else if(codeIns== "SHR" || codeIns== "SHL" || codeIns== "ROR" || codeIns== "ROL" ) {
-      this.decalageRotationLogique(codeIns,param1,instrTab,cpt) ; 
-      return cpt+2 ; 
-    }
-    else if(codeIns== "ADA" || codeIns== "SBA" || codeIns== "LOAD") {
-      if((modeAdr == "00") && dest == "1" && format == "0" ){
-        this.immediaAccDirectCourt(codeIns,param1) ; 
-        return cpt+1 ; 
-  
-      }
-      else if((modeAdr == "00") && dest == "0" && format == "1"){
-        this.immediaAccDirectLong(codeIns,dataTab,instrTab,cpt) ; 
-        return cpt+2 ; 
-      }else if((modeAdr == "01") && dest == "0" && format == "0"){
-        this.LoadinDirectCourt(param1) ; 
-        return cpt+1 ; 
-      }
-      else if((modeAdr == "11") && dest == "0" && format == "1") {
-      this.LoadDirectIndexe(param1,dataTab,instrTab,cpt) 
-      return cpt +main.nbMot[main.Nbinst][1] ;}
-    }
-    else if(codeIns== "ADAI" || codeIns== "SBAI" ||  codeIns== "LOADI"){
-  main.ACC.setContenu(this.operation(codeIns,main.ACC.getContenu(),instrTab[cpt+1].getVal())) ; 
-      return cpt +2 ;
-    }
-    else if(codeIns[codeIns.length-1] == "I"  || codeIns=="INC" || codeIns=="DEC" ){
-    if((modeAdr == "00") && dest == "1"  ){
-      if(codeIns=="INC" || codeIns=="DEC") {
-        this.immediaDirectLongDest(codeIns,param1,instrTab,cpt) ; 
-        return cpt+1 ; }
-      else{ 
-        this.immediaDirectLongDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt)
-        return cpt+2 ; }
-
-    }
-    else if((modeAdr == "00") && dest == "0" ){
-      this.immediaDirectLongNonDest(codeIns.slice(0,codeIns.length-1),instrTab,cpt)
-      return cpt+3 ; 
-    }
-    else if((modeAdr == "01") && dest == "0" ) {
-      this.immediaInDirectLongNonDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt) ; 
-      return cpt+2
-    }
-    else if((modeAdr == "10") && dest == "0" ) {
-      this.immediaBaseIndexeLongNonDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt) ; 
-      return cpt+3 ; 
-    }
-    else if((modeAdr == "11") && dest == "0" ) {
-      this.immDirectIndexeLongNonDest(codeIns,param1,dataTab,instrTab,cpt) 
-      return cpt+main.nbMot[main.Nbinst][1] ; 
-    }
-    }
-    else if ((modeAdr == "00") && dest == "1" && format == "0") {
-      this.directCourtDist(codeIns,param1,param2) ; 
-      return cpt+1 ;
-
-    } 
-    else if (modeAdr == "00" && format == "1") {
-           this.directLong(codeIns,param1,param2,dataTab,instrTab,cpt,dest) ; 
-           return cpt+2 ; 
-
-    }
-     else if(modeAdr == "01" && format == "0") { 
-          if(dest == "0") {
-           this.indirectCourtNonDest(codeIns,param1,param2,dataTab) ; 
-        }
-
-        else {
-        this.indirectCourtDest(codeIns,param1,param2,dataTab) ; 
-        }
-        return cpt+1
-    
-    }
-    else if(modeAdr == "10" && format == "1"){
-    if(dest == "1") {
-      this.BaseIndexeLongDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
-   }else{
-    this.BaseIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ;
-   }
-   return cpt+2 ; 
-  } else if(modeAdr == "11" && format == "1") {
-    if(dest == "1") {
-      this.directIndexeLongDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
-   }else{
-    this.directIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
-   }
-   return cpt+main.nbMot[main.Nbinst][1] ; 
-    
-  }
-
-  }; 
-
-  
-  // Mode direct format court distination =1 
-  directCourtDist = function(code,param1,param2) {
-    let n = 0;
-    let m = 0;
-    let i=0 ; 
-    switch (param2) {
-        case "000":  m = main.AX.getContenu(); break;
-        case "001":  m = main.BX.getContenu(); break;
-        case "010":  m = main.CX.getContenu(); break;
-        case "011":  m = main.DX.getContenu(); break;
-        case "100":  m = main.EX.getContenu(); break;
-        case "101":  m = main.FX.getContenu(); break;
-        case "110":  m = main.SI.getContenu(); break;
-        case "111": m = main.DI.getContenu();  break;
-      }
-      switch (param1) {
-        case "000":
-          n = main.AX.getContenu();
-          main.ACC.setContenu(n);
-          this.mettreAjourIndicateur(main.ACC.getContenu()) ;
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.AX.setContenu(main.ACC.getContenu());
-          break;
-        case "001":
-          n = main.BX.getContenu();
-          main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.BX.setContenu(main.ACC.getContenu());
-          break;
-        case "010":
-          n = main.CX.getContenu();
-          main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.CX.setContenu(main.ACC.getContenu());
-          break;
-        case "011":
-          n = main.DX.getContenu();
-          main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.DX.setContenu(main.ACC.getContenu());
-          break;
-        case "100":
-          n = main.EX.getContenu();
-          main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.EX.setContenu(main.ACC.getContenu());
-          break;
-        case "101":
-          n = main.FX.getContenu();
-          main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.FX.setContenu(main.ACC.getContenu());
-          break;
-        case "110":
-          n = main.SI.getContenu();
-          main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.SI.setContenu(main.ACC.getContenu());
-          break;
-        case "111":
-          n = main.DI.getContenu();
-          main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.DI.setContenu(main.ACC.getContenu());
-          break;
-      }
-
-    } // Finnnn Mode direct format court distination =1 
-
-    // Mode direct format Long destination =0 
-    directLong = function(code,param1,param2,dataTab,instrTab,cpt,dest) {
-      let n = 0;
-      let m = 0;
-      let i = util.chercherAdr(dataTab,(instrTab[cpt+1].getVal()).slice(-3)) ;
-      if(i==dataTab.length) {dataTab.push(new CaseMc((instrTab[cpt+1].getVal()).slice(1),"0000",""));} 
-       m = dataTab[i].getVal() ; 
-           if(dest == "0"){
-            switch (param1) {
-              case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); break;
-              case "001": m = main.BX.getContenu(); main.ACC.setContenu(m); break;
-              case "010": m = main.CX.getContenu(); main.ACC.setContenu(m); break;
-              case "011": m = main.DX.getContenu(); main.ACC.setContenu(m); break;
-              case "100": m = main.EX.getContenu(); main.ACC.setContenu(m); break;
-              case "101": m = main.FX.getContenu(); main.ACC.setContenu(m); break;
-              case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); break;
-              case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); break;
-            }
-          //  console.log("mmm = "+dataTab[i].getVal()+"      "+m);
-            main.ACC.setContenu(this.operation(code,dataTab[i].getVal(),m));
-            dataTab[i].setVal(main.ACC.getContenu()) ; 
-           } 
-            else { 
-              switch (param1) {
-                case "000":
-                  n = main.AX.getContenu();
-                  main.ACC.setContenu(n);
-                  main.ACC.setContenu(this.operation(code,n,m));
-                  main.AX.setContenu(main.ACC.getContenu());
-                  break;
-                case "001":
-                  n = main.BX.getContenu();
-                  main.ACC.setContenu(n);
-                  main.ACC.setContenu(this.operation(code,n,m));
-                  main.BX.setContenu(main.ACC.getContenu());
-                  break;
-                case "010":
-                  n = main.CX.getContenu();main.ACC.setContenu(n);
-                  main.ACC.setContenu(this.operation(code,n,m));
-                  main.CX.setContenu(main.ACC.getContenu());
-                  break;
-                case "011":
-                  n = main.DX.getContenu();
-                  main.ACC.setContenu(n);
-                  main.ACC.setContenu(this.operation(code,n,m));
-                  main.DX.setContenu(main.ACC.getContenu());
-                  break;
-                case "100":
-                  n = main.EX.getContenu();
-                  main.ACC.setContenu(n);
-                  main.ACC.setContenu(this.operation(code,n,m));
-                  main.EX.setContenu(main.ACC.getContenu());
-                  break;
-                case "101":
-                  n = main.FX.getContenu();
-                  main.ACC.setContenu(n);
-                  main.ACC.setContenu(this.operation(code,n,m));
-                  main.FX.setContenu(main.ACC.getContenu());
-                  break;
-                case "110":
-                  n = main.SI.getContenu();
-                  main.ACC.setContenu(n);
-                  main.ACC.setContenu(this.operation(code,n,m));
-                  main.SI.setContenu(main.ACC.getContenu());
-                  break;
-                case "111":
-                  n = main.DI.getContenu();
-                  main.ACC.setContenu(n);
-                  main.ACC.setContenu(this.operation(code,n,m));
-                  main.DI.setContenu(main.ACC.getContenu());
-                  break;
-              }
-               
-           }
-    }
-
-    // Mode indirect format Court distination =0 
-    indirectCourtNonDest = function(code,param1,param2,dataTab) {
-      let m = 0 ; 
-      let n = 0; 
-      switch (param1) {
-        case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); break;
-        case "001": m = main.BX.getContenu(); main.ACC.setContenu(m); break;
-        case "010": m = main.CX.getContenu(); main.ACC.setContenu(m); break;
-        case "011": m = main.DX.getContenu(); main.ACC.setContenu(m); break;
-        case "100": m = main.EX.getContenu(); main.ACC.setContenu(m); break;
-        case "101": m = main.FX.getContenu(); main.ACC.setContenu(m); break;
-        case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); break;
-        case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); break;
-
-    }
-    let i  ; 
-    switch (param2) {
-      case "001":
-        i = util.chercherAdr(dataTab,(main.BX.getContenu()).slice(-3)) ; 
-        if(i==dataTab.length) {dataTab.push(new CaseMc((main.BX.getContenu()).slice(1),"0000",""));}
-        main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
-        break;
-      
-      case "110":
-        i = util.chercherAdr(dataTab,(main.SI.getContenu()).slice(-3)) ;
-        if(i==dataTab.length) {dataTab.push(new CaseMc((main.SI.getContenu()).slice(1),"0000",""));}
-        main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
-        break;
-      case "111":
-        i = util.chercherAdr(dataTab,(main.DI.getContenu()).slice(-3)) ;
-        if(i==dataTab.length) {dataTab.push(new CaseMc((main.DI.getContenu()).slice(1),"0000",""));}
-        main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
-        break;
-    }
-    dataTab[i].setVal(main.ACC.getContenu()) ; 
-    } //Fin Mode indirect format Court distination =0 
-
-    //Mode indirect format Court distination =1
-    indirectCourtDest = function(code,param1,param2,dataTab) {
-      let n=0 ; 
-      let m=0 ; 
-      let i=0 ; 
-      switch (param2) {
-        case "001":
-          i = util.chercherAdr(dataTab,(main.BX.getContenu()).slice(-3)) ;
-          if(i==dataTab.length) {dataTab.push(new CaseMc((main.BX.getContenu()).slice(1),"0000",""));}
-          m = (dataTab[i].getVal()).slice(1)  
-          break;
-        
-        case "110":
-          i = util.chercherAdr(dataTab,(main.SI.getContenu()).slice(-3)) ;
-          if(i==dataTab.length) {dataTab.push(new CaseMc((main.SI.getContenu()).slice(1),"0000",""));}
-          m = (dataTab[i].getVal()).slice(1) 
-          break;
-        case "111":
-          i = util.chercherAdr(dataTab,(main.DI.getContenu()).slice(-3)) ;
-          if(i==dataTab.length) {dataTab.push(new CaseMc((main.DI.getContenu()).slice(1),"0000",""));}
-          m = (dataTab[i].getVal()).slice(1) 
-          break;
-      }
-
-      switch (param1) {
-        case "000":
-          n = main.AX.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.AX.setContenu(main.ACC.getContenu());
-          break;
-        case "001":
-          n = main.BX.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.BX.setContenu(main.ACC.getContenu());
-          break;
-        case "010":
-          n = main.CX.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.CX.setContenu(main.ACC.getContenu());
-          break;
-        case "011":
-          n = main.DX.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.DX.setContenu(main.ACC.getContenu());
-          break;
-        case "100":
-          n = main.EX.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.EX.setContenu(main.ACC.getContenu());
-          break;
-        case "101":
-          n = main.FX.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.FX.setContenu(main.ACC.getContenu());
-          break;
-        case "110":
-          n = main.SI.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.SI.setContenu(main.ACC.getContenu());
-          break;
-        case "111":
-          n = main.DI.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.DI.setContenu(main.ACC.getContenu());
-          break;
-      }
-
-    } // fin Mode indirect format Court distination =1
-
-    //Mode BaseIndexe format Long  distination =1
-    BaseIndexeLongDest = function(code,param1,param2,dataTab,instrTab,cpt) {
-      let n = instrTab[cpt+1].getVal() ; 
-      let m=0 ; 
-      let i=0 ; 
-      switch (param2) {
-        case "001":
-          main.ACC.setContenu(main.BX.getContenu());  m=util.additionHexa(n,main.BX.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
-        case "110":
-          main.ACC.setContenu(main.SI.getContenu());  m=util.additionHexa(n,main.SI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
-        case "111":
-          main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
-      }
-      
-      i = util.chercherAdr(main.getDataTab(),util.remplirZero(m,3,0)) ;
-      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc((util.remplirZero(m,3,0)).slice(-3),"0000",""));}
-      m=main.getDataTab()[i].getVal() ; 
-      switch (param1) {
-        case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
-          break;
-        case "001": n = main.BX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.BX.setContenu(main.ACC.getContenu());
-          break;
-        case "010": n = main.CX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.CX.setContenu(main.ACC.getContenu());
-          break;
-        case "011": n = main.DX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DX.setContenu(main.ACC.getContenu());
-          break;
-        case "100": n = main.EX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.EX.setContenu(main.ACC.getContenu());
-          break;
-        case "101": n = main.FX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.FX.setContenu(main.ACC.getContenu());
-          break;
-        case "110": n = main.SI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.SI.setContenu(main.ACC.getContenu());
-          break;
-        case "111": n = main.DI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DI.setContenu(main.ACC.getContenu());
-          break;
-      }
-
-    } // FinMode BaseIndexe format Long  distination =1
-    //Mode BaseIndexe format Long  distination =0
-    BaseIndexeLongNonDest = function(code,param1,param2,dataTab,instrTab,cpt) {
-      let m = instrTab[cpt+1].getVal() ; 
-      
-      let n=0 ;
-      
-      switch (param2) {
-        case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
-        case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
-        case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
-      }
-      let i = util.chercherAdr(dataTab,util.remplirZero(m,3,0)) ;
-      if(i==dataTab.length) {dataTab.push(new CaseMc((util.remplirZero(m,3,0)).slice(-3),"0000",""));}
-      m=dataTab[i].getVal() ;  
-      switch (param1) {
-        case "000": n = main.AX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "001": n = main.BX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "010": n = main.CX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "011": n = main.DX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "100": n = main.EX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "101": n = main.FX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "110": n = main.SI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "111": n = main.DI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-      }
-      dataTab[i].setVal(main.ACC.getContenu()) ; 
-    } // Fin Mode BaseIndexe format Long  distination =0
-    // Mode direct indexe format Long  distination =0
-    directIndexeLongNonDest = function(code,param1,param2,dataTab,instrTab,cpt) {
-      let m=0 ; 
-      if(main.nbMot[main.Nbinst][1] == 3) {
-       m = instrTab[cpt+1].getVal() ; } else m=0 ;
-       
-      let n=0 ;
-      
-      switch (param2) {
-        case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
-        case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
-        case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
-      }
-      
-      let adretiq =0 ; 
-      if(main.nbMot[main.Nbinst] == 3) {
-      adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
-      let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
-      m=dataTab[i].getVal() ;  
-      switch (param1) {
-        case "000": n = main.AX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "001": n = main.BX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "010": n = main.CX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "011": n = main.DX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "100": n = main.EX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "101": n = main.FX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "110": n = main.SI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-        case "111": n = main.DI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
-          break;
-      }
-      dataTab[i].setVal(main.ACC.getContenu()) ; 
-    } // FIN  Mode direct indexe format Long  distination =0
-
-    // Mode direct indexe format Long  distination =1
-
-    directIndexeLongDest = function(code,param1,param2,dataTab,instrTab,cpt) {
-      let n=0 ; 
-      if(main.nbMot[main.Nbinst][1] == 3) {
-        n = instrTab[cpt+1].getVal() ; } else n=0 ;
-  
-      let m=0 ; 
-      let i=0 ; 
-      switch (param2) {
-        case "001":
-          main.ACC.setContenu(main.BX.getContenu());  m=util.additionHexa(n,main.BX.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
-        case "110":
-          main.ACC.setContenu(main.SI.getContenu());  m=util.additionHexa(n,main.SI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
-        case "111":
-          main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
-      }
-      
-      let adretiq =0 ; 
-      if(main.nbMot[main.Nbinst][1] == 3) {
-      adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
-      i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);  
-      m=dataTab[i].getVal() ;    
-      switch (param1) {
-        case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
-          break;
-        case "001": n = main.BX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.BX.setContenu(main.ACC.getContenu());
-          break;
-        case "010": n = main.CX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.CX.setContenu(main.ACC.getContenu());
-          break;
-        case "011": n = main.DX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DX.setContenu(main.ACC.getContenu());
-          break;
-        case "100": n = main.EX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.EX.setContenu(main.ACC.getContenu());
-          break;
-        case "101": n = main.FX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.FX.setContenu(main.ACC.getContenu());
-          break;
-        case "110": n = main.SI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.SI.setContenu(main.ACC.getContenu());
-          break;
-        case "111": n = main.DI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DI.setContenu(main.ACC.getContenu());
-          break;
-      }
-
-    }  // FIN Mode direct indexe format Long  distination =1
-    
-
-
-    //Mode immediate direct  format Long  distination =1
-    immediaDirectLongDest = function(code,param1,instrTab,cpt) {
-      let m=0 ; 
-      if(code == "INC"){
-        m=1 ; 
-        code ="ADDI"
-      }else if(code == "DEC"){
-        m=1 ; 
-        code ="SUBI"
-      }
-      else{
-       m = instrTab[cpt+1].getVal() ;
-      }
-      let n=0 ;
-      switch (param1) {
-        case "000":
-          n = main.AX.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.AX.setContenu(main.ACC.getContenu());
-          break;
-        case "001":
-          n = main.BX.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.BX.setContenu(main.ACC.getContenu());
-          break;
-        case "010":
-          n = main.CX.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.CX.setContenu(main.ACC.getContenu());
-          break;
-        case "011":
-          n = main.DX.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.DX.setContenu(main.ACC.getContenu());
-          break;
-        case "100":
-          n = main.EX.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.EX.setContenu(main.ACC.getContenu());
-          break;
-        case "101":
-          n = main.FX.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.FX.setContenu(main.ACC.getContenu());
-          break;
-        case "110":
-          n = main.SI.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.SI.setContenu(main.ACC.getContenu());
-          break;
-        case "111":
-          n = main.DI.getContenu(); main.ACC.setContenu(n);
-          main.ACC.setContenu(this.operation(code,n,m));
-          main.DI.setContenu(main.ACC.getContenu());
-          break;
-      }
- 
-
-    }  //Mode immediate direct  format Long  distination =1
-     //Mode immediate direct  format Long  distination =0
-    immediaDirectLongNonDest = function(code,instrTab,cpt) {
-      let m = instrTab[cpt+1].getVal() ;
-      let i = util.chercherAdr(main.getDataTab(),m.slice(1)) ;
-      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc((instrTab[cpt+1].getVal()).slice(-3),"0000",""));}
-      m=main.getDataTab()[i].getVal() ;
-      main.ACC.setContenu(m);
-      let n= instrTab[cpt+2].getVal() ; ; 
-      main.ACC.setContenu(this.operation(code,m,n)); 
-      main.getDataTab()[i].setVal(main.ACC.getContenu()) ;
-    }  // Fin Mode immediate direct  format Long  distination =0 
-
-      //Mode immediate indirect  format Long  distination =0 
-    immediaInDirectLongNonDest = function(code,param1,instrTab,cpt) {
-      let n = instrTab[cpt+1].getVal() ;
-      let i ; 
-      let m=0 ; 
-      switch (param1) {
-        case "001":
-          i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
-          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
-           m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-           m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
-         break;
-        case "110": 
-        i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
-        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
-        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-        m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
-        break ; 
-        case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
-        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
-        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-        m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m); break ; 
-      } 
-    } // FIN Mode immediate indirect  format Long  distination =0 
-
-    //  Mode immediate BaseIndexe  format Long  distination =0 
-    immediaBaseIndexeLongNonDest = function(code,param1,instrTab,cpt) {
-      let m=0 ; 
-      let i=0 ;
-      let n=instrTab[cpt+2].getVal() ;
-      switch (param1) {
-        case "001": main.ACC.setContenu(main.BX.getContenu().slice(1));
-          m = util.additionHexa(main.BX.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
-          i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
-          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
-           m=main.dataTab[i].getVal() ; main.ACC.setContenu(m); 
-           m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
-         break;
-        case "110": 
-        main.ACC.setContenu(main.SI.getContenu().slice(1));
-        m = util.additionHexa(main.SI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
-        i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
-        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
-         m=main.dataTab[i].getVal() ; main.ACC.setContenu(m);
-         m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
-        break ; 
-        case "111": main.ACC.setContenu(main.DI.getContenu().slice(1));
-        m = util.additionHexa(main.DI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
-        i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
-        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
-         m=main.dataTab[i].getVal() ; main.ACC.setContenu(m); 
-         m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
-      } 
-    }  // Fin Mode immediate BaseIndexe  format Long  distination =0 
-
-
-    immDirectIndexeLongNonDest = function(code,param1,dataTab,instrTab,cpt) {
-
-       let m=0 ; 
-      if(main.nbMot[main.Nbinst][1] == 4) {
-       m = instrTab[cpt+1].getVal() ; } else m=0 ;
-      
-      let n=0 ;
-      
-      switch (param1) {
-        case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
-        case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
-        case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
-      }
-      
-      
-      let adretiq ; 
-      if(main.nbMot[main.Nbinst][1] == 4) {
-        adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
-      let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
-      m=dataTab[i].getVal() ;  
-      if(main.nbMot[main.Nbinst][1] == 4) {
-        n= instrTab[cpt+3].getVal() ;  } else n= instrTab[cpt+2].getVal() ; 
-      main.ACC.setContenu(this.operation(code,m,n))
-      dataTab[i].setVal(main.ACC.getContenu()) ; 
-    } 
-
-    //  Mode immediate AccDirect  format COURT  
-    immediaAccDirectCourt = function(code,param1) {
-      switch (param1) {
-        case "000": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.AX.getContenu()));
-         break;
-        case "001": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.BX.getContenu()));
-         break;
-         case "010": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.CX.getContenu()));
-         break; 
-         case "011": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.DX.getContenu()));
-         break;
-         case "100": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.EX.getContenu()));
-         break;
-         case "101": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.FX.getContenu()));
-         break ; 
-        case "110": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.SI.getContenu()));
-        break;
-        case "111": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.DI.getContenu()));
-         break;
-        
-      } 
-    } // FIN  Mode immediate AccDirect  format COURT  
-
-    //  Mode immediate AccDirect  format Long  
-    immediaAccDirectLong = function(code,dataTab,instrTab,cpt) {
-      let n = instrTab[cpt+1].getVal() ;
-      let i = util.chercherAdr(dataTab,n.slice(1)) ;
-      if(i==dataTab.length) {dataTab.push(new CaseMc(n.slice(-3),"0000",""));}
-      n=dataTab[i].getVal() ; 
-       main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),n)); 
-
-    } //  FIN Mode immediate AccDirect  format Long 
-    
-
-    LoadinDirectCourt = function(param1) {
-      let i=0 ; let m=0 ; 
-      switch (param1) {
-        case "001":
-          i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
-          if(i==dataTab.length) {dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
-           m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-         break;
-        case "110": 
-        i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
-        if(i==dataTab.length) {dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
-        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-        break ; 
-        case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
-        if(i==dataTab.length) {dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
-        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m);  break ; 
-      } 
-
-    }
-
-    LoadDirectIndexe = function(param1,dataTab,instrTab,cpt) {
-      let n=0 ; 
-      if(main.nbMot[main.Nbinst][1] == 3) {
-       n = instrTab[cpt+1].getVal() ; } else n=0 ;
-  
-      let m=0 ; 
-      let i=0 ; 
-      switch (param1) {
-        case "001":
-          main.ACC.setContenu(main.BX.getContenu());  m=util.additionHexa(n,main.BX.getContenu().slice(1)) ; main.ACC.setContenu(m);  break;
-        case "110":
-          main.ACC.setContenu(main.SI.getContenu());  m=util.additionHexa(n,main.SI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
-        case "111":
-          main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
-      }
-      
-      let adretiq ; 
-      if(main.nbMot[main.Nbinst][1] == 3) {
-        adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
-
-      i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      
-      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16) ;   
-      m=dataTab[i].getVal() ;  
-      main.ACC.setContenu(m);
-    }
-    //  decalage / Rotation Logique
-    decalageRotationLogique= function(code,param1,instrTab,cpt) {
-      switch (param1) {
-        case "000": main.ACC.setContenu(main.AX.getContenu()) ;
-        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
-        main.AX.setContenu(main.ACC.getContenu() ) ; 
-        
-         break;
-        case "001": main.ACC.setContenu(main.BX.getContenu()) ; 
-        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
-        main.BX.setContenu(main.ACC.getContenu() ) ;
-         break;
-         case "010": main.ACC.setContenu(main.CX.getContenu()) ; 
-         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
-         main.CX.setContenu(main.ACC.getContenu() ) ;
-         break; 
-         case "011":main.ACC.setContenu(main.DX.getContenu()) ; 
-         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
-         main.DX.setContenu(main.ACC.getContenu() ) ;
-         break;
-         case "100": main.ACC.setContenu(main.EX.getContenu()) ; 
-         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
-         main.EX.setContenu(main.ACC.getContenu() ) ;
-         break;
-         case "101": main.ACC.setContenu(main.FX.getContenu()) ; 
-         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
-         main.FX.setContenu(main.ACC.getContenu() ) ;
-         break ; 
-        case "110": main.ACC.setContenu(main.SI.getContenu()) ; 
-        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
-        main.SI.setContenu(main.ACC.getContenu() ) ;
-        break;
-        case "111": main.ACC.setContenu(main.DI.getContenu()) ; 
-        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
-        main.DI.setContenu(main.ACC.getContenu() ) ;
-         break;
-        
-      } 
-   //   console.log(main.getIndicateurRetenue());
-    }   //  FIN decalage / Rotation Logique
-     // JMP 
-     jmp = function (code,indicateurTab,cpt) {
-      let i = main.getinstrTab()[cpt+1].getVal() ; 
-      i= util.chercherAdr(main.getinstrTab(),i.slice(1)) ; 
-    switch ( code.toUpperCase())  {
-    case "JMP": return i;   
-    case "JZ": if( main.getIndicateurZero() == "1")
-        return i; else return cpt+2 ; 
-    case "JNZ": if(main.getIndicateurZero() != "1")
-    return i; else return cpt+2 ;
-    case "JC": if(main.getIndicateurRetenue() == "1")
-    return i; else return cpt+2 ; 
-    case "JNC": if(main.getIndicateurRetenue() != "1") 
-    return i; else return cpt+2 ; 
-
-    case "JS": if(main.getIndicateurSigne() == "1") return i; else return cpt+2 ;
-    case "JNS": if(main.getIndicateurSigne() != "1")  return i; else return cpt+2 ;
-    case "JO": if(main.getIndicateurDebord() == "1")  return i; else return cpt+2 ;
-    case "JNO": if(main.getIndicateurDebord() != "1")  return i ; else return cpt+2 ;
-    case "JE": if(main.getIndicateurZero() == "1" )  {return i ;} else return cpt+2 ; 
-    case "JNE": if(main.getIndicateurZero() != "1" ) return i ; else return cpt+2 ;  
-  }
-} //JMP 
-   //  comparaison direct 
-  cmpDirect = function (code,param1,param2) {
-   let m=0 ;
-   let n=0 ; 
-    switch (param2) {
-      case "000":
-        m = main.AX.getContenu();
-        break;
-      case "001":
-        m = main.BX.getContenu();
-        break;
-      case "010":
-        m = main.CX.getContenu();
-        break;
-      case "011":
-        m = main.DX.getContenu();
-        break;
-      case "100":
-        m = main.EX.getContenu();
-        break;
-      case "101":
-        m = main.FX.getContenu();
-        break;
-      case "110":
-       m = main.SI.getContenu();
-         break;
-        case "111":
-        m = main.DI.getContenu();
-        break;
-    }
-    switch (param1) {
-      case "000":
-        n = main.AX.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "001":
-        n = main.BX.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "010":
-        n = main.CX.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "011":
-        n = main.DX.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "100":
-        n = main.EX.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "101":
-        n = main.FX.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "110":
-        n = main.SI.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m));
-        break;
-      case "111":
-        n = main.DI.getContenu();
-        main.ACC.setContenu(n);
-        main.ACC.setContenu(this.operation("SUB",n,m)); 
-        break;
-    }
-
-    if(util.compareHexValues(n,m)>0) { 
-      main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
-    }else if(util.compareHexValues(n,m)<0) {
-      main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
-    }
-    else { 
-      main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
-      main.setIndicateurDebord("0"); 
-    }
-
-      
-  }  // FIN   comparaison direct
-
-
-
-  cmpIndiret = function (code,param1,param2) {
-    let m=0 ;
-     let i=0 ; 
-     let n=0 ; 
-    switch (param2) {
-      case "001":
-        i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
-        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
-         m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-       break;
-      case "110": 
-      i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
-      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
-      m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-      break ; 
-      case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
-      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
-      m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
-      break;
-    } 
-
-     switch (param1) {
-       case "000":
-         n = main.AX.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "001":
-         n = main.BX.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "010":
-         n = main.CX.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "011":
-         n = main.DX.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "100":
-         n = main.EX.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "101":
-         n = main.FX.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "110":
-         n = main.SI.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "111":
-         n = main.DI.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m)); 
-         break;
-     }
-     if(util.compareHexValues(n,m)>0) {
-       main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
-     }else if(util.compareHexValues(n,m)<0) {
-       main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
-     }
-     else { 
-       main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
-       main.setIndicateurDebord("0"); 
-     }
- 
-       
-   } 
-
-
-   //  comparaison Imm
-  cmpImm = function (code,param1,instrTab,cpt) {
-    let m= instrTab[cpt+1].getVal() ; 
-    let n=0 ; 
-     switch(param1) {
-       case "000":
-         n = main.AX.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "001":
-         n = main.BX.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "010":
-         n = main.CX.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "011":
-         n = main.DX.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "100":
-         n = main.EX.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m)); 
-         break;
-       case "101":
-         n = main.FX.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "110":
-         n = main.SI.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-       case "111":
-         n = main.DI.getContenu();
-         main.ACC.setContenu(n);
-         main.ACC.setContenu(this.operation("SUB",n,m));
-         break;
-     }
-     
-     if(util.compareHexValues(n,m)>0) {
-      main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
-    }else if(util.compareHexValues(n,m)<0) {
-      main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
-    }
-    else { 
-      main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
-      main.setIndicateurDebord("0"); 
-    }
-       
-   } //  DIN comparaison Imm
-
-   store = function(cpt) {
-    let i = main.getinstrTab()[cpt+1].getVal() ; 
-    i= util.chercherAdr(main.getDataTab(),i.slice(1)) ; 
-    if(i==dataTab.length) {dataTab.push(new CaseMc(i,"0000",""));}
-    main.getDataTab()[i].setVal(main.ACC.getContenu())  ; 
-   } 
-
-   NotDirect = function(code,param1) {
-    let m = 0 ; 
-    let n = 0;   
-    switch (param1) { 
-      case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu()); break;
-      case "001": m = main.BX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.BX.setContenu(main.ACC.getContenu()); break;
-      case "010": m = main.CX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.CX.setContenu(main.ACC.getContenu()); break;
-      case "011": m = main.DX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.DX.setContenu(main.ACC.getContenu()); break;
-      case "100": m = main.EX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.EX.setContenu(main.ACC.getContenu()); break;
-      case "101": m = main.FX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.FX.setContenu(main.ACC.getContenu()); break;
-      case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.SI.setContenu(main.ACC.getContenu()); break;
-      case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.DI.setContenu(main.ACC.getContenu()); break;
-
-  }
-   }
-
-   // mettre a jour les indicateurs          
-   mettreAjourIndicateur = function(val) {   
-    let binaryRes = (util.remplirZero(util.hexEnBinaire(val),16,0)).slice(-16) ;
-    if(val=="0000"){main.setIndicateurZero("1") ;}
-    else {main.setIndicateurZero("0");}
-    if (val.length>4){main.setIndicateurDebord("1"); main.setIndicateurRetenue("1");}
-    else {
-      main.setIndicateurDebord("0"); 
-      main.setIndicateurRetenue("0");
-      
-    }
-    if (binaryRes[0]== "1") {main.setIndicateurSigne("1");}
-    else {main.setIndicateurSigne("0");}
-
-   } // FIN mettre a jour les indicateurs 
-    operation = function(code,n,m ) {
-      let res=0 ; 
-      switch (code.toUpperCase()) {
-        case "MOV": res=util.remplirZero(m,4,0); this.mettreAjourIndicateur(res);  break; 
-        case "ADD": res=util.remplirZero(util.additionHexa(n,m),4,0); 
-        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
-        break;
-        case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; 
-        break;
-        case "CMP": res=util.compareHexValues(n,m) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "OR": res=util.remplirZero(util.OrHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "AND": res=util.remplirZero(util.AndHex(n,m),4,0) ;  util.setIndicateursAccumulateur(res.slice(-4)); break; 
-        case "SHR": res=util.remplirZero(util.decalageLogiqueHexadecDroit(n,m),4,0); util.setIndicateursAccumulateur(res.slice(-4));   break; 
-        case "SHL": res=util.remplirZero(util.decalageLogiqueHexadecGauche(n,m),4,0); util.setIndicateursAccumulateur(res.slice(-4));   break; 
-        case "ROL": res=rotationHexadecimal("ROL",n,m); util.setIndicateursAccumulateur(res.slice(-4));   break;
-        case "ROR": res=rotationHexadecimal("ROR",n,m); util.setIndicateursAccumulateur(res.slice(-4));  break;
-        case "JZ": ins = "001100"; this.mettreAjourIndicateur(res); break;
-        case "JNZ": ins = "001101"; this.mettreAjourIndicateur(res); break;
-        case "JC": ins = "001110"; this.mettreAjourIndicateur(res); break;
-        case "JS": ins = "010000"; this.mettreAjourIndicateur(res); break;
-        case "JNC": ins = "001111"; this.mettreAjourIndicateur(res); break;
-        case "JNS": ins = "010001"; this.mettreAjourIndicateur(res);  break;
-        case "JO": ins = "010010"; this.mettreAjourIndicateur(res); break;
-        case "JNO": ins = "010011"; this.mettreAjourIndicateur(res);  break;
-        case "JE": ins = "010100"; this.mettreAjourIndicateur(res); break;
-        case "JNE": ins = "010101"; this.mettreAjourIndicateur(res); break;
-        case "LOAD": res= util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "STORE": ins = "010111"; this.mettreAjourIndicateur(res); break;
-        case "INC": ins = "011000";  this.mettreAjourIndicateur(res); break;
-        case "DEC": ins = "011001";  this.mettreAjourIndicateur(res);break;
-        case "NOT":  res= util.remplirZero(util.NotHex(n),4,0) ;  break;
-        case "JMP": ins = "011011"; this.mettreAjourIndicateur(res); break;
-        case "IN": ins = "011100"; this.mettreAjourIndicateur(res); break;
-        case "OUT": ins = "011101"; break;
-        case "START": ins = "011111"; break;
-        case "STOP": ins = "011110"; break;
-        case "MOVI": res=util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "ADDI": res=util.remplirZero(util.additionHexa(n,m),4,0); 
-        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
-        break;
-        case "ADAI": res=util.remplirZero(util.additionHexa(n,m),4,0); 
-        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
-        break;
-        case "ADA": res=util.remplirZero(util.additionHexa(n,m),4,0) ;  
-        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
-        break; 
-        case "SUBI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
-        case "SBA": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break ;
-        case "SBAI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
-        case "CMPI": res=util.compareHexValues(n,m) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "ORI": res=util.remplirZero(util.OrHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "ANDI":res=util.remplirZero(util.AndHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
-        case "LOADI": res= util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
-        default: ins= "-1"; break;
-      }
-      return res.slice(-4);
-      
-    }
-  
-  
-}
-
-
-
-
-
-
-export class RI {
-  #cop;
-  #ma;
-  #f;
-  #d;
-  #reg1;
-  #reg2;
-  constructor() {
-    
-  }
-  setRI = (code) => {
-    this.#cop = code.substring(0, 6); // capable de changer le 5 à 6 etc ..
-    this.#ma = code.substring(6, 8);
-    this.#f = code.substring(8, 9);
-    this.#d = code.substring(9, 10);
-    this.#reg1 = code.substring(10, 13);
-    this.#reg2 = code.substring(13, 16);
-  };
-  getCOP() {
-    return this.#cop;
-  };
-  getMA = () => {
-    return this.#ma;
-  };
-  getF = () => {
-    return this.#f;
-  };
-  getD = () => {
-    return this.#d;
-  };
-  getReg1 = () => {
-    return this.#reg1;
-  };
-  getreg2 = () => {
-    return this.#reg2;
-  };
-}
-
-
-
-
-
-
-
-export var main = {
-  dataTab: [],
-  instrTab :[],
-  tabEtiq : [],
-  nbMot : [] ,
-  Nbinst :0 ,
-  indic: new registre("INDIC","0000") , 
-  ual: new UAL("0", "0"),
-  AX: new registre("AX", "0000"),
-  BX: new registre("BX", "0000"),
-  CX: new registre("CX", "0000"),
-  DX: new registre("DX", "0000"),
-  EX: new registre("EX", "0000"),
-  FX: new registre("FX", "0000"),
-  SI: new registre("SI", "0000"),
-  DI: new registre("DI", "0000"),
-  CO: new registre("CO", "000"),
-  ACC: new registre("ACC", "0000"),
-  ri: new RI(),
-
-  
-  getinstrTab: function () {
-    return this.instrTab;
-  },
-  getDataTab: function () {
-    return this.dataTab;
-  },
-  getIndic: function () {
-    return this.indic;
-  },
-  getRI: function () {
-    return this.ri;
-  },
-  getCO: function () {
-    return this.CO;
-  },
-  setCO: function (val) {
-    this.CO = this.CO;
-  },
-  setRI: function (val) {
-    this.ri.setRI(val);
-  },
-  getAX: function () {
-    return this.AX;
-  },
-  getBX: function () {
-    return this.BX;
-  },
-  getCX: function () {
-    return this.CX;
-  },
-  getDX: function () {
-    return this.DX;
-  },
-  getEX: function () {
-    return this.EX;
-  },
-  getFX: function () {
-    return this.FX;
-  },
-  getSI: function () {
-    return this.SI;
-  },
-  getDI: function () {
-    return this.DI;
-  },
-  getACC: function () {
-    return this.ACC;
-  },
-  getIndicateurZero: function () {
-    return util.hexEnBinaire(this.getIndic().getContenu()).slice(-1);
-  },
-  getIndicateurSigne: function () {
-    return util.hexEnBinaire(this.getIndic().getContenu())[14];
-  },
-  getIndicateurDebord: function () {
-    return util.hexEnBinaire(this.getIndic().getContenu())[12];
-  },
-  getIndicateurRetenue: function () {
-    return util.hexEnBinaire(this.getIndic().getContenu())[13];  
-  },
-  setIndicateurZero: function (val) {
-    let contenuBin = util.hexEnBinaire(this.getIndic().getContenu()) ;
-    contenuBin = (contenuBin.substring(0,15)).concat(val) ;
-    this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ; 
-  },
-  setIndicateurSigne: function (val) {
-    let contenuBin = util.hexEnBinaire(this.getIndic().getContenu()) ;
-    contenuBin = (contenuBin.substring(0,14)).concat(val,contenuBin.slice(-1)) ;
-    this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ;
-  },
-  setIndicateurRetenue: function (val) {
-    let contenuBin = util.hexEnBinaire(this.getIndic().getContenu()) ;
-    contenuBin = (contenuBin.substring(0,13)).concat(val,contenuBin.slice(-2)) ;
-    this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ;
-  },
-  setIndicateurDebord: function (val) {
-    let contenuBin = util.hexEnBinaire(this.getIndic().getContenu()) ;
-    contenuBin = (contenuBin.substring(0,12)).concat(val,contenuBin.slice(-3)) ;
-    this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ;
-  },
-  
-  coder: function (contents) {
-
-    const messageDiv= document.getElementById("messageDiv");
-    messageDiv.innerHTML = ""; 
-    let indice = 0;
-    let co;
-    let adr = "";
-    let lines = contents.split('\n');
-    console.log(contents);
-    lines = lines.filter(line => line.trim() !== '');    // remove the empty lines from my filecontents : the table lines which represents the lines of the file 
-    let fileLength = lines.length;  
-    let nbLigne = 0;                     // file length without  the empty lines 
-    for (const line of lines) {
-      nbLigne++;
-      if (line != "") {
-      console.log("********************");
-      let ligne_str = line.toString().trim();
-      ligne_str = ligne_str.replace(",", " ");
-      ligne_str = util.removeExtraSpaces(ligne_str);
-      ligne_str = ligne_str.split(" ");
-      if (ligne_str[0] == "ORG") {
-        if (ligne_str[1].indexOf("H") != -1) {
-          adr = ligne_str[1].slice(0, ligne_str[1].length - 1);
-        } 
-        co = adr;
-        this.setCO(co);
-      } else if (ligne_str[0] == "START") {
-      }else if (ligne_str[0] == "SETZ") {
-          this.getDataTab().push(
-            new CaseMc(
-              util.remplirZero(indice.toString(16),3,0),"0000",
-              ligne_str[1]
-            )
-          );
-          indice++;
-          for (let k=1; k < parseInt(ligne_str[2]); k++) {
-            this.getDataTab().push(
-              new CaseMc(
-                util.remplirZero(indice.toString(16),3,0),"0000",
-                ""
-              )
-            );
-            indice++;
-          }
-        }
-       else if (ligne_str[0] == "SET") {
-        this.getDataTab().push(
-          new CaseMc(
-            util.remplirZero(indice.toString(16),3,0),
-            util.remplirZero( ligne_str[2].slice(0, ligne_str[2].length - 1),4,0),
-            ligne_str[1]
-          )
-        );
-        indice++;
-      } else {
-        let tab = codingExecute.coderInst(ligne_str, co, this.getDataTab());
-        main.nbMot.push([main.instrTab.length,tab.length]) ; //+co
-        main.instrTab=main.getinstrTab().concat(tab) ;
-        co = util.incrementHex(co, tab.length);
-      } 
-    }
-   }
-
-
-/*messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  Data Segment *** </span></p>";
-    console.log("***  Data Segment *** ");
-
-    for (let i = 0; i < this.getDataTab().length; i++){
-      this.getDataTab()[i].afficher();
-      this.getDataTab()[i].afficherHTML();}
-
-    console.log(" ********************** ");
-    //messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";
-    console.log("");
-
-    console.log("***  Code Segment *** ");
-    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: white;'>***  Code Segment *** </span></p>";
-
-    for (let i = 0; i < main.getinstrTab().length; i++) {
-    main.getinstrTab()[i].afficher();
-    main.getinstrTab()[i].afficherHTML();}
-
-    console.log("********************** ");
-    messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";*/
-
-
-
-    this.Execute(main.getinstrTab());
-
-    main.afficherRegistres() ;
-    main.afficherRegistresHTML();
-
-    main.afficherIndicateurs() ;
-    main.afficherIndicateursHTML();
-
-    console.log("*** LES DONNEES **** ");
-    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***   LES DONNEES *** </span></p>";
-
-    for (let i = 0; i < this.getDataTab().length; i++){
-      this.getDataTab()[i].afficher();
-      this.getDataTab()[i].afficherHTML();}
-
-    console.log("********************** ");
-    messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";
-    console.log(""); 
-
-
-  },
-
-  Execute: function (instrTab) {
-    let j = 0 ;
-    let i = 0 ;
-    this.Nbinst=0 ; 
-    while (j < instrTab.length) {
-      let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
-      this.setRI(instrBin) ;
-      this.Nbinst =  main.nbMot[util.chercherDansTableauDeuxDimension(main.nbMot,j)][1] ; 
-     
-      switch (this.getRI().getCOP()) {
-        case "000000": i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-        j = i ; break ;
-        case "100000": i = this.ual.opeRation("MOVI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-        j = i ; break ;
-        case "000001":
-        i = this.ual.opeRation("ADD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-        j=i ; break ;
-        case "000011":
-        i = this.ual.opeRation("SUB",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-        j=i ; break ;
-          case "000111":
-            i = this.ual.opeRation("AND",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-          case "000110":
-            i = this.ual.opeRation("OR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-          case "011010":
-            i = this.ual.opeRation("NOT",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-          case "100001":
-            i = this.ual.opeRation("ADDI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-          case "100011":
-            i = this.ual.opeRation("SUBI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-            case "001001":
-              i = this.ual.opeRation("SHL",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "001000":
-              i = this.ual.opeRation("SHR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "100100":
-              i = this.ual.opeRation("SBAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "011000":
-              i = this.ual.opeRation("INC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "011001":
-              i = this.ual.opeRation("DEC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "000101":
-              i = this.ual.opeRation("CMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "100101":
-              i = this.ual.opeRation("CMPI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "011011":
-              i = this.ual.opeRation("JMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "001100":
-              i = this.ual.opeRation("JZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ; 
-            case "001101":
-              i = this.ual.opeRation("JNZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "001110":
-              i = this.ual.opeRation("JC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "001111":
-              i = this.ual.opeRation("JNC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010000":
-              i = this.ual.opeRation("JS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010001":
-              i = this.ual.opeRation("JNS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010010":
-              i = this.ual.opeRation("JO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010011":
-              i = this.ual.opeRation("JNO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010100":
-              i = this.ual.opeRation("JE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010101":
-              i = this.ual.opeRation("JNE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010110":
-              i = this.ual.opeRation("LOAD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "110110":
-              i = this.ual.opeRation("LOADI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "010111":
-              i = this.ual.opeRation("STORE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "000010":
-              i = this.ual.opeRation("ADA",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "100010":
-              i = this.ual.opeRation("ADAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "000100": 
-            i = this.ual.opeRation("SBA",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-            case "011110": 
-            i = this.ual.opeRation("STOP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-            default:
-              break ; 
-
-      }
-      //j++ ;
-      //this.Nbinst ++ ; 
-    } 
-  },
-
-  afficherIndicateurs: function () {
-    console.log("I_ZERO: ", this.getIndicateurZero());
-    console.log("I_SIGNE: ", this.getIndicateurSigne());
-    console.log("I_RETENUE: ", this.getIndicateurRetenue());
-    console.log("I_DEBORD: ", this.getIndicateurDebord());
-  },
-  afficherIndicateursHTML: function (){
-    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_ZERO: </span>"+"<span style='color: white;'>"+ this.getIndicateurZero() +"</span></p>";
-    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_SIGNE: </span>"+"<span style='color: white;'>"+ this.getIndicateurSigne() +"</span></p>";
-    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_RETENUE: </span>"+"<span style='color: white;'>"+ this.getIndicateurRetenue() +"</span></p>";
-    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_DEBORD: </span>"+"<span style='color: white;'>"+ this.getIndicateurDebord() +"</span></p>";
-
-  },
-
-    afficherRegistres: function () {
-    console.log("AX: ", this.getAX().getContenu());
-    console.log("BX: ", this.getBX().getContenu());
-    console.log("CX: ", this.getCX().getContenu());
-    console.log("DX: ", this.getDX().getContenu());
-    console.log("EX: ", this.getEX().getContenu());
-    console.log("FX: ", this.getFX().getContenu());
-    console.log("SI: ", this.getSI().getContenu());
-    console.log("DI: ", this.getDI().getContenu());
-    console.log("ACC: ", this.getACC().getContenu());
-
-  },
-
-  afficherRegistresHTML: function () {
-   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> AX: </span>"+"<span style='color: white;'>"+this.getAX().getContenu() +"</span></p>";
-   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> BX: </span>"+"<span style='color: white;'>"+ this.getBX().getContenu() +"</span></p>";
-   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> CX: </span>"+"<span style='color: white;'>"+ this.getCX().getContenu()+"</span></p>";
-   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> DX: </span>"+"<span style='color: white;'>"+ this.getDX().getContenu() +"</span></p>";
-   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> EX: </span>"+"<span style='color: white;'>"+ this.getEX().getContenu() +"</span></p>";
-   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> FX: </span>"+"<span style='color: white;'>"+ this.getFX().getContenu() +"</span></p>";
-   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> SI: </span>"+"<span style='color: white;'>"+ this.getSI().getContenu()+"</span></p>";
-   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> DI: </span>"+"<span style='color: white;'>"+ this.getDI().getContenu() +"</span></p>";
-   messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> ACC: </span>"+"<span style='color: white;'>"+ this.getACC().getContenu() +"</span></p>";
-
-  },
-  
- 
-};
-
-
-
-
-
-
 // l'objet mainsimulation : ce n'est pas le mainsimulation il contient juste des opérations élémentaires 
 var mainsimulation = {
   dataTab: [],
@@ -6487,9 +6494,42 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
 };
 // fin obj mainsimulation
 
+//___________________________________________ end of functions of simulation _______________________________________________
 
 
 
+
+
+
+
+/************************ added part by Rania / simulation : animation **********************************/
+var utilAnimation = {
+
+  // makes an element with the id="idElem" invisible : it will hide it
+  HideElemById: function (idElem) {
+    idElem.style.visibility='hidden';
+  },
+
+
+// make an element visible 
+ShowElemById: function (idElem) {
+  idElem.style.visibility='visible';
+
+},
+
+
+}
+
+/************************************ END OF ADDED THINGS BY ME *********************************************/
+
+
+
+
+//________________  Random Little function (event listners ...) __________________________________
+
+
+
+/** the event listener of "essembler" button **/
 const testButton = document.getElementById("compile_id");
 const textDiv = document.getElementById("code");
 testButton.addEventListener("click", () => {
@@ -6501,25 +6541,23 @@ testButton.addEventListener("click", () => {
 });
 
 
-const ExecuteButton = document.getElementById("run_id");
 
+/** the event listener of "executer" button **/
+const ExecuteButton = document.getElementById("run_id");
 ExecuteButton.addEventListener("click", () => {
-  
   let contents = textDiv.value; // récupère le contenu initial de la div
   textDiv.addEventListener("input", ()=> {
   contents = textDiv.value; // met à jour le contenu de la variable lorsque la div est modifiée
-  
   });
   console.log("the click on the button execute has worked ! ");
   const messageDiv= document.getElementById("messageDiv");
   messageDiv.innerHTML = ""; 
-  
   main.coder(contents);
   
 });
 
 
-
+/** the event listener of getting the input of a file button and then putting the content on the texte zone **/
 const fileInputButton = document.getElementById("fileInput")
 fileInputButton.addEventListener("change",() => {
  assembler.fromFileInputToTextZone("fileInput","code");
@@ -6527,10 +6565,9 @@ fileInputButton.addEventListener("change",() => {
 
 
 
-
+/** the event listener of "save" button that saves the content of texte zone into a .PASS file**/
 var saveButton = document.getElementById("save");
 var codeTextarea = document.getElementById("code");
-
 saveButton.addEventListener("click", function() {
   let codeText = codeTextarea.value;
   console.log(codeText);
@@ -6541,19 +6578,64 @@ saveButton.addEventListener("click", function() {
 
 
 
+/** the event listener of "selecting one from the six file options we have" button **/
+const optionButton =document.getElementById("fileSelect")
+optionButton.addEventListener("change", () => {
+  console.log("THE click on the option button worked !");  
+  const messageDiv = document.getElementById("code")
+  messageDiv.style.background= '#010232'; 
+  const option = optionButton.options[optionButton.selectedIndex];
+  const file = option.value;
+  const xhr = new XMLHttpRequest();// Create a new XMLHttpRequest object
+  xhr.onload = () => {  // Define a function to handle the "load" event of the XMLHttpRequest object
+    // Get the contents of the file as a string
+    console.log("we are getting the content  !");
+    const contents = xhr.responseText;
+    console.log(contents);
+    assembler.fromFileNameToTextZone(contents)
+  };
+  xhr.open("GET", file);  // Open the file
+  xhr.send();  // Send the request
+//assembler.fromFileNameToTextZone("./program_1.txt","code");
+})
+
+
+
+/**  Traitement pour afficher le nobre de ligne dans la console **/
+const maDiv = document.getElementById("NbLigne");
+maDiv.style.fontFamily= "Courier New, monospace" ;
+const n = 15;
+/*for (let i = 0; i < 2; i++) {
+  maDiv.appendChild(document.createElement("br"));
+}*/
+for (let i = 1; i <= n; i++) {
+  const p = document.createElement("p");
+  p.textContent = i;
+  maDiv.appendChild(p);
+}
+
+
+
+/**--------- HERE THE ANIMATION FOR THE SIMULATION STARTS -----------**/
+
 const simulbtn = document.getElementById("simulate_id");
-const emuleSave = document.getElementById("sml");
-const simulArchi = document.getElementById("arch-id");
+const PasseConsole = document.getElementById("sml");
+const ArchiDiv = document.getElementById("arch-id");
+
+
+// the event listener for the simule button 
 simulbtn.addEventListener("click", () => {
-  emuleSave.style.visibility ='hidden';
-  simulArchi.style.visibility='visible';
-
-
+  utilAnimation.HideElemById(PasseConsole);
+  utilAnimation.ShowElemById(ArchiDiv);
   }) ;
+
+  
+
+// the event listener of the return button in the ArchiDiv
 var returnBtn = document.getElementById("return");
 returnBtn.addEventListener("click",()=>{
-  simulArchi.style.visibility='hidden';
-  emuleSave.style.visibility='visible';
+  utilAnimation.HideElemById(ArchiDiv);
+  utilAnimation.ShowElemById(PasseConsole);
   hide(dataCOel);
   hide(dataRAMel);
   hide(dataRIMel);
@@ -6571,57 +6653,14 @@ returnBtn.addEventListener("click",()=>{
   hide(dataEUAL2el);
 }) ;
 
-const optionButton =document.getElementById("fileSelect")
-optionButton.addEventListener("change", () => {
-  console.log("THE click on the option button worked !");  
-  const messageDiv = document.getElementById("code")
-  messageDiv.style.background= '#010232'; 
-  const option = optionButton.options[optionButton.selectedIndex];
-  const file = option.value;
-  // Create a new XMLHttpRequest object
-  const xhr = new XMLHttpRequest();
-
-  // Define a function to handle the "load" event of the XMLHttpRequest object
-  xhr.onload = () => {
-    // Get the contents of the file as a string
-    console.log("we are getting the content  !");
-    const contents = xhr.responseText;
-    console.log(contents);
-    assembler.fromFileNameToTextZone(contents)
-  };
-
-  // Open the file
-  xhr.open("GET", file);
-
-  // Send the request
-  xhr.send();
-//assembler.fromFileNameToTextZone("./program_1.txt","code");
-})
-
-
-
-
-const maDiv = document.getElementById("NbLigne");
-maDiv.style.fontFamily= "Courier New, monospace" ;
-const n = 15;
-/*for (let i = 0; i < 2; i++) {
-  maDiv.appendChild(document.createElement("br"));
-}*/
-for (let i = 1; i <= n; i++) {
-  const p = document.createElement("p");
-  p.textContent = i;
-  maDiv.appendChild(p);
-}
-
-
 
 
 
 function hide(el, delay){
   setTimeout(function() { el.style.visibility='hidden';
 },delay);
-
 }
+
 
 //l'animation de flow de data
 function moveData(Bus,delay){         // on redéfinit vers glowdata
@@ -6632,11 +6671,7 @@ function moveData(Bus,delay){         // on redéfinit vers glowdata
        Bus.style.visibility='visible';
        Bus.style.animation= 'slide-left 3s';
        // Bus.style.left='100%';
-  
-   
-
   }
-  /// .....................// 
 
 
 
@@ -6801,7 +6836,7 @@ function start() {
 
 const startbutton  = document.getElementById("strt");
 startbutton.addEventListener("click", () => {
- // let delay=0;
+ // let delay=0;// fin obj assembler
   const textDiv = document.getElementById("code");
   let contents = textDiv.value;
   textDiv.addEventListener("input", function() {
@@ -6814,3 +6849,9 @@ startbutton.addEventListener("click", () => {
   mainsimulation.coder(contents);
 
 });
+
+
+
+
+
+//_______________________________________________________________________________________________

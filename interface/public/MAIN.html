@@ -342,20 +342,22 @@
     </main> 
    
     <script>
+
+
+
       function Menu(e){
         let list = document.getElementById("ttt");
-        if(e.name === 'menu')
-        {
+        if(e.name === 'menu'){
           e.name = "close";
           list.style.opacity = '100' ;
-        }
-        else{
+        } else{
           e.name = "menu" ;
           list.style.opacity = '0' ;
         }
-
       }
-      const dataCOel=  document.getElementById('dataCO');
+
+
+const dataCOel=  document.getElementById('dataCO');
 const dataRAMel=  document.getElementById('dataRAM');
 const dataRIMel=  document.getElementById('dataRIM');
 const dataRIel=  document.getElementById('dataRI');
@@ -373,30 +375,35 @@ const dataC4el=  document.getElementById('dataC4');
 const dataC5el=  document.getElementById('dataC5');
 const dataDATAel=  document.getElementById('dataDATA');
 //const g2=document.getElementById('g2');
+
+
+
 function moveData(Bus,delay){
-  
     setTimeout(function() {
       var computedStyle = window.getComputedStyle(Bus);
     var left = computedStyle.getPropertyValue('left');
        console.log(left);
        Bus.style.visibility='visible';
-    if (left === '0px'){
-      
+    if (left === '0px'){ 
       Bus.style.animation='slide-left 3s';
     }
     else {
       console.log('hello world');
       Bus.style.animation='slide-right 3s';
     }
-
   }, delay);
-
   }
+
+
+
   function hideData(Bus,delay){
     setTimeout(function(){
       Bus.style.visibility='hidden';
     },delay);
   }
+
+
+
 function selectElement(Element, delay ,string) {
   setTimeout(function() {
     delay=0;
@@ -407,9 +414,11 @@ function selectElement(Element, delay ,string) {
     }else{
       Element.textContent = string ;
     }
-
   }, delay);
 }
+
+
+
 var co = document.getElementById("CO");
 var ram = document.getElementById("RAM");
 var acc = document.getElementById("ACC");
@@ -423,8 +432,10 @@ var cx=document.getElementById("CX");
 var dx=document.getElementById("DX");
 var caseMemoire = document.getElementById("caseMemoire");
 let instTAB = ['00000001000001',1,2,3,4];
-function premierePhase(adr,delay){
 
+
+
+function premierePhase(adr,delay){
        selectElement(co, delay , adr);
        //delay += 3000; 
        selectElement(dataCOel,delay,0);
@@ -439,8 +450,11 @@ function premierePhase(adr,delay){
        //delay+=3000;
        selectElement(dataRIMel,delay,0);
        return delay ;
-  
 } 
+
+
+
+
 let addinstel= document.getElementById("addinst");
 let d=0;
 function simulation(){
@@ -450,9 +464,10 @@ function simulation(){
   //d=d+3000;
   //deuxiemePhase(d);
   main.coder(contents,d);
-
-
 };
+
+
+
 function start(e) {
   if(e.name === 'caret-forward-outline')
   {
@@ -461,10 +476,12 @@ function start(e) {
   }
   else{
     e.name = "caret-forward-outline" ;
-
   }
-  
 }
+
+
+
+
     </script>
     <div class="con">
     <div id="links"> <p> Site de l'école : <a href="https://www.esi.dz/"> www.esi.dz </a></p></div>
