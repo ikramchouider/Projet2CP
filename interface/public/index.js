@@ -28,7 +28,7 @@ const indR = document.getElementById("R");
 const indD = document.getElementById("D");
 
 let saisie = document.querySelector(".saisie");
-let valider = document.querySelector("#valider");
+let valider = document.getElementById("valider");
 let nom = document.querySelector("#nom");
 saisie.style.display = "none";
 
@@ -3030,12 +3030,12 @@ export var main = {
    Execute:  function (instrTab) {
     let j = 0 ;
     let i = 0 ;
-    this.Nbinst=0 ; 
+    this.Nbinst=0 ;
     while (j < instrTab.length ) {
       let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
       this.setRI(instrBin) ;
       this.Nbinst =  main.nbMot[util.chercherDansTableauDeuxDimension(main.nbMot,j)][1] ; 
-     
+  
       switch (this.getRI().getCOP()) {
         case "000000": i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
         j = i ; break ;
@@ -3138,22 +3138,20 @@ export var main = {
             i = this.ual.opeRation("STOP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
             j=i ; break ;
             case "011100": 
-            saisie.style.display = "block";
-            
-           
-              
-            
-            valider.addEventListener("click", function() {
+            //saisie.style.display = "block";
+          var x = prompt();
+          main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[1].getVal().slice(1))].setVal(x) ;
+         /*   valider.addEventListener("click", function() {
               // Fermer la boîte de saisie
-              saisie.style.display = "none";
               console.log("Nom entré :", nom.value);
               nom.value ="";
               // Continuer l'exécution du programme ici
               console.log("Suite du programme...");
-              main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[1].getVal().slice(1))].setVal() ;
+              main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[1].getVal().slice(1))].setVal(nom.value) ;
               // Autres instructions...
-           
-            });
+              saisie.style.display = "none";
+              b=true;
+            });*/
           
         
             j=j+2;
