@@ -146,9 +146,9 @@
           <div class="bus" id="busEUAL1">
             <div class="dataflux" id="dataEUAL1"></div>
           </div>
-          <div class="bus" id="busEUAL2">
+          <!-- <div class="bus" id="busEUAL2">
             <div class="dataflux" id="dataEUAL2"></div>
-          </div>
+          </div> -->
           <div class="bus" id="busACC">
             <div class="dataflux" id="dataACC"></div>
           </div>
@@ -156,7 +156,8 @@
             <div class="dataflux" id="dataRI"></div>
           </div>
           <div class="bus" id="busCO">
-            <div class="dataflux" id="dataCO"></div> </div>
+            <div class="dataflux" id="dataCO"></div>
+            <div class="animation-Co-Rim" id="animationCoRim"></div> </div>
           <div class="bus" id="busTDA">
             <div class="dataflux" id="dataTDA"></div>
           </div> 
@@ -190,41 +191,171 @@
           <div class="bus" id="Add"></div>
           <div class="bus" id="Sub"></div>
           <div class="bus" id="mov"></div>
+          
+          <!-- sorties du seq-->
+          <div class="bus" id="s1"></div>
+          <div class="arrow" id="a21"></div>
+          <div class="bus" id="s2"></div>
+          <div class="arrow" id="a22"></div>
+          <div class="bus" id="s3"></div>
+          <div class="arrow" id="a23"></div>
           <!---->
-          <div class="decodeur" id="ual"></div>
-          <div class="decodeur" id="RIM">
+          <div class="rim" id="RIM">
+            <div class="formeRim" > </div>
+            <div class="ombreRim" > </div>
+            <div class="bordureRim" > </div>
             <p id="Rimcontent"></p>
           </div>
-          <div class="decodeur" id="RAM"></div>
-          <div class="decodeur" id="SEQ"></div>
-          <div class="MC">
-            <div class="caseMemoire" id="caseMemoire"></div>
+          <div class="Ual" id="ual">
+            <p id="UALtxt">UAL</p>
+            <div class="formeUal" > </div>
+            <div class="ombreUal" > </div>
+            <div class="bordureUalFace" > </div>
+            <div class="bordureOmbreUal" > </div>
           </div>
-          <div class="REG" id="CO"> </div>
-
+          <div class="ram" id="RAM">
+            <div class="formeRam" > </div>
+            <div class="ombreRam" > </div>
+            <div class="bordureRam" > </div>
+          </div>
+          <div class="sequ" id="SEQ">
+            <p id="SEQtxt">SEQ</p>
+            <div class="formeSeq" > </div>
+            <div class="bordureSeq" > </div>
+            <div class="ombreSeq" > </div>
+            <div class="bordureOmbreSeq" > </div>
+          </div>
+          <div class="MC">
+            <div class="caseAdresse" id="caseAdresse"></div>
+            <div class="caseMemoire" id="caseMemoire"></div>
+            <div class="formeMc" > </div>
+            <div class="ombreMc" > </div>
+            <div class="bordureMc" > </div>
+          </div>
+          <div class="co" id="CO"> 
+            <div class="formeRim" > </div>
+            <div class="ombreRim" > </div>
+            <div class="bordureRim" > </div>
+          </div>
+          <div class="container">
+            <div class="shape shape1"></div>
+            <div class="shape shape2"></div>
+          </div>
           <div class="REG" id="RI"> <!--on va mettre les champs de l'instruction dans le div RI-->
-               <div class="REG"  id="COP"></div>
-               <div class="REG" id="MA"></div>
-               <div class="REG" id="F"></div>
-               <div class="REG" id="DD"></div>
-               <div class="REG" id="REG1"></div>
-               <div class="REG" id="REG2"></div>
+               <div class="cop"  id="COP">
+                <div class="formeCop" > </div>
+                <div class="ombreCop" > </div>
+                <div class="bordureCop" > </div>
+               </div>
+               <div class="ma" id="MA">
+                <div class="formeMa" > </div>
+                <div class="ombreMa" > </div>
+                <div class="bordureMa" > </div>
+               </div>
+               <div class="f" id="F">
+                <div class="formeF" > </div>
+                <div class="ombreF" > </div>
+                <div class="bordureF" > </div>
+               </div>
+               <div class="dd" id="DD">
+                <div class="formeF" > </div>
+                <div class="ombreF" > </div>
+                <div class="bordureF" > </div>
+               </div>
+               <div class="reg1" id="REG1">
+                <div class="formeCop" > </div>
+                <div class="ombreCop" > </div>
+                <div class="bordureCop" > </div>
+               </div>
+               <div class="reg2" id="REG2">
+                <div class="formeCop" > </div>
+                <div class="ombreCop" > </div>
+                <div class="bordureCop" > </div>
+               </div>
           </div>    
-          <div class="REG" id="ACC"></div>
-          <div class="REG" id="EUAL1"></div>
-          <div class="REG" id="EUAL2"></div>
-          <div class="REG" id="AX"></div>
-          <div class="REG" id="BX"></div>
-          <div class="REG" id="CX"></div>
-          <div class="REG" id="DX"></div>
-          <div class="REG" id="EX"></div>
-          <div class="REG" id="FX"></div>
-          <div class="REG" id="SI"></div>
-          <div class="REG" id="DI"></div>
-          <div class="REG" id="Z"></div>
-          <div class="REG" id="S"></div>
-          <div class="REG" id="R"></div>
-          <div class="REG" id="D"></div>
+          <div class="acc" id="ACC">
+            <div class="formeEual" > </div>
+            <div class="ombreEual" > </div>
+            <div class="bordureEual" > </div>
+          </div>
+          <div class="eual" id="EUAL1">
+            <div class="formeEual" > </div>
+            <div class="ombreEual" > </div>
+            <div class="bordureEual" > </div>
+          </div>
+          <div class="eual" id="EUAL2">
+            <div class="formeEual" > </div>
+            <div class="ombreEual" > </div>
+            <div class="bordureEual" > </div>
+          </div>
+          <div class="REG" id="AX">
+            <p id="AXtxt">AX</p>
+            <div class="formeEual" > </div>
+            <div class="ombreEual" > </div>
+            <div class="bordureEual" > </div>
+          </div>
+          <div class="REG" id="BX">
+            <p id="BXtxt">BX</p>
+            <div class="formeEual" > </div>
+            <div class="ombreEual" > </div>
+            <div class="bordureEual" > </div>
+          </div>
+          <div class="REG" id="CX">
+            <p id="CXtxt">CX</p>
+            <div class="formeEual" > </div>
+            <div class="ombreEual" > </div>
+            <div class="bordureEual" > </div>
+          </div>
+          <div class="REG" id="DX">
+            <p id="DXtxt">DX</p>
+            <div class="formeEual" > </div>
+            <div class="ombreEual" > </div>
+            <div class="bordureEual" > </div>
+          </div>
+          <div class="REG" id="EX">
+            <p id="EXtxt">EX</p>
+            <div class="formeEual" > </div>
+            <div class="ombreEual" > </div>
+            <div class="bordureEual" > </div>
+          </div>
+          <div class="REG" id="FX">
+            <p id="FXtxt">FX</p>
+            <div class="formeEual" > </div>
+            <div class="ombreEual" > </div>
+            <div class="bordureEual" > </div>
+          </div>
+          <div class="REG" id="SI">
+            <p id="DItxt">SI</p>
+            <div class="formeEual" > </div>
+            <div class="ombreEual" > </div>
+            <div class="bordureEual" > </div>
+          </div>
+          <div class="REG" id="DI">
+            <p id="SItxt">DI</p>
+            <div class="formeEual" > </div>
+            <div class="ombreEual" > </div>
+            <div class="bordureEual" > </div>
+          </div>
+          <div class="REG" id="Z">
+            <div class="formeFlag" > </div>
+            <div class="ombreFlag" > </div>
+            <div class="bordureFlag" > </div>
+          </div>
+          <div class="REG" id="S">
+            <div class="formeFlag" > </div>
+            <div class="ombreFlag" > </div>
+            <div class="bordureFlag" > </div>
+          </div>
+          <div class="REG" id="R">
+            <div class="formeFlag" > </div>
+            <div class="ombreFlag" > </div>
+            <div class="bordureFlag" > </div>
+          </div>
+          <div class="REG" id="D">
+            <div class="formeFlag" > </div>
+            <div class="ombreFlag" > </div>
+            <div class="bordureFlag" > </div>
+          </div>
           <div class="glow" id="g2"></div>
           
   
@@ -247,7 +378,7 @@
 <div class="arrow" id="le"></div>
 <div class="arrow" id="a16"></div>
 <div class="arrow" id="a17"></div>
-<div class="arrow" id="a18"></div>
+<!-- <div class="arrow" id="a18"></div> -->
 <div class="arrow" id="a19"></div>
 <div class="arrow" id="a20"></div>
 <div class="arrow" id="addinst"></div>
@@ -263,14 +394,6 @@
   <p id="indR"> R </p>
   <p id="indD"> D </p>
   <p id="seq"> SEQ </p>
-  <p id="AXtxt">AX</p>
-  <p id="BXtxt">BX</p>
-  <p id="CXtxt">CX</p>
-  <p id="DXtxt">DX</p>
-  <p id="EXtxt">EX</p>
-  <p id="FXtxt">FX</p>
-  <p id="DItxt">SI</p>
-  <p id="SItxt">DI</p>
   <p id="COtxt"> CO </p>
   <p id="RAMtxt">RAM</p>
   <p id="RIMtxt">RIM</p>
