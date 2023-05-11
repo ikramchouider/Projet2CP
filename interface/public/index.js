@@ -949,6 +949,23 @@ hexSigne: function(op) {
       if (op[0] == "1")  return "-1" ; 
       else return "1" ; 
  
+
+},
+// la fpnction qui supprime tout les zéro a gauche 
+supprimerToutZerosGauche: function(chaine) {
+  // Vérifier si la chaîne est vide
+  if (chaine.length === 0) {
+    return chaine;
+  }
+  
+  // Trouver l'indice du premier caractère différent de zéro
+  let indice = 0;
+  while (indice < chaine.length && chaine.charAt(indice) === '0') {
+    indice++;
+  }
+  
+  // Retourner la chaîne sans les zéros à gauche
+  return chaine.substring(indice);
 },
 /*
 convertToAscii: function(string) {
@@ -961,9 +978,6 @@ convertToAscii: function(string) {
   return asciiCode;
 } */
 
-test: function (x) {
-  x.concat("nour")
-}
 
 
 }
@@ -995,7 +1009,7 @@ var codingExecute = {
       strLigne.shift();
     }
     
-   
+    
     instrTab.push(
       new CaseMc(adr,util.binaryToHex(codingExecute.getCode(strLigne)),str)
     );
@@ -1199,7 +1213,7 @@ return instrTab;
         for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }  
         return  instrTab ; 
       }}
-      else {
+      else if(strLigne[1]== "IN"){
              adr = util.incrementHex(adr, 1);
            let indice = util.chercherDansTableau(main.dataTab,strLigne[1]) ; 
            instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
@@ -1522,11 +1536,10 @@ return instrTab;
 var decodage = {
   fonctionDecodage: function() { 
       let tabInstrMnemonique =[] ; 
-      let premierMot = true ; 
-      let dernierMot = false ; 
-  
-      for(let i=0;i<main.instrTab.length-1;i++) {
-          if(premierMot) {
+      
+      console.log();
+      for(let i=0;i<main.instrTab.length;i++) {
+              console.log(main.instrTab[i].getVal());
               let motBinaire =util.hexEnBinaire(main.instrTab[i].getVal()) ;
               
               let cop = motBinaire.substring(0, 6); // capable de changer le 5 à 6 etc ..
@@ -1535,9 +1548,42 @@ var decodage = {
               let d = motBinaire.substring(9, 10);
               let reg1 = motBinaire.substring(10, 13);
               let reg2 = motBinaire.substring(13, 16);
+    
+
+              if(cop[0] == "1" && this.getNom(cop) != "START") {
+                if(ma == "00" && d=="1"){
+                 tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                i++ ; 
+                } else if(ma == "00" && f=="1" && d=="0"){
+                  i++;
+                  let indice=util.chercherAdr(main.dataTab,main.instrTab[i].getVal().slice(1)) ; 
+                  if(main.dataTab[indice].getEtiq() != ""){
+                  tabInstrMnemonique.push([this.getNom(cop),main.dataTab[indice].getEtiq(),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;}
+                  else tabInstrMnemonique.push([this.getNom(cop),"[".concat(main.dataTab[indice].getAdr(),"H]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                i++ ; 
+                }
+                else if(ma == "01" &&  d=="0") {
+                  tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg2),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                } else if(ma == "10" &&  d=="0"){
+                  tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+2].getVal()),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                  i=i+2; 
+                } else if(ma == "11" &&  d=="0") {
+                  if(main.instrTab[i+1].getVal() == "0000") {  
+                    etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;   
+                    tabInstrMnemonique.push([this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+3].getVal()).concat("H")]) ;  
+                    }
+                    else{
+                       etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ; 
+                       tabInstrMnemonique.push([this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+3].getVal()),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                    } i = i+3 ; 
+                }
+                    
+
+              }
+              else {
               if(ma == "00" && f=="0"  ){
-                  tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",this.getNomReg(reg2)]) ; 
-                  
+                 if(this.getNom(cop)=="STOP") tabInstrMnemonique.push([this.getNom(cop),"","",""]) ; 
+                else tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",this.getNomReg(reg2)]) ; 
               }
               else if(ma == "00" && f=="1" && d=="1"){
                   i++ ; 
@@ -1559,13 +1605,42 @@ var decodage = {
               else if(ma == "01" &&  d=="0"){
                   tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg2),"]"),",",this.getNomReg(reg1)]) ; 
               }
-              else if(ma == "11" &&  d=="1"){
-                  tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",","[".concat(this.getNomReg(reg2),"]")]) ; 
-              }
-              premierMot=false ; 
-              console.log(tabInstrMnemonique[0]);
-          }
+              else if(ma == "10" &&  d=="1"){
+                   tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",","[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]")]) ;
+                  i=i+2;
+                }
+            else if(ma == "10" &&  d=="0"){
+                 tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]"),",",this.getNomReg(reg1)]) ;
+                 i=i++; 
+                }
+                else if(ma == "11" &&  d=="1"){
+                  let etiq ; 
+                  if(main.instrTab[i+1].getVal() == "0000") {
+                  etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+1].getVal().slice(1))].getEtiq(); 
+                  tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",etiq,"[".concat(this.getNomReg(reg2),"]")]) ;
+                   i=i+2;} 
+                  else { etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ; 
+                    tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",etiq,"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]")]) ;
+                  i=i+2;}
+
+                }
+            else if(ma == "11" &&  d=="0"){
+                  let etiq ; 
+                  if(main.instrTab[i+1].getVal() == "0000") {  
+                  etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;   
+                  tabInstrMnemonique.push([this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"]"),",",this.getNomReg(reg1)]) ;  
+                  i=i+2;}
+                  else{
+                     etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ; 
+                     tabInstrMnemonique.push([this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]"),",",this.getNomReg(reg1)]) ;
+                  i=i+2;}
+                }
+              
+              }   
+        
       }
+      for(let i=0;i<tabInstrMnemonique.length;i++)
+      console.log(i+1," ",tabInstrMnemonique[i]);
   },
   getNom: function (str) {
       let ins;
@@ -3004,7 +3079,9 @@ export var main = {
       this.getDataTab()[i].afficher();
     console.log("********************** ");
     console.log(""); 
-
+    console.log("DECODAGE");
+    decodage.fonctionDecodage() ; 
+    console.log("********************** ");
    /* this.Execute(main.getinstrTab());
 
     main.afficherRegistres() ;
