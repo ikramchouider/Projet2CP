@@ -27,6 +27,11 @@ const indS = document.getElementById("S");
 const indR = document.getElementById("R");
 const indD = document.getElementById("D");
 
+let saisie = document.querySelector(".saisie");
+let valider = document.getElementById("valider");
+let nom = document.querySelector("#nom");
+saisie.style.display = "none";
+
 
 //------------------------- Fonction qui traite et detecte les erreurs dans les programmes des utilisateurs --------------------
 
@@ -985,23 +990,16 @@ var codingExecute = {
     if (strLigne[0][strLigne[0].length - 1] == ":") {
       if(main.tabEtiq.length > 0) {
         let indice  = util.chercherDansTableau2(main.tabEtiq,strLigne[0].slice(0,strLigne[0].length-1),adr) ; 
-      /*  console.log(strLigne[0].slice(0,strLigne[0].length-1));
-        console.log(main.tabEtiq.length);
-        if(indice<main.tabEtiq.length){
-          let adresse = main.tabEtiq[indice].getAdr();
-          let indice2 = util.chercherAdr(main.instrTab,adresse)
-          main.instrTab[indice2].setVal(util.remplirZero(adr,4,0)) ;
-          
-        }*/
       }
       str = strLigne[0].slice(0,strLigne[0].length-1);
       strLigne.shift();
     }
     
-
+   
     instrTab.push(
-      new CaseMc(adr,util.binaryToHex(coding.getCode(strLigne)),str)
+      new CaseMc(adr,util.binaryToHex(codingExecute.getCode(strLigne)),str)
     );
+   
 
     if(strLigne.length >2) {
       if(strLigne[0].toUpperCase() == "SHL" || strLigne[0].toUpperCase() == "SHR" || strLigne[0].toUpperCase() == "ROL" || strLigne[0].toUpperCase() == "ROR" ) {
@@ -1010,12 +1008,12 @@ var codingExecute = {
         for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }  
         return  instrTab ; 
       }
-    else if (coding.getFormat(strLigne) == "0") {
+    else if (codingExecute.getFormat(strLigne) == "0") {
       for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
       return instrTab;
     } else if (strLigne[0][strLigne[0].length - 1].toUpperCase() == "I") {
 
-      if (coding.modeAdr(strLigne) == "00" && coding.getDest(strLigne) == "0") {
+      if (codingExecute.modeAdr(strLigne) == "00" && codingExecute.getDest(strLigne) == "0") {
         if (strLigne[1].indexOf("[") != -1) {
           adr = util.incrementHex(adr, 1);
           instrTab.push(
@@ -1038,13 +1036,13 @@ var codingExecute = {
         for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
         return instrTab;
       }
-      else if((coding.modeAdr(strLigne) == "00" && coding.getDest(strLigne) == "1") ||  (coding.modeAdr(strLigne)== "01")) {
+      else if((codingExecute.modeAdr(strLigne) == "00" && codingExecute.getDest(strLigne) == "1") ||  (codingExecute.modeAdr(strLigne)== "01")) {
         adr = util.incrementHex(adr, 1);
         instrTab.push(
           new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
         );
       }
-      else if (coding.modeAdr(strLigne) == "10" && coding.getDest(strLigne) == "0") {
+      else if (codingExecute.modeAdr(strLigne) == "10" && codingExecute.getDest(strLigne) == "0") {
         let regEtDepl = strLigne[1].slice(1, strLigne[1].length - 1) ;
         let depl = "";
         if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
@@ -1056,7 +1054,7 @@ var codingExecute = {
             new CaseMc(adr, strLigne[2].slice(0, strLigne[2].length - 1), "")
           );
       }
-      else if(coding.modeAdr(strLigne) == "11" && coding.getDest(strLigne) == "0") {
+      else if(codingExecute.modeAdr(strLigne) == "11" && codingExecute.getDest(strLigne) == "0") {
         let regEtDepl = strLigne[1].slice(strLigne[1].indexOf("[")+1, strLigne[1].length - 1) ;
         let depl = "";
         if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
@@ -1064,6 +1062,7 @@ var codingExecute = {
         if(strLigne[1].indexOf("+") != -1){
         adr = util.incrementHex(adr, 1);
         instrTab.push(new CaseMc(adr, depl.toString(16), ""));}
+        else{instrTab.push(new CaseMc(adr,"0000", "")); }
         let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
          adr = util.incrementHex(adr, 1);
          instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
@@ -1074,8 +1073,8 @@ var codingExecute = {
       }
       for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
       return instrTab;
-    } else if (coding.modeAdr(strLigne) == "00") {
-      if (coding.getDest(strLigne) == "0") {
+    } else if (codingExecute.modeAdr(strLigne) == "00") {
+      if (codingExecute.getDest(strLigne) == "0") {
         if (strLigne[1].indexOf("[") != -1) {
           adr = util.incrementHex(adr, 1);
           instrTab.push(
@@ -1100,8 +1099,8 @@ var codingExecute = {
           instrTab.push(new CaseMc(adr, dataTab[indice].getAdr(), ""));
         }
       }
-    } else {if (coding.modeAdr(strLigne) == "10") {
-      if (coding.getDest(strLigne) == "0"){ //MOV [BX+3], AX
+    } else {if (codingExecute.modeAdr(strLigne) == "10") {
+      if (codingExecute.getDest(strLigne) == "0"){ //MOV [BX+3], AX
         let regEtDepl = strLigne[1].slice(1, strLigne[1].length - 1) ;
         let depl = "";
         if (this.regexi(regEtDepl.substring(0,2))){ depl = regEtDepl.substring(regEtDepl.lastIndexOf("+") + 1);}
@@ -1117,8 +1116,8 @@ var codingExecute = {
         adr = util.incrementHex(adr, 1);
         instrTab.push(new CaseMc(adr, depl.toString(16), ""));
       }
-  } else if (coding.modeAdr(strLigne) == "11") {
-     if(coding.getDest(strLigne) == "1") {
+  } else if (codingExecute.modeAdr(strLigne) == "11") {
+     if(codingExecute.getDest(strLigne) == "1") {
     
       let regEtDepl = strLigne[2].slice(strLigne[2].indexOf("[")+1, strLigne[2].length - 1) ;
         let depl = "";
@@ -1126,7 +1125,9 @@ var codingExecute = {
         else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
         if(strLigne[2].indexOf("+") != -1){
           adr = util.incrementHex(adr, 1);
-          instrTab.push(new CaseMc(adr, depl.toString(16), ""));}
+          instrTab.push(new CaseMc(adr, depl.toString(16), ""));}else{
+            instrTab.push(new CaseMc(adr,"0000", ""));
+          }
         let indice = util.chercherDansTableau(dataTab, strLigne[2].slice(0,strLigne[2].indexOf("[")));
         adr = util.incrementHex(adr, 1);
         instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
@@ -1138,7 +1139,8 @@ var codingExecute = {
         else {depl = regEtDepl.substring(0, regEtDepl.length -3);}
         if(strLigne[1].indexOf("+") != -1){
           adr = util.incrementHex(adr, 1);
-          instrTab.push(new CaseMc(adr, depl.toString(16), ""));}
+          instrTab.push(new CaseMc(adr, depl.toString(16), ""));}else{
+            instrTab.push(new CaseMc(adr,"0000", "")); }
         let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
          adr = util.incrementHex(adr, 1);
          instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
@@ -1172,6 +1174,7 @@ return instrTab;
              if(strLigne[1].indexOf("+") != -1){
               adr = util.incrementHex(adr, 1);
               instrTab.push(new CaseMc(adr, depl.toString(16), ""));}
+              else{instrTab.push(new CaseMc(adr,"0000", ""));}
               let indice = util.chercherDansTableau(dataTab, strLigne[1].slice(0,strLigne[1].indexOf("[")));
             adr = util.incrementHex(adr, 1);
             instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
@@ -1196,6 +1199,11 @@ return instrTab;
         for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }  
         return  instrTab ; 
       }}
+      else {
+             adr = util.incrementHex(adr, 1);
+           let indice = util.chercherDansTableau(main.dataTab,strLigne[1]) ; 
+           instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
+      }
     } 
   
     for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }
@@ -1207,7 +1215,8 @@ return instrTab;
     // return code binaire de l'instruction 
     getCode: function (str) {
       let code; 
-      if(str[0] == "STOP") {
+      if(str[0] == "STOP" || str[0] == "IN" ) {
+        console.log( this.getCop(str[0]));
         code = this.getCop(str[0]).concat("0000000000");
       }
       else if (str.length == 3) {
@@ -1334,6 +1343,7 @@ return instrTab;
 
     // return code operation de l'instruction 
     getCop: function (str) {
+      console.log(str);
       let ins;
       switch (str.toUpperCase()) {
         case "MOV": ins = "000000"; break;
@@ -1508,6 +1518,122 @@ return instrTab;
 
 } // fin  codingExecute
 
+// la variable decodage qui sera utilisé pour l'execution seulemnt 
+var decodage = {
+  fonctionDecodage: function() { 
+      let tabInstrMnemonique =[] ; 
+      let premierMot = true ; 
+      let dernierMot = false ; 
+  
+      for(let i=0;i<main.instrTab.length-1;i++) {
+          if(premierMot) {
+              let motBinaire =util.hexEnBinaire(main.instrTab[i].getVal()) ;
+              
+              let cop = motBinaire.substring(0, 6); // capable de changer le 5 à 6 etc ..
+              let ma = motBinaire.substring(6, 8);
+              let f = motBinaire.substring(8, 9);
+              let d = motBinaire.substring(9, 10);
+              let reg1 = motBinaire.substring(10, 13);
+              let reg2 = motBinaire.substring(13, 16);
+              if(ma == "00" && f=="0"  ){
+                  tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",this.getNomReg(reg2)]) ; 
+                  
+              }
+              else if(ma == "00" && f=="1" && d=="1"){
+                  i++ ; 
+                  let indice=util.chercherAdr(main.dataTab,main.instrTab[i].getVal().slice(1)) ; 
+                  if(main.dataTab[indice].getEtiq() != ""){
+                  tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",main.dataTab[indice].getEtiq()]) ;}
+                  else tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",","[".concat(main.dataTab[indice].getAdr(),"H]")]) ;
+              }
+              else if (ma == "00" && f=="1" && d=="0"){
+                  i++ ; 
+                  let indice=util.chercherAdr(main.dataTab,main.instrTab[i].getVal().slice(1)) ; 
+                  if(main.dataTab[indice].getEtiq() != ""){
+                  tabInstrMnemonique.push([this.getNom(cop),main.dataTab[indice].getEtiq(),",",this.getNomReg(reg1)]) ;}
+                  else tabInstrMnemonique.push([this.getNom(cop),"[".concat(main.dataTab[indice].getAdr(),"H]"),",",this.getNomReg(reg1),]) ;
+              }
+              else if(ma == "01" &&  d=="1") {
+                  tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",","[".concat(this.getNomReg(reg2),"]")]) ; 
+              }
+              else if(ma == "01" &&  d=="0"){
+                  tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg2),"]"),",",this.getNomReg(reg1)]) ; 
+              }
+              else if(ma == "11" &&  d=="1"){
+                  tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",","[".concat(this.getNomReg(reg2),"]")]) ; 
+              }
+              premierMot=false ; 
+              console.log(tabInstrMnemonique[0]);
+          }
+      }
+  },
+  getNom: function (str) {
+      let ins;
+      switch (str) {
+        case "000000": ins = "MOV"; break;
+        case "000001": ins = "ADD"; break;
+        case "000010": ins = "ADA"; break;
+        case "000011": ins = "SUB"; break;
+        case "000100": ins = "SBA"; break;
+        case "000101": ins = "CMP"; break;
+        case "000110": ins = "OR"; break;
+        case "000111": ins = "AND"; break;
+        case "001000": ins = "SHR"; break;
+        case "001001": ins = "SHL"; break;
+        case "001010": ins = "ROL"; break;
+        case "001011": ins = "ROR"; break;
+        case "001100": ins = "JZ"; break;
+        case "001101": ins = "JNZ"; break;
+        case "001110": ins = "JC"; break;
+        case "010000": ins = "JS"; break;
+        case "001111": ins = "JNC"; break;
+        case "010001": ins = "JNS"; break;
+        case "010010": ins = "JO"; break;
+        case "010011": ins = "JNO"; break;
+        case "010100": ins = "JE"; break;
+        case "010101": ins = "JNE"; break;
+        case "010110": ins = "LOAD"; break;
+        case "010111": ins = "STORE"; break;
+        case "011000": ins = "INC"; break;
+        case "011001": ins = "DEC"; break;
+        case "011010": ins = "NOT"; break;
+        case "011011": ins = "JMP"; break;
+        case "011100": ins = "IN"; break;
+        case "011101": ins = "OUT"; break;
+        case "011111": ins = "START"; break;
+        case "011110": ins = "STOP"; break;
+        case "100000": ins = "MOVI"; break;
+        case "100001": ins = "ADDI";break;
+        case "100010": ins = "ADAI"; break;
+        case "100011": ins = "SUBI"; break;
+        case "100100": ins = "SBAI"; break;
+        case "100101": ins = "CMPI"; break;
+        case "100110": ins = "ORI"; break;
+        case "100111": ins = "ANDI"; break;
+        case "110110": ins = "LOADI"; break;
+        default: ins= "-1"; break;
+      }
+      return ins;
+    }, // fin get code operation 
+
+    getNomReg: function (reg) {
+      let code;
+      switch (reg.toUpperCase()) {
+        case "000": code = "AX"; break;
+        case "001": code = "BX"; break;
+        case "010": code = "CX"; break;
+        case "011": code = "DX"; break;
+        case "100": code = "EX"; break;
+        case "101": code = "FX"; break;
+        case "110": code = "SI"; break;
+        case "111": code = "DI"; break;
+        default: code = "000"; break;
+      }
+      return code;
+    }, // fin get code registre 
+
+    
+}; 
 
 
 // used in execute function 
@@ -1567,7 +1693,7 @@ class UAL {
       }
       else if((modeAdr == "11") && dest == "0" && format == "1") {
       this.LoadDirectIndexe(param1,dataTab,instrTab,cpt) 
-      return cpt +main.nbMot[main.Nbinst][1] ;}
+      return cpt +main.Nbinst;}
     }
     else if(codeIns== "ADAI" || codeIns== "SBAI" ||  codeIns== "LOADI"){
   main.ACC.setContenu(this.operation(codeIns,main.ACC.getContenu(),instrTab[cpt+1].getVal())) ; 
@@ -1597,7 +1723,7 @@ class UAL {
     }
     else if((modeAdr == "11") && dest == "0" ) {
       this.immDirectIndexeLongNonDest(codeIns,param1,dataTab,instrTab,cpt) 
-      return cpt+main.nbMot[main.Nbinst][1] ; 
+      return cpt+main.Nbinst ; 
     }
     }
     else if ((modeAdr == "00") && dest == "1" && format == "0") {
@@ -1634,7 +1760,7 @@ class UAL {
    }else{
     this.directIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
    }
-   return cpt+main.nbMot[main.Nbinst][1] ; 
+   return cpt+main.Nbinst ; 
     
   }
 
@@ -1966,7 +2092,7 @@ class UAL {
     // Mode direct indexe format Long  distination =0
     directIndexeLongNonDest = function(code,param1,param2,dataTab,instrTab,cpt) {
       let m=0 ; 
-      if(main.nbMot[main.Nbinst][1] == 3) {
+      if(main.Nbinst == 3) {
        m = instrTab[cpt+1].getVal() ; } else m=0 ;
        
       let n=0 ;
@@ -1978,7 +2104,7 @@ class UAL {
       }
       
       let adretiq =0 ; 
-      if(main.nbMot[main.Nbinst] == 3) {
+      if(main.Nbinst== 3) {
       adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
       let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
       i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
@@ -2008,7 +2134,7 @@ class UAL {
 
     directIndexeLongDest = function(code,param1,param2,dataTab,instrTab,cpt) {
       let n=0 ; 
-      if(main.nbMot[main.Nbinst][1] == 3) {
+      if(main.Nbinst == 3) {
         n = instrTab[cpt+1].getVal() ; } else n=0 ;
   
       let m=0 ; 
@@ -2023,7 +2149,7 @@ class UAL {
       }
       
       let adretiq =0 ; 
-      if(main.nbMot[main.Nbinst][1] == 3) {
+      if(main.Nbinst == 3) {
       adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
       i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
       i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);  
@@ -2181,7 +2307,7 @@ class UAL {
     immDirectIndexeLongNonDest = function(code,param1,dataTab,instrTab,cpt) {
 
        let m=0 ; 
-      if(main.nbMot[main.Nbinst][1] == 4) {
+      if(main.Nbinst== 4) {
        m = instrTab[cpt+1].getVal() ; } else m=0 ;
       
       let n=0 ;
@@ -2194,7 +2320,7 @@ class UAL {
       
       
       let adretiq ; 
-      if(main.nbMot[main.Nbinst][1] == 4) {
+      if(main.Nbinst== 4) {
         adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
       let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
       i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
@@ -2261,7 +2387,7 @@ class UAL {
 
     LoadDirectIndexe = function(param1,dataTab,instrTab,cpt) {
       let n=0 ; 
-      if(main.nbMot[main.Nbinst][1] == 3) {
+      if(main.Nbinst == 3) {
        n = instrTab[cpt+1].getVal() ; } else n=0 ;
   
       let m=0 ; 
@@ -2276,7 +2402,7 @@ class UAL {
       }
       
       let adretiq ; 
-      if(main.nbMot[main.Nbinst][1] == 3) {
+      if(main.Nbinst == 3) {
         adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
 
       i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
@@ -2862,15 +2988,30 @@ export var main = {
     console.log("********************** ");
     messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";*/
 
-
-
+    console.log("***  Data Segment *** ");
+    for (let i = 0; i < this.getDataTab().length; i++)
+      this.getDataTab()[i].afficher();
+    console.log("********************** ");
+    console.log("");
+    console.log("***  Code Segment *** ");
+    for (let i = 0; i < main.getinstrTab().length; i++) main.getinstrTab()[i].afficher();
+    console.log("********************** ");
     this.Execute(main.getinstrTab());
+    main.afficherRegistres() ;
+    main.afficherIndicateurs() ;
+    console.log("***  Data Segment *** ");
+    for (let i = 0; i < this.getDataTab().length; i++)
+      this.getDataTab()[i].afficher();
+    console.log("********************** ");
+    console.log(""); 
+
+   /* this.Execute(main.getinstrTab());
 
     main.afficherRegistres() ;
     main.afficherRegistresHTML();
 
     main.afficherIndicateurs() ;
-    main.afficherIndicateursHTML();
+    main.afficherIndicateursHTML(); */
 
     console.log("*** LES DONNEES **** ");
     messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***   LES DONNEES *** </span></p>";
@@ -2886,15 +3027,15 @@ export var main = {
 
   },
 
-  Execute: function (instrTab) {
+   Execute:  function (instrTab) {
     let j = 0 ;
     let i = 0 ;
-    this.Nbinst=0 ; 
-    while (j < instrTab.length) {
+    this.Nbinst=0 ;
+    while (j < instrTab.length ) {
       let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
       this.setRI(instrBin) ;
       this.Nbinst =  main.nbMot[util.chercherDansTableauDeuxDimension(main.nbMot,j)][1] ; 
-     
+  
       switch (this.getRI().getCOP()) {
         case "000000": i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
         j = i ; break ;
@@ -2906,35 +3047,35 @@ export var main = {
         case "000011":
         i = this.ual.opeRation("SUB",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
         j=i ; break ;
-          case "000111":
-            i = this.ual.opeRation("AND",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-          case "000110":
-            i = this.ual.opeRation("OR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-          case "011010":
-            i = this.ual.opeRation("NOT",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-          case "100001":
-            i = this.ual.opeRation("ADDI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-          case "100011":
-            i = this.ual.opeRation("SUBI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-            j=i ; break ;
-            case "001001":
-              i = this.ual.opeRation("SHL",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "001000":
-              i = this.ual.opeRation("SHR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "100100":
-              i = this.ual.opeRation("SBAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "011000":
-              i = this.ual.opeRation("INC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
-              j=i ; break ;
-            case "011001":
-              i = this.ual.opeRation("DEC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        case "000111":
+        i = this.ual.opeRation("AND",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j=i ; break ;
+        case "000110":
+        i = this.ual.opeRation("OR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j=i ; break ;
+        case "011010":
+        i = this.ual.opeRation("NOT",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j=i ; break ;
+        case "100001":
+        i = this.ual.opeRation("ADDI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j=i ; break ;
+        case "100011":
+        i = this.ual.opeRation("SUBI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j=i ; break ;
+        case "001001":
+        i = this.ual.opeRation("SHL",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j=i ; break ;
+        case "001000":
+        i = this.ual.opeRation("SHR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j=i ; break ;
+        case "100100":
+        i = this.ual.opeRation("SBAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j=i ; break ;
+        case "011000":
+        i = this.ual.opeRation("INC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
+        j=i ; break ;
+        case "011001":
+        i = this.ual.opeRation("DEC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
               j=i ; break ;
             case "000101":
               i = this.ual.opeRation("CMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
@@ -2996,6 +3137,25 @@ export var main = {
             case "011110": 
             i = this.ual.opeRation("STOP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
             j=i ; break ;
+            case "011100": 
+            //saisie.style.display = "block";
+          var x = prompt();
+          main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[1].getVal().slice(1))].setVal(x) ;
+         /*   valider.addEventListener("click", function() {
+              // Fermer la boîte de saisie
+              console.log("Nom entré :", nom.value);
+              nom.value ="";
+              // Continuer l'exécution du programme ici
+              console.log("Suite du programme...");
+              main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[1].getVal().slice(1))].setVal(nom.value) ;
+              // Autres instructions...
+              saisie.style.display = "none";
+              b=true;
+            });*/
+          
+        
+            j=j+2;
+             break ;
             default:
               break ; 
 
@@ -3004,6 +3164,8 @@ export var main = {
       //this.Nbinst ++ ; 
     } 
   },
+
+
 
   afficherIndicateurs: function () {
     console.log("I_ZERO: ", this.getIndicateurZero());
@@ -3660,7 +3822,7 @@ class UALsimulation {
       }
       else if((modeAdr == "11") && dest == "0" && format == "1")
       this.LoadDirectIndexe(param1,dataTab,instrTab,cpt) 
-
+      return {p1: cpt+3,p2: delay };
     }
     else if(codeIns== "ADAI" || codeIns== "SBAI" ||  codeIns== "LOADI"){
   mainsimulation.ACC.setContenu(this.operation(codeIns,mainsimulation.ACC.getContenu(),instrTab[cpt+1].getVal())) ; 
@@ -6829,6 +6991,7 @@ function start() {
 
   //}
 }
+
 
 
 
