@@ -393,7 +393,6 @@ Make sure disabled buttons don't get the pointer cursor.
    This can trigger a poorly considered lint error in some tools but is included by design.
 */
 
-
 img,
 svg,
 video,
@@ -2516,15 +2515,260 @@ ion-icon {
   transform: translate(77%, 39.5%);
 }
 
-.saisie {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 9999; /* Assurez-vous que la boîte de saisie est au-dessus des autres éléments */
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+#RIM{
+  position:absolute;
+  width: 200px;
+  height: 45px;
+  bottom: 270px ;
+  left: 884px;
 }
+.formeRim {
+  width: 100%;
+  height: 100%;
+  background:  #a7b6e3;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 3;
+  border-radius: 15px 20px 15px 16px;
+}
+
+.ombreRim {
+  position: absolute;
+  top: -4.5px;
+  left: -6px;
+  bottom: 0px;
+  width: calc(100% + 6px);
+  height: calc(100% + 3px);
+  background-color: rgba(99,108,135,255);
+  border-radius: 13.5px 26px 15px 15px ;
+  z-index:2 ;
+}
+
+.bordureRim {
+  position: absolute;
+  top: -8.5px;
+  left: -10px;
+  width: 106%;
+  height: 125%;
+  border: 5px solid rgb(69, 69, 69);;
+  box-sizing: border-box;
+  border-radius: 18px 27px 17px 23px;
+  z-index:5;
+}
+
+.ombreRim::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 1px;
+  width: 2px;
+  height: calc(100% - 70px);
+  height: calc(100% - 4px);
+  background-color: rgba(17, 19, 24, 0.265);
+  filter: blur(5px);
+  z-index: 5;
+}
+
+.formeRim::before ,
+.formeRim::after {
+  content: '';
+  position: absolute;
+  background-color: rgba(19, 21, 26, 0.783);
+  filter: blur(5px);
+  border-radius: 10px;
+  z-index: 5;
+}
+.formeRim::before {
+  top: 2px;
+  left: 4px;
+  width: 190px;
+  height: 2px ;
+}
+.formeRim::after {
+  top: 4px;
+  left: 2px;
+  width: 2px;
+  height: calc(100% - 7px);
+}
+.formeRam {
+  width: 100%;
+  height: 100%;
+  background:  #a7b6e3;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 3;
+  border-radius: 15px 15px 15px 15px;
+}
+
+.ombreRam {
+  position: absolute;
+  top: -10px;
+  left: 0px;
+  bottom: 0px;
+  width: calc(100% + 2px);
+  height: calc(100% + 8px);
+  background-color: rgba(99,108,135,255);
+  border-radius: 25px 25px 15px 15px ;
+  z-index:2 ;
+}
+
+.bordureRam {
+  position: absolute;
+  top: -13px;
+  left: 0px;
+  width: 101%;
+  height: 135%;
+  border: 5px solid rgb(69, 69, 69);;
+  box-sizing: border-box;
+  border-radius: 25px 25px 15px 15px;
+  z-index:5;
+}
+
+.ombreRam::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 1px;
+  width: 2px;
+  height: calc(100% - 70px);
+  height: calc(100% - 4px);
+  background-color: rgba(17, 19, 24, 0.265);
+  filter: blur(5px);
+  z-index: 5;
+}
+
+.formeRam::after {
+  content: '';
+  position: absolute;
+  background-color: rgba(19, 21, 26, 0.817);
+  filter: blur(4px);
+  border-radius: 10px;
+  z-index: 5;
+  top: 1.4px;
+  left: 9px;
+  width: 95.45%;
+  height: 4.44% ;
+}
+.formeEual {
+  width: 100%;
+  height: 100%;
+  background:  #a7b6e3;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 3;
+  border-radius: 15px 10px 10px 10px;
+}
+
+.ombreEual {
+  position: absolute;
+  top: -6px;
+  left: 3px;
+  bottom: 0px;
+  width: calc(100% + 1px);
+  height: calc(100% + 8px);
+  background-color: rgba(99,108,135,255);
+  border-radius: 15px 15px 10px 10px ;
+  z-index:2 ;
+}
+
+.bordureEual {
+  position: absolute;
+  top: -8px;
+  left: 0px;
+  width: 105%;
+  height: 135%;
+  border: 5px solid rgb(69, 69, 69);;
+  box-sizing: border-box;
+  border-radius: 18px 15px 10px 10px;
+  z-index:5;
+}
+
+.ombreEual::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 1px;
+  width: 2px;
+  height: calc(100% - 70px);
+  height: calc(100% - 4px);
+  background-color: rgba(17, 19, 24, 0.265);
+  filter: blur(3px);
+  z-index: 5;
+}
+
+.formeEual::after {
+  content: '';
+  position: absolute;
+  background-color: rgba(19, 21, 26, 0.817);
+  filter: blur(3px);
+  border-radius: 10px;
+  z-index: 5;
+  top: 1.4px;
+  left: 2.5px;
+  width: 95.45%;
+  height: 4.44% ;
+}
+
+.formeFlag {
+  width: 100%;
+  height: 100%;
+  background:  #a7b6e3;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 3;
+  border-radius: 8px 8px 8px 8px;
+}
+
+.ombreFlag {
+  position: absolute;
+  top: -6px;
+  left: -1px;
+  bottom: 0px;
+  width: calc(100% + 4px);
+  height: calc(100% + 8px);
+  background-color: rgba(99,108,135,255);
+  border-radius: 15px 15px 10px 10px ;
+  z-index:2 ;
+}
+
+.bordureFlag {
+  position: absolute;
+  top: -8px;
+  left: -4px;
+  width: 130%;
+  height: 135%;
+  border: 5px solid rgb(69, 69, 69);;
+  box-sizing: border-box;
+  border-radius: 12.5px 12px 8px 8px;
+  z-index:5;
+}
+
+.formeFlag::after {
+  content: '';
+  position: absolute;
+  background-color: rgba(19, 21, 26, 0.817);
+  filter: blur(3px);
+  border-radius: 10px;
+  z-index: 5;
+  top: 1.4px;
+  left: 1px;
+  width: 95.45%;
+  height: 4.44% ;
+}
+
+
+
+
+/*.ombreFlag::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 1px;
+  width: 2px;
+  height: calc(100% - 4px);
+  background-color: rgba(17, 19, 24, 0.265);
+  filter: blur(3px);
+  z-index: 5;
+}*/
+ 
+
