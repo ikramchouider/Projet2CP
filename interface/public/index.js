@@ -1537,9 +1537,9 @@ var decodage = {
   fonctionDecodage: function() { 
       let tabInstrMnemonique =[] ; 
       
-      console.log();
+      
       for(let i=0;i<main.instrTab.length;i++) {
-              console.log(main.instrTab[i].getVal());
+              //console.log(main.instrTab[i].getVal());
               let motBinaire =util.hexEnBinaire(main.instrTab[i].getVal()) ;
               
               let cop = motBinaire.substring(0, 6); // capable de changer le 5 à 6 etc ..
@@ -1551,7 +1551,8 @@ var decodage = {
     
 
               if(cop[0] == "1" && this.getNom(cop) != "START") {
-                if(ma == "00" && d=="1"){
+            
+                if(ma == "00" && f=="1" && d=="1"){
                  tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
                 i++ ; 
                 } else if(ma == "00" && f=="1" && d=="0"){
@@ -1562,12 +1563,12 @@ var decodage = {
                   else tabInstrMnemonique.push([this.getNom(cop),"[".concat(main.dataTab[indice].getAdr(),"H]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
                 i++ ; 
                 }
-                else if(ma == "01" &&  d=="0") {
+                else if(ma == "01" && f=="1" &&  d=="0") {
                   tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg2),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
-                } else if(ma == "10" &&  d=="0"){
+                } else if(ma == "10" && f=="1" &&  d=="0"){
                   tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+2].getVal()),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
                   i=i+2; 
-                } else if(ma == "11" &&  d=="0") {
+                } else if(ma == "11" && f=="1"  &&  d=="0") {
                   if(main.instrTab[i+1].getVal() == "0000") {  
                     etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;   
                     tabInstrMnemonique.push([this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+3].getVal()).concat("H")]) ;  
@@ -1581,8 +1582,8 @@ var decodage = {
 
               }
               else {
-              if(ma == "00" && f=="0"  ){
-                 if(this.getNom(cop)=="STOP") tabInstrMnemonique.push([this.getNom(cop),"","",""]) ; 
+                 if(ma == "00" && f=="0"  ){
+                 if(this.getNom(cop)=="START" || this.getNom(cop)=="STOP" ) tabInstrMnemonique.push([this.getNom(cop),"","",""]) ; 
                 else tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",this.getNomReg(reg2)]) ; 
               }
               else if(ma == "00" && f=="1" && d=="1"){
@@ -1611,7 +1612,7 @@ var decodage = {
                 }
             else if(ma == "10" &&  d=="0"){
                  tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]"),",",this.getNomReg(reg1)]) ;
-                 i=i++; 
+                 i++; 
                 }
                 else if(ma == "11" &&  d=="1"){
                   let etiq ; 
@@ -1642,6 +1643,9 @@ var decodage = {
       for(let i=0;i<tabInstrMnemonique.length;i++)
       console.log(i+1," ",tabInstrMnemonique[i]);
   },
+
+
+  // Fin fonction decodage 
   getNom: function (str) {
       let ins;
       switch (str) {
