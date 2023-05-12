@@ -27,10 +27,10 @@ const indS = document.getElementById("S");
 const indR = document.getElementById("R");
 const indD = document.getElementById("D");
 
-let saisie = document.querySelector(".saisie");
+//let saisie = document.querySelector(".saisie");
 let valider = document.getElementById("valider");
 let nom = document.querySelector("#nom");
-saisie.style.display = "none";
+//saisie.style.display = "none";
 
 
 //------------------------- Fonction qui traite et detecte les erreurs dans les programmes des utilisateurs --------------------
@@ -813,6 +813,12 @@ instUnSeulOp: function(str) {
      str== 'JNO' || str == 'JO' || str=='JNS' || str=='JS' || str=='JNC' || str=='JC' || str=='JNZ' || str== 'JZ' ) return true ; 
      else return false ; 
 },
+instUnSeulOpHexa: function(str) {
+ 
+  if (str== '000010' || str == '100010' ||str=="010110" || str=="011000" || str=='011001' || str=='011010' || str=='110110' || str=='010111' || str=='000100' || 
+  str=='100100' ) return true ; 
+  else return false ; 
+},
 
 getCodeASCIIHex: function(caractere) {
   return caractere.charCodeAt(0).toString(16);
@@ -891,11 +897,23 @@ OrHex: function(n, m) {
   return hexResult;
 },
 
-NotHex: function(n) {
-const decimalN = parseInt(n, 16);
-const result = ~decimalN;
-const hexResult = result.toString(16).toUpperCase();
-return hexResult;
+NotHex: function (hexString) {
+  // Convertir le nombre hexadécimal en décimal
+  var decimal = parseInt(hexString, 16);
+
+  // Appliquer l'opération NOT logique
+  var result = ~decimal;
+
+  // Masquer le résultat pour obtenir 16 bits
+  result = result & 0xFFFF;
+
+  // Convertir le résultat en binaire avec 16 bits
+  var binaryResult = result.toString(2).padStart(16, '0');
+
+  // Convertir le résultat binaire en hexadécimal avec 4 positions
+  var hexResult = parseInt(binaryResult, 2).toString(16).toUpperCase().padStart(4, '0');
+
+  return hexResult;
 },
 
 decalageLogiqueHexadecDroit: function(hexa, n) {
@@ -953,19 +971,28 @@ hexSigne: function(op) {
 },
 // la fpnction qui supprime tout les zéro a gauche 
 supprimerToutZerosGauche: function(chaine) {
-  // Vérifier si la chaîne est vide
-  if (chaine.length === 0) {
-    return chaine;
-  }
+ 
+    // Vérifier si la chaîne est vide
+    if (chaine.length === 0) {
+      return chaine;
+    }
+    
+    // Trouver l'indice du premier caractère différent de zéro
+    let indice = 0;
+    while (indice < chaine.length && chaine.charAt(indice) === '0') {
+      indice++;
+    }
+    
+    // Retourner la chaîne sans les zéros à gauche
+    let nouvelleChaine = chaine.substring(indice);
+    
+    // Vérifier si la chaîne résultante est vide ou égale à "0"
+    if (nouvelleChaine === "" || nouvelleChaine === "0") {
+      return "0";
+    }
+    
+    return nouvelleChaine;
   
-  // Trouver l'indice du premier caractère différent de zéro
-  let indice = 0;
-  while (indice < chaine.length && chaine.charAt(indice) === '0') {
-    indice++;
-  }
-  
-  // Retourner la chaîne sans les zéros à gauche
-  return chaine.substring(indice);
 },
 /*
 convertToAscii: function(string) {
@@ -1014,7 +1041,6 @@ var codingExecute = {
       new CaseMc(adr,util.binaryToHex(codingExecute.getCode(strLigne)),str)
     );
    
-
     if(strLigne.length >2) {
       if(strLigne[0].toUpperCase() == "SHL" || strLigne[0].toUpperCase() == "SHR" || strLigne[0].toUpperCase() == "ROL" || strLigne[0].toUpperCase() == "ROR" ) {
         adr = util.incrementHex(adr, 1);
@@ -1025,7 +1051,7 @@ var codingExecute = {
     else if (codingExecute.getFormat(strLigne) == "0") {
       for (let j=0; j<instrTab.length;j++) instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) ;
       return instrTab;
-    } else if (strLigne[0][strLigne[0].length - 1].toUpperCase() == "I") {
+    } else if (strLigne[0][strLigne[0].length - 1].toUpperCase() == "I"  ) {
 
       if (codingExecute.modeAdr(strLigne) == "00" && codingExecute.getDest(strLigne) == "0") {
         if (strLigne[1].indexOf("[") != -1) {
@@ -1177,8 +1203,8 @@ return instrTab;
              main.tabEtiq.push(new CaseMc(adr,"",strLigne[1])) ; 
            }
       }
-      else if(this.getFormat(strLigne) == "1" ) {
-        if(strLigne[0][strLigne[0].length - 1].toUpperCase() != "I"){
+      else if(this.getFormat(strLigne) == "1" ||  strLigne[0]=="ORG" ) {
+        if(strLigne[0][strLigne[0].length - 1].toUpperCase() != "I" && strLigne[0]!="ORG"){
         if (strLigne[1].indexOf("[") != -1 ) {
           if(strLigne[1][0] != "[") {
             let regEtDepl = strLigne[1].slice(strLigne[1].indexOf("[")+1, strLigne[1].length - 1) ;
@@ -1213,7 +1239,7 @@ return instrTab;
         for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }  
         return  instrTab ; 
       }}
-      else if(strLigne[1]== "IN"){
+      else if(strLigne[1]== "IN" ){
              adr = util.incrementHex(adr, 1);
            let indice = util.chercherDansTableau(main.dataTab,strLigne[1]) ; 
            instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
@@ -1229,7 +1255,7 @@ return instrTab;
     // return code binaire de l'instruction 
     getCode: function (str) {
       let code; 
-      if(str[0] == "STOP" || str[0] == "IN" ) {
+      if(str[0] == "STOP" || str[0] == "IN" || str[0] == "START" || str[0] == "ORG" ) {
         console.log( this.getCop(str[0]));
         code = this.getCop(str[0]).concat("0000000000");
       }
@@ -1401,6 +1427,7 @@ return instrTab;
         case "ORI": ins = "100110"; break;
         case "ANDI": ins = "100111"; break;
         case "LOADI": ins = "110110"; break;
+        case "ORG": ins = "101010"; break;
         default: ins= "-1"; break;
       }
       return ins;
@@ -1536,105 +1563,166 @@ return instrTab;
 var decodage = {
   fonctionDecodage: function() { 
       let tabInstrMnemonique =[] ; 
+       let i=0 ; 
       
-      
-      for(let i=0;i<main.instrTab.length;i++) {
-              //console.log(main.instrTab[i].getVal());
+      while(i<main.instrTab.length){
+              console.log(main.instrTab[i].getVal());
               let motBinaire =util.hexEnBinaire(main.instrTab[i].getVal()) ;
-              
+              let ind=0 ; 
               let cop = motBinaire.substring(0, 6); // capable de changer le 5 à 6 etc ..
               let ma = motBinaire.substring(6, 8);
               let f = motBinaire.substring(8, 9);
               let d = motBinaire.substring(9, 10);
               let reg1 = motBinaire.substring(10, 13);
               let reg2 = motBinaire.substring(13, 16);
-    
-
-              if(cop[0] == "1" && this.getNom(cop) != "START") {
+              let Etiqt="" ; 
+              if(main.instrTab[i].getEtiq() != ""){
+              Etiqt = main.instrTab[i].getEtiq().concat(":") ; }
             
-                if(ma == "00" && f=="1" && d=="1"){
-                 tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
-                i++ ; 
+             if(cop == "011111" || cop == "101001"  ) { 
+              i=i+2 ; 
+             }
+              else if(this.getNom(cop)[0] == "J"){
+               let indice=util.chercherAdr(main.instrTab,main.instrTab[i+1].getVal().slice(1)) ; 
+               console.log("   ",main.instrTab,main.instrTab[i+1].getVal());
+                tabInstrMnemonique.push([this.getNom(cop),main.instrTab[indice].getEtiq(),"",""]) ; 
+                i=i+2; 
+              } else if((cop[0] == "1"  && this.getNom(cop) != "START" && cop != "101010" ) || (cop=="001000" || cop=="001001" || cop=="001010" || cop=="001011" )) {
+                if(util.instUnSeulOpHexa(cop)){
+                    if(ma == "00" && f=="1" ){
+                      tabInstrMnemonique.push([Etiqt,this.getNom(cop),util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H"),"",""]) ;
+                    }
+                    i=i+2; 
+                }
+                else if(ma == "00" && f=="1" && d=="1"){
+                  if(cop=="001000" || cop=="001001" || cop=="001010" || cop=="001011" )
+                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal())]) ;
+                  else tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                i=i+2;  
                 } else if(ma == "00" && f=="1" && d=="0"){
-                  i++;
-                  let indice=util.chercherAdr(main.dataTab,main.instrTab[i].getVal().slice(1)) ; 
+                 
+                  let indice=util.chercherAdr(main.dataTab,main.instrTab[i+1].getVal().slice(1)) ;
+                  if(indice == main.dataTab.length) main.dataTab.push(new CaseMc("0000",main.dataTab[indice].getAdr(),"")) ; 
                   if(main.dataTab[indice].getEtiq() != ""){
-                  tabInstrMnemonique.push([this.getNom(cop),main.dataTab[indice].getEtiq(),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;}
-                  else tabInstrMnemonique.push([this.getNom(cop),"[".concat(main.dataTab[indice].getAdr(),"H]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
-                i++ ; 
+                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),main.dataTab[indice].getEtiq(),",",util.supprimerToutZerosGauche(main.instrTab[i+2].getVal()).concat("H")]) ;}
+                  else tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(util.remplirZero(main.instrTab[i+1].getVal().slice(1)),"H]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                  i=i+3;
                 }
                 else if(ma == "01" && f=="1" &&  d=="0") {
-                  tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg2),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(this.getNomReg(reg1),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                  i++ ; 
                 } else if(ma == "10" && f=="1" &&  d=="0"){
-                  tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+2].getVal()),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
-                  i=i+2; 
+                  tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg1),"+",util.supprimerToutZerosGauche(main.instrTab[i+2].getVal()),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                  i=i+3; 
                 } else if(ma == "11" && f=="1"  &&  d=="0") {
                   if(main.instrTab[i+1].getVal() == "0000") {  
-                    etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;   
-                    tabInstrMnemonique.push([this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+3].getVal()).concat("H")]) ;  
+                   let  etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;   
+                    tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg1),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+3].getVal()).concat("H")]) ;  
                     }
                     else{
-                       etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ; 
-                       tabInstrMnemonique.push([this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+3].getVal()),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
-                    } i = i+3 ; 
+                       let etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;  
+                       tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg1),"+",parseInt(main.instrTab[i+1].getVal(), 16),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+3].getVal()).concat("H")]) ;
+                    } i = i+4 ; 
                 }
                     
 
               }
               else {
-                 if(ma == "00" && f=="0"  ){
-                 if(this.getNom(cop)=="START" || this.getNom(cop)=="STOP" ) tabInstrMnemonique.push([this.getNom(cop),"","",""]) ; 
-                else tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",this.getNomReg(reg2)]) ; 
+                
+                if(util.instUnSeulOpHexa(cop)){
+                  console.log("cop",this.getNom(cop));
+                  this.getNom(cop) ;
+                  if(ma == "00" && f=="0" ){
+                    tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),"",""]) ; 
+                    i++ ; 
+                  }else if(ma == "00" && f=="1") {
+                  
+                    let indice=util.chercherAdr(main.dataTab,main.instrTab[i+1].getVal().slice(1)) ; 
+                    
+                    if(indice == main.dataTab.length) main.dataTab.push(new CaseMc("0000",main.dataTab[indice].getAdr(),"")) ; 
+                    if(main.dataTab[indice].getEtiq() != ""){
+                    tabInstrMnemonique.push([Etiqt,this.getNom(cop),main.dataTab[indice].getEtiq()]) ; 
+                    }
+                    else {tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(main.instrTab[i+1].getVal().slice(1),"H]"),"",""]) ;
+                  } i=i+2;
+                  }else if(ma == "01" && f=="0" ) {
+                    tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(this.getNomReg(reg1),"]"),"",""]) ; 
+                    i++ ; 
+                  }else if(ma == "11" && f=="1") {
+                    let etiq ; 
+                    if(main.instrTab[i+1].getVal() == "0000") {   
+                    etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;   
+                    tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg1),"]"),"",""]) ;  
+                    i=i+3;}
+                    else{
+                       etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;      
+                       tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg1),"+",parseInt(main.instrTab[i+1].getVal(), 16),"]"),"",""]) ;
+                    i=i+3;}
+                  }
+              }
+              else if(ma == "00" && f=="0"  ){
+                if(cop == "101010") { tabInstrMnemonique.push([this.getNom(cop),util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H"),"",""]) ; i=i+2;  }
+                else  if(this.getNom(cop)=="START" || this.getNom(cop)=="STOP"  ){ tabInstrMnemonique.push([Etiqt,this.getNom(cop),"","",""]) ; i++ }
+                else{ tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",this.getNomReg(reg2)]) ; 
+              i++; }
               }
               else if(ma == "00" && f=="1" && d=="1"){
-                  i++ ; 
-                  let indice=util.chercherAdr(main.dataTab,main.instrTab[i].getVal().slice(1)) ; 
+                 
+                  let indice=util.chercherAdr(main.dataTab,main.instrTab[i+1].getVal().slice(1)) ; 
+                  if(indice == main.dataTab.length) main.dataTab.push(new CaseMc("0000",main.dataTab[indice].getAdr(),"")) ; 
                   if(main.dataTab[indice].getEtiq() != ""){
-                  tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",main.dataTab[indice].getEtiq()]) ;}
-                  else tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",","[".concat(main.dataTab[indice].getAdr(),"H]")]) ;
-              }
+                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",main.dataTab[indice].getEtiq()]) ;}  
+                  else tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",","[".concat(main.instrTab[i+1].getVal().slice(1),"H]")]) ;
+                  i=i+2 ; 
+                }
               else if (ma == "00" && f=="1" && d=="0"){
-                  i++ ; 
-                  let indice=util.chercherAdr(main.dataTab,main.instrTab[i].getVal().slice(1)) ; 
+                  let indice=util.chercherAdr(main.dataTab,main.instrTab[i+1].getVal().slice(1)) ; 
+                  if(indice == main.dataTab.length) main.dataTab.push(new CaseMc("0000",main.dataTab[indice].getAdr(),"")) ; 
                   if(main.dataTab[indice].getEtiq() != ""){
-                  tabInstrMnemonique.push([this.getNom(cop),main.dataTab[indice].getEtiq(),",",this.getNomReg(reg1)]) ;}
-                  else tabInstrMnemonique.push([this.getNom(cop),"[".concat(main.dataTab[indice].getAdr(),"H]"),",",this.getNomReg(reg1),]) ;
-              }
+                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),main.dataTab[indice].getEtiq(),",",this.getNomReg(reg1)]) ;}
+                  else tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(main.instrTab[i+1].getVal().slice(1),"H]"),",",this.getNomReg(reg1),]) ;
+                  i=i+2;
+                }
               else if(ma == "01" &&  d=="1") {
-                  tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",","[".concat(this.getNomReg(reg2),"]")]) ; 
-              }
+                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",","[".concat(this.getNomReg(reg2),"]")]) ; 
+                   i++ ; 
+                }
               else if(ma == "01" &&  d=="0"){
-                  tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg2),"]"),",",this.getNomReg(reg1)]) ; 
-              }
+                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(this.getNomReg(reg2),"]"),",",this.getNomReg(reg1)]) ; 
+                  i++ ;
+                }
               else if(ma == "10" &&  d=="1"){
-                   tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",","[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]")]) ;
+                   tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",","[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]")]) ;
                   i=i+2;
                 }
             else if(ma == "10" &&  d=="0"){
-                 tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]"),",",this.getNomReg(reg1)]) ;
-                 i++; 
+                 tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]"),",",this.getNomReg(reg1)]) ;
+                 i=i+2; 
                 }
                 else if(ma == "11" &&  d=="1"){
                   let etiq ; 
                   if(main.instrTab[i+1].getVal() == "0000") {
                   etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+1].getVal().slice(1))].getEtiq(); 
-                  tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",etiq,"[".concat(this.getNomReg(reg2),"]")]) ;
-                   i=i+2;} 
-                  else { etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ; 
-                    tabInstrMnemonique.push([this.getNom(cop),this.getNomReg(reg1),",",etiq,"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]")]) ;
-                  i=i+2;}
+                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",etiq,"[".concat(this.getNomReg(reg2),"]")]) ;
+                   i=i+3;} 
+                  else { etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;                     
+                    tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",etiq,"[".concat(this.getNomReg(reg2),"+",parseInt(main.instrTab[i+1].getVal(), 16),"]")]) ;
+                  i=i+3;}
 
                 }
             else if(ma == "11" &&  d=="0"){
                   let etiq ; 
+                  let indice=util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1)) ;
+                  if(indice == main.dataTab.length) main.dataTab.push(new CaseMc("0000",main.dataTab[indice].getAdr(),"")) ; 
                   if(main.instrTab[i+1].getVal() == "0000") {  
-                  etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;   
-                  tabInstrMnemonique.push([this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"]"),",",this.getNomReg(reg1)]) ;  
-                  i=i+2;}
+                  
+                  etiq= main.dataTab[indice].getEtiq() ;   
+                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"]"),",",this.getNomReg(reg1)]) ;  
+                  i=i+3;}
                   else{
-                     etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ; 
-                     tabInstrMnemonique.push([this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]"),",",this.getNomReg(reg1)]) ;
-                  i=i+2;}
+                     etiq= main.dataTab[indice].getEtiq() ;               
+                     tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"+",parseInt(main.instrTab[i+1].getVal()),"]"),",",this.getNomReg(reg1)]) ;
+                  i=i+3;}
                 }
               
               }   
@@ -1690,6 +1778,7 @@ var decodage = {
         case "100110": ins = "ORI"; break;
         case "100111": ins = "ANDI"; break;
         case "110110": ins = "LOADI"; break;
+        case "101010": ins = "ORG"; break;
         default: ins= "-1"; break;
       }
       return ins;
@@ -2449,16 +2538,16 @@ class UAL {
       switch (param1) {
         case "001":
           i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
-          if(i==dataTab.length) {dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
+          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
            m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
          break;
         case "110": 
         i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
-        if(i==dataTab.length) {dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
         m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
         break ; 
         case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
-        if(i==dataTab.length) {dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
         m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m);  break ; 
       } 
 
@@ -2466,8 +2555,9 @@ class UAL {
 
     LoadDirectIndexe = function(param1,dataTab,instrTab,cpt) {
       let n=0 ; 
+     
       if(main.Nbinst == 3) {
-       n = instrTab[cpt+1].getVal() ; } else n=0 ;
+       n = main.instrTab[cpt+1].getVal() ; } else n=0 ;
   
       let m=0 ; 
       let i=0 ; 
@@ -2480,15 +2570,18 @@ class UAL {
           main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
       }
       
-      let adretiq ; 
+      let adretiq=0 ; 
       if(main.Nbinst == 3) {
         adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
-
+       
       i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
       
       i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16) ;   
+   
       m=dataTab[i].getVal() ;  
       main.ACC.setContenu(m);
+
+      
     }
     //  decalage / Rotation Logique
     decalageRotationLogique= function(code,param1,instrTab,cpt) {
@@ -2780,7 +2873,7 @@ class UAL {
    store = function(cpt) {
     let i = main.getinstrTab()[cpt+1].getVal() ; 
     i= util.chercherAdr(main.getDataTab(),i.slice(1)) ; 
-    if(i==dataTab.length) {dataTab.push(new CaseMc(i,"0000",""));}
+    if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(i,"0000",""));}
     main.getDataTab()[i].setVal(main.ACC.getContenu())  ; 
    } 
 
@@ -3008,6 +3101,10 @@ export var main = {
         } 
         co = adr;
         this.setCO(co);
+        let tab = codingExecute.coderInst(ligne_str, co, this.getDataTab());
+          main.nbMot.push([main.instrTab.length,tab.length]) ;
+          main.instrTab=main.getinstrTab().concat(tab) ;
+          co = util.incrementHex(co, tab.length);
       } else if (ligne_str[0] == "START") {
       }else if (ligne_str[0] == "SETZ") {
           this.getDataTab().push(
@@ -3026,6 +3123,7 @@ export var main = {
             );
             indice++;
           }
+        
         }
        else if (ligne_str[0] == "SET") {
         this.getDataTab().push(
@@ -3036,6 +3134,7 @@ export var main = {
           )
         );
         indice++;
+       
       } else {
         let tab = codingExecute.coderInst(ligne_str, co, this.getDataTab());
         main.nbMot.push([main.instrTab.length,tab.length]) ; //+co
@@ -3218,10 +3317,18 @@ export var main = {
             case "011110": 
             i = this.ual.opeRation("STOP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
             j=i ; break ;
+            case "101000": //START
+            j++ ; break ;
+            case "101010": //ORG
+            j=j+2 ; break ;
+            case "011111": //SET
+            j=j+2 ; break ;
+            case "101001": //SETZ
+            j=j+2 ; break ;
             case "011100": 
             //saisie.style.display = "block";
           var x = prompt();
-          main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[1].getVal().slice(1))].setVal(x) ;
+          main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[j+1].getVal().slice(1))].setVal(x) ;
          /*   valider.addEventListener("click", function() {
               // Fermer la boîte de saisie
               console.log("Nom entré :", nom.value);
