@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="playquizes.css">
+    <link rel="icon" href="./img/logo.png">
+    <link href="https://fonts.googleapis.com/css2family=Actor&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <title>QUIZEZ</title>
+</head>
+<body >        
+    <main>
+     
+         <div class="welcom">
+             
+               
+         </div>
+    <!-- start du quiz -->
+    <div class="cat1-container">
+  
+
+      <h2 id="question">  Comment est appelée l'unité en charge de synchronisation des commmandes ? </h2>
+     
+     <div class="choice-container">
+        <p class="choice-prefix"> 1 </p>
+        <p class="choice-text" data-number="1">  UAL </p>
+     </div>
+     <div class="choice-container">
+        <p class="choice-prefix"> 2 </p>
+        <p class="choice-text" data-number="2">  Unité de commande  </p>
+     </div>
+     <div class="choice-container">
+        <p class="choice-prefix"> 3 </p>
+        <p class="choice-text" data-number="3">  CPU </p>
+     </div>
+     <div class="choice-container">
+        <p class="choice-prefix"> 4 </p>
+        <p class="choice-text" data-number="4">  MC </p>
+     </div>
+     <div id="hud">
+      <div id="hud-item">
+         <p class="hud-prefix" id="progresstext">Question </p>
+       <div id="progressbar"> 
+         <div id="progress-bar-fall"></div>
+       </div>
+      </div>
+      <div id="hud-item">
+         <p class="hud-prefix">Score  </p>
+         <h1 class="hud-main-text" id="score">0/7</h1>
+      </div>
+    </div>
+     <a class="btttn" id="retourquiz" href="playquizes.html" > Retour </a>
+
+   </div> 
+    </main>   
+    <script src="Cat4.js"></script>
+</body>
+</html>
