@@ -7553,6 +7553,32 @@ function afficherTexteSurElement(Element,string) {
         Element.parentNode.insertBefore(textContainer, Element); 
         break;
 
+        case caseMemoire: 
+        previousTextContainer = document.querySelector(".textContainerCaseMemoire");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerCaseMemoire";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case caseAdresse: 
+        previousTextContainer = document.querySelector(".textContainerCaseAdresse");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerCaseAdresse";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
 
     }
 

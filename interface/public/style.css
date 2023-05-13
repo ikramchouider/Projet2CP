@@ -3284,4 +3284,39 @@ ion-icon {
   font-family: 'Impact', sans-serif;
   z-index: 99;
 }
+
+.textContainerCaseMemoire {
+position: absolute;
+  width: 200px;
+  height: 30px;
+  left: 35px;
+  color: rgb(255, 255, 255);
+  text-align: center;
+  margin: auto;
+  top: 50%;
+  bottom: 50%;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerCaseAdresse {
+    position: absolute;
+    width: 50px;
+    left: 010px;
+    right: 5px;
+    text-align: center;
+    margin: auto;
+    top: 50%;
+    bottom: 50%;
+    text-align: center;
+    margin: auto;
+    top: 50%;
+    bottom: 50%;
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    font-family: 'Impact', sans-serif;
+    z-index: 99;
+  }
+
 /* ----*/ 
