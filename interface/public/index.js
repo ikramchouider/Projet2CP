@@ -21,6 +21,7 @@ const dataC4el=  document.getElementById('dataC4');
 const dataC5el=  document.getElementById('dataC5');
 const dataC6el=  document.getElementById('dataC6');
 const dataDATAel=  document.getElementById('dataDATA');
+let dataincco = document.getElementById("dataincco");
 // les indicateurs 
 const indZ = document.getElementById("Z");
 const indS = document.getElementById("S");
@@ -4029,8 +4030,7 @@ return instrTab;
 
 }
 
-
-class UALsimulation {
+class UALsimul {
   #eUal1;
   #eUal2;
   constructor(eUal1, eUal2) {
@@ -4039,38 +4039,41 @@ class UALsimulation {
   }
   
   opeRation = function (codeIns,dataTab,indicateurTab,instrTab,modeAdr,cpt, dest, format, param1, param2,delay) {
+ 
     //addition registre registre et le resultat sera dans reg1 000000 00 0 1 REG1   REG2
     let somme = 0;
     let n = 0;
     let m = 0;
     let i=0 ; 
-    let tab=[];
     let d=0;
+    if(codeIns == "STOP") {return {p1: cpt+1,p2: delay}} ; 
     if(codeIns[0]== "J") {
+
       return {p1: this.jmp(codeIns,indicateurTab,cpt,delay),p2: delay}  ; 
     }
     else if(codeIns == "STORE") {
       this.store(cpt) ; 
+      return {p1:cpt +2,p2:delay} ;
      }
     else if(codeIns== "CMP") {
       if ((modeAdr == "00") && dest == "1" && format == "0") {
-        delay+=3000;
-        d= this.cmpDirect(codeIns,param1,param2,delay); 
-       delay=d+3000;
-        return {p1: cpt+1 ,p2: delay};}
+          delay+=3000;
+          d= this.cmpDirect(codeIns,param1,param2,delay); 
+         delay=d+3000;
+          return {p1: cpt+1 ,p2: delay};}
       if ((modeAdr == "01") && dest == "1" && format == "0") {
-        delay+=3000;
-         d =this.cmpIndiret(codeIns,param1,param2); 
-        delay = d+3000;
-        return {p1: cpt+1,p2: delay };}
+          delay+=3000;
+          d =this.cmpIndiret(codeIns,param1,param2); 
+         delay = d+3000;
+         return {p1: cpt+1,p2: delay };}
 
     }
     else if(codeIns== "CMPI") {
       if ((modeAdr == "00") && dest == "1" && format == "1") {
-        delay+=3000;
-         d= this.cmpImm(codeIns,param1,instrTab,cpt); 
-        delay=d+3000;
-        return {p1: cpt+2,p2: delay };}
+          delay+=3000;
+          d= this.cmpImm(codeIns,param1,instrTab,cpt); 
+         delay=d+3000;
+         return {p1: cpt+2,p2: delay };}
     }
     else if(codeIns== "SHR" || codeIns== "SHL" || codeIns== "ROR" || codeIns== "ROL" ) {
       delay+=3000;
@@ -4080,62 +4083,67 @@ class UALsimulation {
     }
     else if(codeIns== "ADA" || codeIns== "SBA" || codeIns== "LOAD") {
       if((modeAdr == "00") && dest == "1" && format == "0" ){
-        delay+=3000;
-        let d =this.immediaAccDirectCourt(codeIns,param1) ; 
-        delay=d+3000;
-        return {p1: cpt+1,p2: delay };
+          delay+=3000;
+          let d =this.immediaAccDirectCourt(codeIns,param1) ; 
+          delay=d+3000;
+          return {p1: cpt+1,p2: delay };
+    
   
       }
       else if((modeAdr == "00") && dest == "0" && format == "1"){
-        this.immediaAccDirectLong(codeIns,dataTab,instrTab,cpt) ; 
-        return {p1: cpt+2,p2: delay };
+          this.immediaAccDirectLong(codeIns,dataTab,instrTab,cpt) ; 
+          return {p1: cpt+2,p2: delay };
       }else if((modeAdr == "01") && dest == "0" && format == "0"){
-        this.LoadinDirectCourt(param1) ; 
-        return {p1: cpt+2,p2: delay };
+          this.LoadinDirectCourt(param1) ; 
+          return {p1: cpt+2,p2: delay };
       }
-      else if((modeAdr == "11") && dest == "0" && format == "1")
+      else if((modeAdr == "11") && dest == "0" && format == "1") {
       this.LoadDirectIndexe(param1,dataTab,instrTab,cpt) 
-      return {p1: cpt+3,p2: delay };
+      return cpt +main.Nbinst;}
     }
     else if(codeIns== "ADAI" || codeIns== "SBAI" ||  codeIns== "LOADI"){
-  mainsimulation.ACC.setContenu(this.operation(codeIns,mainsimulation.ACC.getContenu(),instrTab[cpt+1].getVal())) ; 
-
+  mainsimul.ACC.setContenu(this.operation(codeIns,mainsimul.ACC.getContenu(),instrTab[cpt+1].getVal())) ; 
+      return cpt +2 ;
     }
     else if(codeIns[codeIns.length-1] == "I"  || codeIns=="INC" || codeIns=="DEC" ){
     if((modeAdr == "00") && dest == "1"  ){
       if(codeIns=="INC" || codeIns=="DEC") {
-        this.immediaDirectLongDest(codeIns,param1,instrTab,cpt) ; 
-        return {p1: cpt+1,p2: delay };}
+          this.immediaDirectLongDest(codeIns,param1,instrTab,cpt) ; 
+          return {p1: cpt+1,p2: delay };}
       else{ 
-        this.immediaDirectLongDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt)
-        return {p1: cpt+2,p2: delay };}
+          this.immediaDirectLongDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt)
+          return {p1: cpt+2,p2: delay };}
 
     }
     else if((modeAdr == "00") && dest == "0" ){
       this.immediaDirectLongNonDest(codeIns.slice(0,codeIns.length-1),instrTab,cpt)
-      return {p1: cpt+3,p2: delay }; 
+      return cpt+3 ; 
     }
     else if((modeAdr == "01") && dest == "0" ) {
       this.immediaInDirectLongNonDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt) ; 
-      return {p1: cpt+2,p2: delay };
+    return {p1: cpt+2,p2: delay };
     }
     else if((modeAdr == "10") && dest == "0" ) {
       this.immediaBaseIndexeLongNonDest(codeIns.slice(0,codeIns.length-1),param1,instrTab,cpt) ; 
       return {p1: cpt+3,p2: delay }; 
     }
+    else if((modeAdr == "11") && dest == "0" ) {
+      this.immDirectIndexeLongNonDest(codeIns,param1,dataTab,instrTab,cpt) 
+      return cpt+main.Nbinst ; 
+    }
     }
     else if ((modeAdr == "00") && dest == "1" && format == "0") {
       delay+=3000;
-       d=  this.directCourtDist(codeIns,param1,param2,delay) ; 
-      delay =  d+3000;          
-      return { p1: cpt+1 ,p2: delay};
+     d=  this.directCourtDist(codeIns,param1,param2,delay) ; 
+    delay =  d+3000;          
+    return { p1: cpt+1 ,p2: delay};
 
     } 
     else if (modeAdr == "00" && format == "1") {
       delay+=3000;
-            d = this.directLong(codeIns,param1,param2,dataTab,instrTab,cpt,dest,delay) ; 
-           delay =  d+3000; 
-           return {p1: cpt+2,p2: delay };
+      d = this.directLong(codeIns,param1,param2,dataTab,instrTab,cpt,dest,delay) ; 
+     delay =  d+3000; 
+     return {p1: cpt+2,p2: delay };
 
     }
      else if(modeAdr == "01" && format == "0") { 
@@ -4158,31 +4166,31 @@ class UALsimulation {
    return {p1: cpt+2,p2: delay };
   } else if(modeAdr == "11" && format == "1") {
     if(dest == "1") {
-      this.directIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
+      this.directIndexeLongDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
    }else{
     this.directIndexeLongNonDest(codeIns,param1,param2,dataTab,instrTab,cpt) ; 
    }
-   return {p1: cpt+3,p2: delay };
+   return {p1: cpt+mainsimul.Nbinst,p2: delay };
     
   }
-          
+
   }; 
 
   
   // Mode direct format court distination =1 
-  directCourtDist = function(code,param1,param2,delay) {     // F=0 , D=1(reg 1 destination)
+  directCourtDist = function(code,param1,param2,delay) {
     let n = 0;
     let m = 0;
     let i=0 ; 
     switch (param2) {
-        case "000":  m = mainsimulation.AX.getContenu(); break;
-        case "001":  m = mainsimulation.BX.getContenu(); break;
-        case "010":  m = mainsimulation.CX.getContenu(); break;
-        case "011":  m = mainsimulation.DX.getContenu(); break;
-        case "100":  m = mainsimulation.EX.getContenu(); break;
-        case "101":  m = mainsimulation.FX.getContenu(); break;
-        case "110":  m = mainsimulation.SI.getContenu(); break;
-        case "111":  m = mainsimulation.DI.getContenu(); break;
+        case "000":  m = mainsimul.AX.getContenu(); break;
+        case "001":  m = mainsimul.BX.getContenu(); break;
+        case "010":  m = mainsimul.CX.getContenu(); break;
+        case "011":  m = mainsimul.DX.getContenu(); break;
+        case "100":  m = mainsimul.EX.getContenu(); break;
+        case "101":  m = mainsimul.FX.getContenu(); break;
+        case "110":  m = mainsimul.SI.getContenu(); break;
+        case "111": m = mainsimul.DI.getContenu();  break;
       }
       selectElement(dataREG1el,delay,'L');
       delay+=3000; 
@@ -4194,18 +4202,18 @@ class UALsimulation {
       delay+=3000;
       switch (param1) {
         case "000":
-          n = mainsimulation.AX.getContenu();
+          n = mainsimul.AX.getContenu();
           selectElement(ax,delay,n);
           delay+=2000;
-          selectElement(dataREGel,delay,0);
+          selectElement(dataREGel,delay,'L');
           delay+=3000;
-          selectElement(dataEUAL2el,delay,0);
+          selectElement(dataEUAL2el,delay,'L');
           delay+=3000;
           selectElement(ual2,delay,n);
           delay+=3000;
           selectElement(acc,delay,n);          //chargement vers l'acc
-          mainsimulation.ACC.setContenu(n);
-          this.mettreAjourIndicateur(mainsimulation.ACC.getContenu()) ;
+          mainsimul.ACC.setContenu(n);
+          this.mettreAjourIndicateur(mainsimul.ACC.getContenu()) ;
           selectElement(dataREG2el,delay,0);
           delay+=3000;
           selectElement(dataC1el,delay,0);
@@ -4215,14 +4223,14 @@ class UALsimulation {
           selectElement(dataC3el,delay,0);
           delay+=3000;
           switch (param2) {             // on récoupère le contenu de deuxième registre
-              case "000":  m = mainsimulation.AX.getContenu(); selectElement(ax,delay,m); break;
-              case "001":  m = mainsimulation.BX.getContenu();selectElement(bx,delay,m); break;
-              case "010":  m = mainsimulation.CX.getContenu();selectElement(cx,delay,m); break;
-              case "011":  m = mainsimulation.DX.getContenu(); selectElement(dx,delay,m);break;
-              case "100":  m = mainsimulation.EX.getContenu();selectElement(ex,delay,m); break;
-              case "101":  m = mainsimulation.FX.getContenu();selectElement(fx,delay,m); break;
-              case "110":  m = mainsimulation.SI.getContenu();selectElement(si,delay,m); break;
-              case "111":  m = mainsimulation.DI.getContenu(); selectElement(di,delay,m); break;
+              case "000":  m = mainsimul.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = mainsimul.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = mainsimul.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = mainsimul.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = mainsimul.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = mainsimul.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = mainsimul.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = mainsimul.DI.getContenu(); selectElement(di,delay,m); break;
             }
             selectElement(dataREGel,delay,0);
             delay+=3000;
@@ -4239,9 +4247,9 @@ class UALsimulation {
             selectElement(dataEUAL1el,delay,0);
             delay+=3000;
             selectElement(ual1,delay,m);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
+          mainsimul.ACC.setContenu(this.operation(code,n,m));
         //  selectElement(instname,delay,code);
-          selectElement(acc,delay,mainsimulation.ACC.getContenu());
+          selectElement(acc,delay,mainsimul.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -4249,11 +4257,11 @@ class UALsimulation {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(ax,delay,mainsimulation.ACC.getContenu());
-          mainsimulation.AX.setContenu(mainsimulation.ACC.getContenu());
+          selectElement(ax,delay,mainsimul.ACC.getContenu());
+          mainsimul.AX.setContenu(mainsimul.ACC.getContenu());
           break;
         case "001":
-          n = mainsimulation.BX.getContenu();
+          n = mainsimul.BX.getContenu();
           selectElement(bx,delay,n);
           delay+=2000;
           selectElement(dataREGel,delay,0);
@@ -4263,8 +4271,8 @@ class UALsimulation {
           selectElement(ual2,delay,n);
           delay+=3000;
           selectElement(acc,delay,n);          //chargement vers l'acc
-          mainsimulation.ACC.setContenu(n);
-          this.mettreAjourIndicateur(mainsimulation.ACC.getContenu()) ;
+          mainsimul.ACC.setContenu(n);
+          this.mettreAjourIndicateur(mainsimul.ACC.getContenu()) ;
           selectElement(dataREG2el,delay,0);
           delay+=3000;
           selectElement(dataC1el,delay,0);
@@ -4274,14 +4282,14 @@ class UALsimulation {
           selectElement(dataC3el,delay,0);
           delay+=3000;
           switch (param2) {             // on récoupère le contenu de deuxième registre
-              case "000":  m = mainsimulation.AX.getContenu(); selectElement(ax,delay,m); break;
-              case "001":  m = mainsimulation.BX.getContenu();selectElement(bx,delay,m); break;
-              case "010":  m = mainsimulation.CX.getContenu();selectElement(cx,delay,m); break;
-              case "011":  m = mainsimulation.DX.getContenu(); selectElement(dx,delay,m);break;
-              case "100":  m = mainsimulation.EX.getContenu();selectElement(ex,delay,m); break;
-              case "101":  m = mainsimulation.FX.getContenu();selectElement(fx,delay,m); break;
-              case "110":  m = mainsimulation.SI.getContenu();selectElement(si,delay,m); break;
-              case "111":  m = mainsimulation.DI.getContenu(); selectElement(di,delay,m); break;
+              case "000":  m = mainsimul.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = mainsimul.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = mainsimul.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = mainsimul.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = mainsimul.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = mainsimul.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = mainsimul.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = mainsimul.DI.getContenu(); selectElement(di,delay,m); break;
             }
             selectElement(dataREGel,delay,0);
             delay+=3000;
@@ -4298,9 +4306,9 @@ class UALsimulation {
             selectElement(dataEUAL1el,delay,0);
             delay+=3000;
             selectElement(ual1,delay,m);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
+          mainsimul.ACC.setContenu(this.operation(code,n,m));
         //  selectElement(instname,delay,code);
-          selectElement(acc,delay,mainsimulation.ACC.getContenu());
+          selectElement(acc,delay,mainsimul.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -4308,11 +4316,11 @@ class UALsimulation {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(bx,delay,mainsimulation.ACC.getContenu());
-          mainsimulation.BX.setContenu(mainsimulation.ACC.getContenu());
+          selectElement(bx,delay,mainsimul.ACC.getContenu());
+          mainsimul.BX.setContenu(mainsimul.ACC.getContenu());
           break;
         case "010":
-          n = mainsimulation.CX.getContenu();
+          n = mainsimul.CX.getContenu();
           selectElement(cx,delay,n);
           delay+=2000;
           selectElement(dataREGel,delay,0);
@@ -4322,8 +4330,8 @@ class UALsimulation {
           selectElement(ual2,delay,n);
           delay+=3000;
           selectElement(acc,delay,n);          //chargement vers l'acc
-          mainsimulation.ACC.setContenu(n);
-          this.mettreAjourIndicateur(mainsimulation.ACC.getContenu()) ;
+          mainsimul.ACC.setContenu(n);
+          this.mettreAjourIndicateur(mainsimul.ACC.getContenu()) ;
           selectElement(dataREG2el,delay,0);
           delay+=3000;
           selectElement(dataC1el,delay,0);
@@ -4333,14 +4341,14 @@ class UALsimulation {
           selectElement(dataC3el,delay,0);
           delay+=3000;
           switch (param2) {             // on récoupère le contenu de deuxième registre
-              case "000":  m = mainsimulation.AX.getContenu(); selectElement(ax,delay,m); break;
-              case "001":  m = mainsimulation.BX.getContenu();selectElement(bx,delay,m); break;
-              case "010":  m = mainsimulation.CX.getContenu();selectElement(cx,delay,m); break;
-              case "011":  m = mainsimulation.DX.getContenu(); selectElement(dx,delay,m);break;
-              case "100":  m = mainsimulation.EX.getContenu();selectElement(ex,delay,m); break;
-              case "101":  m = mainsimulation.FX.getContenu();selectElement(fx,delay,m); break;
-              case "110":  m = mainsimulation.SI.getContenu();selectElement(si,delay,m); break;
-              case "111":  m = mainsimulation.DI.getContenu(); selectElement(di,delay,m); break;
+              case "000":  m = mainsimul.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = mainsimul.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = mainsimul.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = mainsimul.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = mainsimul.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = mainsimul.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = mainsimul.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = mainsimul.DI.getContenu(); selectElement(di,delay,m); break;
             }
             selectElement(dataREGel,delay,0);
             delay+=3000;
@@ -4357,9 +4365,9 @@ class UALsimulation {
             selectElement(dataEUAL1el,delay,0);
             delay+=3000;
             selectElement(ual1,delay,m);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
+          mainsimul.ACC.setContenu(this.operation(code,n,m));
         //  selectElement(instname,delay,code);
-          selectElement(acc,delay,mainsimulation.ACC.getContenu());
+          selectElement(acc,delay,mainsimul.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -4367,70 +4375,70 @@ class UALsimulation {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(cx,delay,mainsimulation.ACC.getContenu());
-          mainsimulation.CX.setContenu(mainsimulation.ACC.getContenu());
+          selectElement(cx,delay,mainsimul.ACC.getContenu());
+          mainsimul.CX.setContenu(mainsimul.ACC.getContenu());
           break;
         case "011":
-          n = mainsimulation.DX.getContenu();
-          selectElement(dx,delay,n);
-          delay+=2000;
+          n = mainsimul.DX.getContenu();
+        selectElement(dx,delay,n);
+        delay+=2000;
+        selectElement(dataREGel,delay,0);
+        delay+=3000;
+        selectElement(dataEUAL2el,delay,0);
+        delay+=3000;
+        selectElement(ual2,delay,n);
+        delay+=3000;
+        selectElement(acc,delay,n);          //chargement vers l'acc
+        mainsimul.ACC.setContenu(n);
+        this.mettreAjourIndicateur(mainsimul.ACC.getContenu()) ;
+        selectElement(dataREG2el,delay,0);
+        delay+=3000;
+        selectElement(dataC1el,delay,0);
+        delay+=3000;
+        selectElement(dataC2el,delay,0);
+        delay+=3000;
+        selectElement(dataC3el,delay,0);
+        delay+=3000;
+        switch (param2) {             // on récoupère le contenu de deuxième registre
+            case "000":  m = mainsimul.AX.getContenu(); selectElement(ax,delay,m); break;
+            case "001":  m = mainsimul.BX.getContenu();selectElement(bx,delay,m); break;
+            case "010":  m = mainsimul.CX.getContenu();selectElement(cx,delay,m); break;
+            case "011":  m = mainsimul.DX.getContenu(); selectElement(dx,delay,m);break;
+            case "100":  m = mainsimul.EX.getContenu();selectElement(ex,delay,m); break;
+            case "101":  m = mainsimul.FX.getContenu();selectElement(fx,delay,m); break;
+            case "110":  m = mainsimul.SI.getContenu();selectElement(si,delay,m); break;
+            case "111":  m = mainsimul.DI.getContenu(); selectElement(di,delay,m); break;
+          }
           selectElement(dataREGel,delay,0);
           delay+=3000;
           selectElement(dataEUAL2el,delay,0);
           delay+=3000;
-          selectElement(ual2,delay,n);
+          selectElement(ual2,delay,m);
           delay+=3000;
-          selectElement(acc,delay,n);          //chargement vers l'acc
-          mainsimulation.ACC.setContenu(n);
-          this.mettreAjourIndicateur(mainsimulation.ACC.getContenu()) ;
-          selectElement(dataREG2el,delay,0);
-          delay+=3000;
-          selectElement(dataC1el,delay,0);
-          delay+=3000;
-          selectElement(dataC2el,delay,0);
-          delay+=3000;
-          selectElement(dataC3el,delay,0);
-          delay+=3000;
-          switch (param2) {             // on récoupère le contenu de deuxième registre
-              case "000":  m = mainsimulation.AX.getContenu(); selectElement(ax,delay,m); break;
-              case "001":  m = mainsimulation.BX.getContenu();selectElement(bx,delay,m); break;
-              case "010":  m = mainsimulation.CX.getContenu();selectElement(cx,delay,m); break;
-              case "011":  m = mainsimulation.DX.getContenu(); selectElement(dx,delay,m);break;
-              case "100":  m = mainsimulation.EX.getContenu();selectElement(ex,delay,m); break;
-              case "101":  m = mainsimulation.FX.getContenu();selectElement(fx,delay,m); break;
-              case "110":  m = mainsimulation.SI.getContenu();selectElement(si,delay,m); break;
-              case "111":  m = mainsimulation.DI.getContenu(); selectElement(di,delay,m); break;
-            }
-            selectElement(dataREGel,delay,0);
-            delay+=3000;
-            selectElement(dataEUAL2el,delay,0);
-            delay+=3000;
-            selectElement(ual2,delay,m);
-            delay+=3000;
-            selectElement(acc,delay,m);
-            delay+=3000;
-            selectElement(dataC5el,delay,0);
-            delay+=3000;
-            selectElement(dataC4el,delay,0);
-            delay+=3000;
-            selectElement(dataEUAL1el,delay,0);
-            delay+=3000;
-            selectElement(ual1,delay,m);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-        //  selectElement(instname,delay,code);
-          selectElement(acc,delay,mainsimulation.ACC.getContenu());
+          selectElement(acc,delay,m);
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
           selectElement(dataC4el,delay,0);
           delay+=3000;
-          selectElement(dataREGel,delay,0);
+          selectElement(dataEUAL1el,delay,0);
           delay+=3000;
-          selectElement(dx,delay,mainsimulation.ACC.getContenu());
-          mainsimulation.DX.setContenu(mainsimulation.ACC.getContenu());
+          selectElement(ual1,delay,m);
+        mainsimul.ACC.setContenu(this.operation(code,n,m));
+      //  selectElement(instname,delay,code);
+        selectElement(acc,delay,mainsimul.ACC.getContenu());
+        delay+=3000;
+        selectElement(dataC5el,delay,0);
+        delay+=3000;
+        selectElement(dataC4el,delay,0);
+        delay+=3000;
+        selectElement(dataREGel,delay,0);
+        delay+=3000;
+        selectElement(dx,delay,mainsimul.ACC.getContenu());
+        mainsimul.DX.setContenu(mainsimul.ACC.getContenu());
           break;
         case "100":
-          n = mainsimulation.EX.getContenu();
+          n = mainsimul.EX.getContenu();
           selectElement(ex,delay,n);
           delay+=2000;
           selectElement(dataREGel,delay,0);
@@ -4440,8 +4448,8 @@ class UALsimulation {
           selectElement(ual2,delay,n);
           delay+=3000;
           selectElement(acc,delay,n);          //chargement vers l'acc
-          mainsimulation.ACC.setContenu(n);
-          this.mettreAjourIndicateur(mainsimulation.ACC.getContenu()) ;
+          mainsimul.ACC.setContenu(n);
+          this.mettreAjourIndicateur(mainsimul.ACC.getContenu()) ;
           selectElement(dataREG2el,delay,0);
           delay+=3000;
           selectElement(dataC1el,delay,0);
@@ -4451,14 +4459,14 @@ class UALsimulation {
           selectElement(dataC3el,delay,0);
           delay+=3000;
           switch (param2) {             // on récoupère le contenu de deuxième registre
-              case "000":  m = mainsimulation.AX.getContenu(); selectElement(ax,delay,m); break;
-              case "001":  m = mainsimulation.BX.getContenu();selectElement(bx,delay,m); break;
-              case "010":  m = mainsimulation.CX.getContenu();selectElement(cx,delay,m); break;
-              case "011":  m = mainsimulation.DX.getContenu(); selectElement(dx,delay,m);break;
-              case "100":  m = mainsimulation.EX.getContenu();selectElement(ex,delay,m); break;
-              case "101":  m = mainsimulation.FX.getContenu();selectElement(fx,delay,m); break;
-              case "110":  m = mainsimulation.SI.getContenu();selectElement(si,delay,m); break;
-              case "111":  m = mainsimulation.DI.getContenu(); selectElement(di,delay,m); break;
+              case "000":  m = mainsimul.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = mainsimul.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = mainsimul.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = mainsimul.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = mainsimul.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = mainsimul.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = mainsimul.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = mainsimul.DI.getContenu(); selectElement(di,delay,m); break;
             }
             selectElement(dataREGel,delay,0);
             delay+=3000;
@@ -4475,9 +4483,9 @@ class UALsimulation {
             selectElement(dataEUAL1el,delay,0);
             delay+=3000;
             selectElement(ual1,delay,m);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
+          mainsimul.ACC.setContenu(this.operation(code,n,m));
         //  selectElement(instname,delay,code);
-          selectElement(acc,delay,mainsimulation.ACC.getContenu());
+          selectElement(acc,delay,mainsimul.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -4485,11 +4493,11 @@ class UALsimulation {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(ex,delay,mainsimulation.ACC.getContenu());
-          mainsimulation.EX.setContenu(mainsimulation.ACC.getContenu());
+          selectElement(ex,delay,mainsimul.ACC.getContenu());
+          mainsimul.EX.setContenu(mainsimul.ACC.getContenu());
           break;
         case "101":
-          n = mainsimulation.FX.getContenu();
+          n = mainsimul.FX.getContenu();
           selectElement(fx,delay,n);
           delay+=2000;
           selectElement(dataREGel,delay,0);
@@ -4499,8 +4507,8 @@ class UALsimulation {
           selectElement(ual2,delay,n);
           delay+=3000;
           selectElement(acc,delay,n);          //chargement vers l'acc
-          mainsimulation.ACC.setContenu(n);
-          this.mettreAjourIndicateur(mainsimulation.ACC.getContenu()) ;
+          mainsimul.ACC.setContenu(n);
+          this.mettreAjourIndicateur(mainsimul.ACC.getContenu()) ;
           selectElement(dataREG2el,delay,0);
           delay+=3000;
           selectElement(dataC1el,delay,0);
@@ -4510,14 +4518,14 @@ class UALsimulation {
           selectElement(dataC3el,delay,0);
           delay+=3000;
           switch (param2) {             // on récoupère le contenu de deuxième registre
-              case "000":  m = mainsimulation.AX.getContenu(); selectElement(ax,delay,m); break;
-              case "001":  m = mainsimulation.BX.getContenu();selectElement(bx,delay,m); break;
-              case "010":  m = mainsimulation.CX.getContenu();selectElement(cx,delay,m); break;
-              case "011":  m = mainsimulation.DX.getContenu(); selectElement(dx,delay,m);break;
-              case "100":  m = mainsimulation.EX.getContenu();selectElement(ex,delay,m); break;
-              case "101":  m = mainsimulation.FX.getContenu();selectElement(fx,delay,m); break;
-              case "110":  m = mainsimulation.SI.getContenu();selectElement(si,delay,m); break;
-              case "111":  m = mainsimulation.DI.getContenu(); selectElement(di,delay,m); break;
+              case "000":  m = mainsimul.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = mainsimul.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = mainsimul.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = mainsimul.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = mainsimul.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = mainsimul.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = mainsimul.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = mainsimul.DI.getContenu(); selectElement(di,delay,m); break;
             }
             selectElement(dataREGel,delay,0);
             delay+=3000;
@@ -4534,9 +4542,9 @@ class UALsimulation {
             selectElement(dataEUAL1el,delay,0);
             delay+=3000;
             selectElement(ual1,delay,m);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
+          mainsimul.ACC.setContenu(this.operation(code,n,m));
         //  selectElement(instname,delay,code);
-          selectElement(acc,delay,mainsimulation.ACC.getContenu());
+          selectElement(acc,delay,mainsimul.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -4544,11 +4552,11 @@ class UALsimulation {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(fx,delay,mainsimulation.ACC.getContenu());
-          mainsimulation.FX.setContenu(mainsimulation.ACC.getContenu());
+          selectElement(fx,delay,mainsimul.ACC.getContenu());
+          mainsimul.FX.setContenu(mainsimul.ACC.getContenu());
           break;
         case "110":
-          n = mainsimulation.SI.getContenu();
+          n = mainsimul.SI.getContenu();
           selectElement(si,delay,n);
           delay+=2000;
           selectElement(dataREGel,delay,0);
@@ -4558,8 +4566,8 @@ class UALsimulation {
           selectElement(ual2,delay,n);
           delay+=3000;
           selectElement(acc,delay,n);          //chargement vers l'acc
-          mainsimulation.ACC.setContenu(n);
-          this.mettreAjourIndicateur(mainsimulation.ACC.getContenu()) ;
+          mainsimul.ACC.setContenu(n);
+          this.mettreAjourIndicateur(mainsimul.ACC.getContenu()) ;
           selectElement(dataREG2el,delay,0);
           delay+=3000;
           selectElement(dataC1el,delay,0);
@@ -4569,14 +4577,14 @@ class UALsimulation {
           selectElement(dataC3el,delay,0);
           delay+=3000;
           switch (param2) {             // on récoupère le contenu de deuxième registre
-              case "000":  m = mainsimulation.AX.getContenu(); selectElement(ax,delay,m); break;
-              case "001":  m = mainsimulation.BX.getContenu();selectElement(bx,delay,m); break;
-              case "010":  m = mainsimulation.CX.getContenu();selectElement(cx,delay,m); break;
-              case "011":  m = mainsimulation.DX.getContenu(); selectElement(dx,delay,m);break;
-              case "100":  m = mainsimulation.EX.getContenu();selectElement(ex,delay,m); break;
-              case "101":  m = mainsimulation.FX.getContenu();selectElement(fx,delay,m); break;
-              case "110":  m = mainsimulation.SI.getContenu();selectElement(si,delay,m); break;
-              case "111":  m = mainsimulation.DI.getContenu(); selectElement(di,delay,m); break;
+              case "000":  m = mainsimul.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = mainsimul.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = mainsimul.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = mainsimul.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = mainsimul.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = mainsimul.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = mainsimul.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = mainsimul.DI.getContenu(); selectElement(di,delay,m); break;
             }
             selectElement(dataREGel,delay,0);
             delay+=3000;
@@ -4593,9 +4601,9 @@ class UALsimulation {
             selectElement(dataEUAL1el,delay,0);
             delay+=3000;
             selectElement(ual1,delay,m);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
+          mainsimul.ACC.setContenu(this.operation(code,n,m));
         //  selectElement(instname,delay,code);
-          selectElement(acc,delay,mainsimulation.ACC.getContenu());
+          selectElement(acc,delay,mainsimul.ACC.getContenu());
           delay+=3000;
           selectElement(dataC5el,delay,0);
           delay+=3000;
@@ -4603,155 +4611,149 @@ class UALsimulation {
           delay+=3000;
           selectElement(dataREGel,delay,0);
           delay+=3000;
-          selectElement(si,delay,mainsimulation.ACC.getContenu());
-          mainsimulation.SI.setContenu(mainsimulation.ACC.getContenu());
-         break;
-         case "111": 
-         n = mainsimulation.DI.getContenu();
-         selectElement(di,delay,n);
-         delay+=2000;
-         selectElement(dataREGel,delay,0);
-         delay+=3000;
-         selectElement(dataEUAL2el,delay,0);
-         delay+=3000;
-         selectElement(ual2,delay,n);
-         delay+=3000;
-         selectElement(acc,delay,n);          //chargement vers l'acc
-         mainsimulation.ACC.setContenu(n);
-         this.mettreAjourIndicateur(mainsimulation.ACC.getContenu()) ;
-         selectElement(dataREG2el,delay,0);
-         delay+=3000;
-         selectElement(dataC1el,delay,0);
-         delay+=3000;
-         selectElement(dataC2el,delay,0);
-         delay+=3000;
-         selectElement(dataC3el,delay,0);
-         delay+=3000;
-         switch (param2) {             // on récoupère le contenu de deuxième registre
-             case "000":  m = mainsimulation.AX.getContenu(); selectElement(ax,delay,m); break;
-             case "001":  m = mainsimulation.BX.getContenu();selectElement(bx,delay,m); break;
-             case "010":  m = mainsimulation.CX.getContenu();selectElement(cx,delay,m); break;
-             case "011":  m = mainsimulation.DX.getContenu(); selectElement(dx,delay,m);break;
-             case "100":  m = mainsimulation.EX.getContenu();selectElement(ex,delay,m); break;
-             case "101":  m = mainsimulation.FX.getContenu();selectElement(fx,delay,m); break;
-             case "110":  m = mainsimulation.SI.getContenu();selectElement(si,delay,m); break;
-             case "111":  m = mainsimulation.DI.getContenu(); selectElement(di,delay,m); break;
-           }
-           selectElement(dataREGel,delay,0);
-           delay+=3000;
-           selectElement(dataEUAL2el,delay,0);
-           delay+=3000;
-           selectElement(ual2,delay,m);
-           delay+=3000;
-           selectElement(acc,delay,m);
-           delay+=3000;
-           selectElement(dataC5el,delay,0);
-           delay+=3000;
-           selectElement(dataC4el,delay,0);
-           delay+=3000;
-           selectElement(dataEUAL1el,delay,0);
-           delay+=3000;
-           selectElement(ual1,delay,m);
-         mainsimulation.ACC.setContenu(this.operation(code,n,m));
-       //  selectElement(instname,delay,code);
-         selectElement(acc,delay,mainsimulation.ACC.getContenu());
-         delay+=3000;
-         selectElement(dataC5el,delay,0);
-         delay+=3000;
-         selectElement(dataC4el,delay,0);
-         delay+=3000;
-         selectElement(dataREGel,delay,0);
-         delay+=3000;
-         selectElement(di,delay,mainsimulation.ACC.getContenu());
-         mainsimulation.DI.setContenu(mainsimulation.ACC.getContenu());
-         break; 
+          selectElement(si,delay,mainsimul.ACC.getContenu());
+          mainsimul.SI.setContenu(mainsimul.ACC.getContenu());
+          break;
+        case "111":
+          n = mainsimul.DI.getContenu();
+          selectElement(di,delay,n);
+          delay+=2000;
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(dataEUAL2el,delay,0);
+          delay+=3000;
+          selectElement(ual2,delay,n);
+          delay+=3000;
+          selectElement(acc,delay,n);          //chargement vers l'acc
+          mainsimulation.ACC.setContenu(n);
+          this.mettreAjourIndicateur(mainsimul.ACC.getContenu()) ;
+          selectElement(dataREG2el,delay,0);
+          delay+=3000;
+          selectElement(dataC1el,delay,0);
+          delay+=3000;
+          selectElement(dataC2el,delay,0);
+          delay+=3000;
+          selectElement(dataC3el,delay,0);
+          delay+=3000;
+          switch (param2) {             // on récoupère le contenu de deuxième registre
+              case "000":  m = mainsimul.AX.getContenu(); selectElement(ax,delay,m); break;
+              case "001":  m = mainsimul.BX.getContenu();selectElement(bx,delay,m); break;
+              case "010":  m = mainsimul.CX.getContenu();selectElement(cx,delay,m); break;
+              case "011":  m = mainsimul.DX.getContenu(); selectElement(dx,delay,m);break;
+              case "100":  m = mainsimul.EX.getContenu();selectElement(ex,delay,m); break;
+              case "101":  m = mainsimul.FX.getContenu();selectElement(fx,delay,m); break;
+              case "110":  m = mainsimul.SI.getContenu();selectElement(si,delay,m); break;
+              case "111":  m = mainsimul.DI.getContenu(); selectElement(di,delay,m); break;
+            }
+            selectElement(dataREGel,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL2el,delay,0);
+            delay+=3000;
+            selectElement(ual2,delay,m);
+            delay+=3000;
+            selectElement(acc,delay,m);
+            delay+=3000;
+            selectElement(dataC5el,delay,0);
+            delay+=3000;
+            selectElement(dataC4el,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL1el,delay,0);
+            delay+=3000;
+            selectElement(ual1,delay,m);
+          mainsimul.ACC.setContenu(this.operation(code,n,m));
+        //  selectElement(instname,delay,code);
+          selectElement(acc,delay,mainsimul.ACC.getContenu());
+          delay+=3000;
+          selectElement(dataC5el,delay,0);
+          delay+=3000;
+          selectElement(dataC4el,delay,0);
+          delay+=3000;
+          selectElement(dataREGel,delay,0);
+          delay+=3000;
+          selectElement(di,delay,mainsimul.ACC.getContenu());
+          mainsimul.DI.setContenu(mainsimul.ACC.getContenu());
+          break;
       }
-        return delay;
+ return delay;
+    } // Finnnn Mode direct format court distination =1 
 
-    } // Finnnn Mode direct format court(f=0) distination =1 
-
-    // Mode direct format Long distination =0 
-    directLong = function(code,param1,param2,dataTab,instrTab,cpt,dest,delay) { 
+    // Mode direct format Long destination =0 
+    directLong = function(code,param1,param2,dataTab,instrTab,cpt,dest,delay) {
       let n = 0;
       let m = 0;
-      let i = util.chercherAdr(dataTab,(instrTab[cpt+1].getVal()).slice(1)) ;
-             if(i==dataTab.length) {dataTab.push(new CaseMc((instrTab[cpt+1].getVal()).slice(1),0,"")); }
-
-       m = dataTab[i].getVal() ;              // la valeur de la donnée 
-       let adr = dataTab[i].getAdr();          // l'adr de la donnée dans le segment de données 
-            
-        
-
+      let i = util.chercherAdr(dataTab,(instrTab[cpt+1].getVal()).slice(-3)) ;
+      if(i==dataTab.length) {dataTab.push(new CaseMc((instrTab[cpt+1].getVal()).slice(1),"0000",""));} 
+       m = dataTab[i].getVal() ; 
+       let adr = dataTab[i].getAdr(); 
            if(dest == "0"){
             switch (param1) {
-              case "000": m = mainsimulation.AX.getContenu(); selectElement(ax,delay,m);  mainsimulation.ACC.setContenu(m); break;
-              case "001": m = mainsimulation.BX.getContenu(); selectElement(bx,delay,m);  mainsimulation.ACC.setContenu(m); break;
-              case "010": m = mainsimulation.CX.getContenu(); selectElement(cx,delay,m);  mainsimulation.ACC.setContenu(m); break;
-              case "011": m = mainsimulation.DX.getContenu(); selectElement(dx,delay,m);  mainsimulation.ACC.setContenu(m); break;
-              case "100": m = mainsimulation.EX.getContenu(); selectElement(ex,delay,m);  mainsimulation.ACC.setContenu(m); break;
-              case "101": m = mainsimulation.FX.getContenu(); selectElement(fx,delay,m);  mainsimulation.ACC.setContenu(m); break;
-              case "110": m = mainsimulation.SI.getContenu(); selectElement(si,delay,m);  mainsimulation.ACC.setContenu(m); break;
-              case "111": m = mainsimulation.DI.getContenu(); selectElement(di,delay,m);  mainsimulation.ACC.setContenu(m); break;
+              case "000": m = mainsimul.AX.getContenu(); selectElement(ax,delay,m);  mainsimul.ACC.setContenu(m); break;
+              case "001": m = mainsimul.BX.getContenu(); selectElement(bx,delay,m);  mainsimul.ACC.setContenu(m); break;
+              case "010": m = mainsimul.CX.getContenu(); selectElement(cx,delay,m);  mainsimul.ACC.setContenu(m); break;
+              case "011": m = mainsimul.DX.getContenu(); selectElement(dx,delay,m);  mainsimul.ACC.setContenu(m); break;
+              case "100": m = mainsimul.EX.getContenu(); selectElement(ex,delay,m);  mainsimul.ACC.setContenu(m); break;
+              case "101": m = mainsimul.FX.getContenu(); selectElement(fx,delay,m);  mainsimul.ACC.setContenu(m); break;
+              case "110": m = mainsimul.SI.getContenu(); selectElement(si,delay,m);  mainsimul.ACC.setContenu(m); break;
+              case "111": m = mainsimul.DI.getContenu(); selectElement(di,delay,m);  mainsimul.ACC.setContenu(m); break;
             }
+          //  console.log("mmm = "+dataTab[i].getVal()+"      "+m);
+          delay+=3000;
+          delay = premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+          delay+=3000;
+          delay= lecturememoire(instrTab[i].getVal(),delay,dataTab[i].getVal());
+          delay+=3000;
+          if(code=="MOV"){
+            delay= ecriturememoiremov(dataTab[i].getAdr(),delay,m);
+          }
+          else{
             delay+=3000;
-            delay = premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+            selectElement(dataREGel,delay,0);
             delay+=3000;
-            delay= lecturememoire(instrTab[i].getVal(),delay,dataTab[i].getVal());
+            selectElement(dataDATAel,delay,0);
             delay+=3000;
-            if(code=="MOV"){
-              delay= ecriturememoiremov(dataTab[i].getAdr(),delay,m);
-            }
-            else{
-              delay+=3000;
-              selectElement(dataREGel,delay,0);
-              delay+=3000;
-              selectElement(dataDATAel,delay,0);
-              delay+=3000;
-              selectElement(dataEUAL2el,delay,0);
-              delay+=3000;
-              selectElement(ual2,delay,m);
-              delay+=3000;
-              selectElement(acc,delay,m);
-              delay+=3000; 
-              selectElement(dataRIMel,delay,0);
-              delay+=3000;
-              selectElement(dataDATAel,delay,0);
-              delay+=3000;
-              selectElement(dataEUAL2el,delay,0);
-              delay+=3000;
-              selectElement(ual2,delay,dataTab[i].getVal());
-              delay+=3000;
-              selectElement(dataC5el,delay,0);
-              delay+=3000;
-              selectElement(dataC4el,delay,0);
-              delay+=3000;
-              selectElement(dataACCel,delay,0);
-              delay+=3000;
-              selectElement(dataC6el,delay,0);
-              delay+=3000;
-              selectElement(ual1,delay,mainsimulation.ACC.getContenu());
+            selectElement(dataEUAL2el,delay,0);
+            delay+=3000;
+            selectElement(ual2,delay,m);
+            delay+=3000;
+            selectElement(acc,delay,m);
+            delay+=3000; 
+            selectElement(dataRIMel,delay,0);
+            delay+=3000;
+            selectElement(dataDATAel,delay,0);
+            delay+=3000;
+            selectElement(dataEUAL2el,delay,0);
+            delay+=3000;
+            selectElement(ual2,delay,dataTab[i].getVal());
+            delay+=3000;
+            selectElement(dataC5el,delay,0);
+            delay+=3000;
+            selectElement(dataC4el,delay,0);
+            delay+=3000;
+            selectElement(dataACCel,delay,0);
+            delay+=3000;
+            selectElement(dataC6el,delay,0);
+            delay+=3000;
+            selectElement(ual1,delay,mainsimul.ACC.getContenu());
 
 
-              mainsimulation.ACC.setContenu(this.operation(code,dataTab[i].getVal(),m));
-              delay+=3000;
-              selectElement(acc,delay,mainsimulation.ACC.getContenu());
-              delay+=3000;
-              delay = ecriturememoire(dataTab[i].getAdr(),delay,mainsimulation.ACC.getContenu());
+            mainsimul.ACC.setContenu(this.operation(code,dataTab[i].getVal(),m));
+            delay+=3000;
+            selectElement(acc,delay,mainsimul.ACC.getContenu());
+            delay+=3000;
+            delay = ecriturememoire(dataTab[i].getAdr(),delay,mainsimul.ACC.getContenu());
 
-            }
-            
-            mainsimulation.ACC.setContenu(this.operation(code,dataTab[i].getVal(),m));
-            dataTab[i].setVal(mainsimulation.ACC.getContenu()) ;
-            
+          }
+          
+          mainsimul.ACC.setContenu(this.operation(code,dataTab[i].getVal(),m));
+          dataTab[i].setVal(mainsimul.ACC.getContenu()) ;
            } 
-            else {    
-                                // dest==1 (reg1 destination) 
+            else { 
               switch (param1) {
                 case "000":
                   let dd; 
-                  n = mainsimulation.AX.getContenu();
+                  n = mainsimul.AX.getContenu();
                   if(code=="MOV"){
-                    selectElement(ax,delay,mainsimulation.AX.getContenu());
+                    selectElement(ax,delay,mainsimul.AX.getContenu());
                     delay+=3000;
                   }
                   else{
@@ -4764,7 +4766,7 @@ class UALsimulation {
                   selectElement(acc,delay,n);
                   delay+=3000;
                   }
-              mainsimulation.ACC.setContenu(n);
+              mainsimul.ACC.setContenu(n);
               // on lit le mot memoire 
               dd= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
               delay=dd+3000;
@@ -4777,8 +4779,8 @@ class UALsimulation {
                   selectElement(dataREGel,delay,0);
                   delay+=3000;
                   selectElement(ax,delay,dataTab[i].getVal());
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
-                  mainsimulation.AX.setContenu(mainsimulation.ACC.getContenu());
+                  mainsimul.ACC.setContenu(this.operation(code,n,m));
+                  mainsimul.AX.setContenu(mainsimul.ACC.getContenu());
 
 
                 }
@@ -4791,11 +4793,11 @@ class UALsimulation {
                 delay+=3000;
                 selectElement(dataC6el,delay,0);
                 delay+=3000;
-                selectElement(ual1,delay,mainsimulation.ACC.getContenu());
+                selectElement(ual1,delay,mainsimul.ACC.getContenu());
                
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
+                  mainsimul.ACC.setContenu(this.operation(code,n,m));
                   delay+=3000;
-                  selectElement(acc,delay,mainsimulation.ACC.getContenu());
+                  selectElement(acc,delay,mainsimul.ACC.getContenu());
                   delay+=3000;
                 selectElement(dataC5el,delay,0);
                 delay+=3000;
@@ -4807,17 +4809,16 @@ class UALsimulation {
                 delay+=3000;
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  mainsimulation.AX.setContenu(mainsimulation.ACC.getContenu());
-                  selectElement(ax,delay,mainsimulation.ACC.getContenu());
+                  mainsimul.AX.setContenu(mainsimul.ACC.getContenu());
+                  selectElement(ax,delay,mainsimul.ACC.getContenu());
                 }
 
                   break;
-
                 case "001":
                   let ddd;
-                  n = mainsimulation.BX.getContenu();
+                  n = mainsimul.BX.getContenu();
                   if(code=="MOV"){
-                    selectElement(bx,delay,mainsimulation.BX.getContenu());
+                    selectElement(bx,delay,mainsimul.BX.getContenu());
                     delay+=3000;
                   }
                   else{
@@ -4830,7 +4831,7 @@ class UALsimulation {
                   selectElement(acc,delay,n);
                   delay+=3000;
                   }
-              mainsimulation.ACC.setContenu(n);
+              mainsimul.ACC.setContenu(n);
               // on lit le mot memoire 
                ddd= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
               delay=ddd+3000;
@@ -4843,8 +4844,8 @@ class UALsimulation {
                   selectElement(dataREGel,delay,0);
                   delay+=3000;
                   selectElement(bx,delay,dataTab[i].getVal());
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
-                  mainsimulation.BX.setContenu(mainsimulation.ACC.getContenu());
+                  mainsimul.ACC.setContenu(this.operation(code,n,m));
+                  mainsimul.BX.setContenu(mainsimul.ACC.getContenu());
 
 
                 }
@@ -4857,11 +4858,11 @@ class UALsimulation {
                 delay+=3000;
                 selectElement(dataC6el,delay,0);
                 delay+=3000;
-                selectElement(ual1,delay,mainsimulation.ACC.getContenu());
+                selectElement(ual1,delay,mainsimul.ACC.getContenu());
                
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
+                  mainsimul.ACC.setContenu(this.operation(code,n,m));
                   delay+=3000;
-                  selectElement(acc,delay,mainsimulation.ACC.getContenu());
+                  selectElement(acc,delay,mainsimul.ACC.getContenu());
                   delay+=3000;
                 selectElement(dataC5el,delay,0);
                 delay+=3000;
@@ -4873,78 +4874,77 @@ class UALsimulation {
                 delay+=3000;
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  mainsimulation.BX.setContenu(mainsimulation.ACC.getContenu());
-                  selectElement(bx,delay,mainsimulation.ACC.getContenu());
+                  mainsimul.BX.setContenu(mainsimul.ACC.getContenu());
+                  selectElement(bx,delay,mainsimul.ACC.getContenu());
                 }
                   break;
                 case "010":
-                  n = mainsimulation.CX.getContenu();
-                  if(code=="MOV"){
-                    selectElement(cx,delay,mainsimulation.CX.getContenu());
-                    delay+=3000;
-                  }
-                  else{
-                  selectElement(dataREGel,delay,0);
-                  delay+=3000;
-                  selectElement(dataEUAL2el,delay,0);
-                  delay+=3000;
-                  selectElement(ual2,delay,n);
-                  delay+=3000;
-                  selectElement(acc,delay,n);
-                  delay+=3000;
-                  }
-              mainsimulation.ACC.setContenu(n);
-              // on lit le mot memoire 
-              let d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
-              delay=d+3000;
-              d= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
-              delay=d+3000;
-              //ff
-                selectElement(dataDATAel,delay,0);
-                delay+=3000;
+                  n = mainsimul.CX.getContenu();
                 if(code=="MOV"){
-                  selectElement(dataREGel,delay,0);
+                  selectElement(cx,delay,mainsimul.CX.getContenu());
                   delay+=3000;
-                  selectElement(cx,delay,dataTab[i].getVal());
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
-                  mainsimulation.CX.setContenu(mainsimulation.ACC.getContenu());
-
-
                 }
-                else {
-                selectElement(ual2,delay,dataTab[i].getVal());
-                delay+=3000;
-                selectElement(dataC5el,delay,0);
-                delay+=3000;
-                selectElement(dataC4el,delay,0);
-                delay+=3000;
-                selectElement(dataC6el,delay,0);
-                delay+=3000;
-                selectElement(ual1,delay,mainsimulation.ACC.getContenu());
-               
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
-                  delay+=3000;
-                  selectElement(acc,delay,mainsimulation.ACC.getContenu());
-                  delay+=3000;
-                selectElement(dataC5el,delay,0);
-                delay+=3000;
-                selectElement(dataC4el,delay,0);
-                delay+=3000;
-                selectElement(dataACCel,delay,0);
-                delay+=3000;
-                selectElement(dataDATAel,delay,0);
-                delay+=3000;
+                else{
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  mainsimulation. CX.setContenu(mainsimulation.ACC.getContenu());
-                  selectElement(cx,delay,mainsimulation.ACC.getContenu());
+                selectElement(dataEUAL2el,delay,0);
+                delay+=3000;
+                selectElement(ual2,delay,n);
+                delay+=3000;
+                selectElement(acc,delay,n);
+                delay+=3000;
                 }
-                  
+            mainsimul.ACC.setContenu(n);
+            // on lit le mot memoire 
+            let d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+            delay=d+3000;
+            d= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
+            delay=d+3000;
+            //ff
+              selectElement(dataDATAel,delay,0);
+              delay+=3000;
+              if(code=="MOV"){
+                selectElement(dataREGel,delay,0);
+                delay+=3000;
+                selectElement(cx,delay,dataTab[i].getVal());
+                mainsimul.ACC.setContenu(this.operation(code,n,m));
+                mainsimul.CX.setContenu(mainsimul.ACC.getContenu());
+
+
+              }
+              else {
+              selectElement(ual2,delay,dataTab[i].getVal());
+              delay+=3000;
+              selectElement(dataC5el,delay,0);
+              delay+=3000;
+              selectElement(dataC4el,delay,0);
+              delay+=3000;
+              selectElement(dataC6el,delay,0);
+              delay+=3000;
+              selectElement(ual1,delay,mainsimul.ACC.getContenu());
+             
+                mainsimul.ACC.setContenu(this.operation(code,n,m));
+                delay+=3000;
+                selectElement(acc,delay,mainsimul.ACC.getContenu());
+                delay+=3000;
+              selectElement(dataC5el,delay,0);
+              delay+=3000;
+              selectElement(dataC4el,delay,0);
+              delay+=3000;
+              selectElement(dataACCel,delay,0);
+              delay+=3000;
+              selectElement(dataDATAel,delay,0);
+              delay+=3000;
+              selectElement(dataREGel,delay,0);
+              delay+=3000;
+                mainsimul.CX.setContenu(mainsimul.ACC.getContenu());
+                selectElement(cx,delay,mainsimul.ACC.getContenu());
+              }
                   break;
                 case "011":
-                  n = mainsimulation.DX.getContenu();
+                  n = mainsimul.DX.getContenu();
                   if(code=="MOV"){
-                    selectElement(dx,delay,mainsimulation.DX.getContenu());
+                    selectElement(dx,delay,mainsimul.DX.getContenu());
                     delay+=3000;
                   }
                   else{
@@ -4957,7 +4957,7 @@ class UALsimulation {
                   selectElement(acc,delay,n);
                   delay+=3000;
                   }
-              mainsimulation.ACC.setContenu(n);
+              mainsimul.ACC.setContenu(n);
               // on lit le mot memoire 
                d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
               delay=d+3000;
@@ -4970,8 +4970,8 @@ class UALsimulation {
                   selectElement(dataREGel,delay,0);
                   delay+=3000;
                   selectElement(dx,delay,dataTab[i].getVal());
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
-                  mainsimulation.DX.setContenu(mainsimulation.ACC.getContenu());
+                  mainsimul.ACC.setContenu(this.operation(code,n,m));
+                  mainsimul.DX.setContenu(mainsimul.ACC.getContenu());
 
 
                 }
@@ -4984,11 +4984,11 @@ class UALsimulation {
                 delay+=3000;
                 selectElement(dataC6el,delay,0);
                 delay+=3000;
-                selectElement(ual1,delay,mainsimulation.ACC.getContenu());
+                selectElement(ual1,delay,mainsimul.ACC.getContenu());
                
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
+                  mainsimul.ACC.setContenu(this.operation(code,n,m));
                   delay+=3000;
-                  selectElement(acc,delay,mainsimulation.ACC.getContenu());
+                  selectElement(acc,delay,mainsimul.ACC.getContenu());
                   delay+=3000;
                 selectElement(dataC5el,delay,0);
                 delay+=3000;
@@ -5000,80 +5000,80 @@ class UALsimulation {
                 delay+=3000;
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  mainsimulation.DX.setContenu(mainsimulation.ACC.getContenu());
-                  selectElement(dx,delay,mainsimulation.ACC.getContenu());
+                  mainsimul.DX.setContenu(mainsimul.ACC.getContenu());
+                  selectElement(dx,delay,mainsimul.ACC.getContenu());
                 }
                   
                   break;
                 case "100":
-                  n = mainsimulation.EX.getContenu();
-                  if(code=="MOV"){
-                    selectElement(ex,delay,mainsimulation.EX.getContenu());
-                    delay+=3000;
-                  }
-                  else{
-                  selectElement(dataREGel,delay,0);
-                  delay+=3000;
-                  selectElement(dataEUAL2el,delay,0);
-                  delay+=3000;
-                  selectElement(ual2,delay,n);
-                  delay+=3000;
-                  selectElement(acc,delay,n);
-                  delay+=3000;
-                  }
-              mainsimulation.ACC.setContenu(n);
-              // on lit le mot memoire 
-               d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
-              delay=d+3000;
-              d= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
-              delay=d+3000;
-              //ff
-                selectElement(dataDATAel,delay,0);
-                delay+=3000;
+                  n = mainsimul.EX.getContenu();
                 if(code=="MOV"){
-                  selectElement(dataREGel,delay,0);
+                  selectElement(ex,delay,mainsimul.EX.getContenu());
                   delay+=3000;
-                  selectElement(ex,delay,dataTab[i].getVal());
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
-                  mainsimulation.EX.setContenu(mainsimulation.ACC.getContenu());
-
-
                 }
-                else {
-                selectElement(ual2,delay,dataTab[i].getVal());
-                delay+=3000;
-                selectElement(dataC5el,delay,0);
-                delay+=3000;
-                selectElement(dataC4el,delay,0);
-                delay+=3000;
-                selectElement(dataC6el,delay,0);
-                delay+=3000;
-                selectElement(ual1,delay,mainsimulation.ACC.getContenu());
-               
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
-                  delay+=3000;
-                  selectElement(acc,delay,mainsimulation.ACC.getContenu());
-                  delay+=3000;
-                selectElement(dataC5el,delay,0);
-                delay+=3000;
-                selectElement(dataC4el,delay,0);
-                delay+=3000;
-                selectElement(dataACCel,delay,0);
-                delay+=3000;
-                selectElement(dataDATAel,delay,0);
-                delay+=3000;
+                else{
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  mainsimulation.EX.setContenu(mainsimulation.ACC.getContenu());
-                  selectElement(ex,delay,mainsimulation.ACC.getContenu());
-                
+                selectElement(dataEUAL2el,delay,0);
+                delay+=3000;
+                selectElement(ual2,delay,n);
+                delay+=3000;
+                selectElement(acc,delay,n);
+                delay+=3000;
                 }
-                  
+            mainsimul.ACC.setContenu(n);
+            // on lit le mot memoire 
+             d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
+            delay=d+3000;
+            d= lecturememoire(dataTab[i].getAdr(),delay,dataTab[i].getVal());
+            delay=d+3000;
+            //ff
+              selectElement(dataDATAel,delay,0);
+              delay+=3000;
+              if(code=="MOV"){
+                selectElement(dataREGel,delay,0);
+                delay+=3000;
+                selectElement(ex,delay,dataTab[i].getVal());
+                mainsimul.ACC.setContenu(this.operation(code,n,m));
+                mainsimul.EX.setContenu(mainsimul.ACC.getContenu());
+
+
+              }
+              else {
+              selectElement(ual2,delay,dataTab[i].getVal());
+              delay+=3000;
+              selectElement(dataC5el,delay,0);
+              delay+=3000;
+              selectElement(dataC4el,delay,0);
+              delay+=3000;
+              selectElement(dataC6el,delay,0);
+              delay+=3000;
+              selectElement(ual1,delay,mainsimul.ACC.getContenu());
+             
+                mainsimul.ACC.setContenu(this.operation(code,n,m));
+                delay+=3000;
+                selectElement(acc,delay,mainsimul.ACC.getContenu());
+                delay+=3000;
+              selectElement(dataC5el,delay,0);
+              delay+=3000;
+              selectElement(dataC4el,delay,0);
+              delay+=3000;
+              selectElement(dataACCel,delay,0);
+              delay+=3000;
+              selectElement(dataDATAel,delay,0);
+              delay+=3000;
+              selectElement(dataREGel,delay,0);
+              delay+=3000;
+                mainsimul.EX.setContenu(mainsimul.ACC.getContenu());
+                selectElement(ex,delay,mainsimul.ACC.getContenu());
+              
+              }
+                
                   break;
                 case "101":
-                  n = mainsimulation.FX.getContenu();
+                  n = mainsimul.FX.getContenu();
                   if(code=="MOV"){
-                    selectElement(fx,delay,mainsimulation.AX.getContenu());
+                    selectElement(fx,delay,mainsimul.AX.getContenu());
                     delay+=3000;
                   }
                   else{
@@ -5086,7 +5086,7 @@ class UALsimulation {
                   selectElement(acc,delay,n);
                   delay+=3000;
                   }
-              mainsimulation.ACC.setContenu(n);
+              mainsimul.ACC.setContenu(n);
               // on lit le mot memoire 
                d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
               delay=d+3000;
@@ -5099,8 +5099,8 @@ class UALsimulation {
                   selectElement(dataREGel,delay,0);
                   delay+=3000;
                   selectElement(fx,delay,dataTab[i].getVal());
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
-                  mainsimulation.FX.setContenu(mainsimulation.ACC.getContenu());
+                  mainsimul.ACC.setContenu(this.operation(code,n,m));
+                  mainsimul.FX.setContenu(mainsimul.ACC.getContenu());
 
 
                 }
@@ -5113,11 +5113,11 @@ class UALsimulation {
                 delay+=3000;
                 selectElement(dataC6el,delay,0);
                 delay+=3000;
-                selectElement(ual1,delay,mainsimulation.ACC.getContenu());
+                selectElement(ual1,delay,mainsimul.ACC.getContenu());
                
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
+                  mainsimul.ACC.setContenu(this.operation(code,n,m));
                   delay+=3000;
-                  selectElement(acc,delay,mainsimulation.ACC.getContenu());
+                  selectElement(acc,delay,mainsimul.ACC.getContenu());
                   delay+=3000;
                 selectElement(dataC5el,delay,0);
                 delay+=3000;
@@ -5129,16 +5129,16 @@ class UALsimulation {
                 delay+=3000;
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  mainsimulation.FX.setContenu(mainsimulation.ACC.getContenu());
-                  selectElement(fx,delay,mainsimulation.ACC.getContenu());
+                  mainsimul.FX.setContenu(mainsimul.ACC.getContenu());
+                  selectElement(fx,delay,mainsimul.ACC.getContenu());
                 
                 }
                   
                   break;
                 case "110":
-                  n = mainsimulation.SI.getContenu();
+                  n = mainsimul.SI.getContenu();
                   if(code=="MOV"){
-                    selectElement(si,delay,mainsimulation.SI.getContenu());
+                    selectElement(si,delay,mainsimul.SI.getContenu());
                     delay+=3000;
                   }
                   else{
@@ -5151,7 +5151,7 @@ class UALsimulation {
                   selectElement(acc,delay,n);
                   delay+=3000;
                   }
-              mainsimulation.ACC.setContenu(n);
+              mainsimul.ACC.setContenu(n);
               // on lit le mot memoire 
               d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
               delay=d+3000;
@@ -5164,8 +5164,8 @@ class UALsimulation {
                   selectElement(dataREGel,delay,0);
                   delay+=3000;
                   selectElement(si,delay,dataTab[i].getVal());
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
-                  mainsimulation.SI.setContenu(mainsimulation.ACC.getContenu());
+                  mainsimul.ACC.setContenu(this.operation(code,n,m));
+                  mainsimul.SI.setContenu(mainsimul.ACC.getContenu());
 
 
                 }
@@ -5178,11 +5178,11 @@ class UALsimulation {
                 delay+=3000;
                 selectElement(dataC6el,delay,0);
                 delay+=3000;
-                selectElement(ual1,delay,mainsimulation.ACC.getContenu());
+                selectElement(ual1,delay,mainsimul.ACC.getContenu());
                
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
+                  mainsimul.ACC.setContenu(this.operation(code,n,m));
                   delay+=3000;
-                  selectElement(acc,delay,mainsimulation.ACC.getContenu());
+                  selectElement(acc,delay,mainsimul.ACC.getContenu());
                   delay+=3000;
                 selectElement(dataC5el,delay,0);
                 delay+=3000;
@@ -5194,15 +5194,15 @@ class UALsimulation {
                 delay+=3000;
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  mainsimulation.SI.setContenu(mainsimulation.ACC.getContenu());
-                  selectElement(si,delay,mainsimulation.ACC.getContenu());
+                  mainsimul.SI.setContenu(mainsimul.ACC.getContenu());
+                  selectElement(si,delay,mainsimul.ACC.getContenu());
                 }
                   
                   break;
                 case "111":
-                  n = mainsimulation.DI.getContenu();
+                  n = mainsimul.DI.getContenu();
                   if(code=="MOV"){
-                    selectElement(di,delay,mainsimulation.DI.getContenu());
+                    selectElement(di,delay,mainsimul.DI.getContenu());
                     delay+=3000;
                   }
                   else{
@@ -5215,7 +5215,7 @@ class UALsimulation {
                   selectElement(acc,delay,n);
                   delay+=3000;
                   }
-              mainsimulation.ACC.setContenu(n);
+              mainsimul.ACC.setContenu(n);
               // on lit le mot memoire 
                d= premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
               delay=d+3000;
@@ -5228,8 +5228,8 @@ class UALsimulation {
                   selectElement(dataREGel,delay,0);
                   delay+=3000;
                   selectElement(di,delay,dataTab[i].getVal());
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
-                  mainsimulation.DI.setContenu(mainsimulation.ACC.getContenu());
+                  mainsimul.ACC.setContenu(this.operation(code,n,m));
+                  mainsimul.DI.setContenu(mainsimul.ACC.getContenu());
 
 
                 }
@@ -5242,11 +5242,11 @@ class UALsimulation {
                 delay+=3000;
                 selectElement(dataC6el,delay,0);
                 delay+=3000;
-                selectElement(ual1,delay,mainsimulation.ACC.getContenu());
+                selectElement(ual1,delay,mainsimul.ACC.getContenu());
                
-                  mainsimulation.ACC.setContenu(this.operation(code,n,m));
+                  mainsimul.ACC.setContenu(this.operation(code,n,m));
                   delay+=3000;
-                  selectElement(acc,delay,mainsimulation.ACC.getContenu());
+                  selectElement(acc,delay,mainsimul.ACC.getContenu());
                   delay+=3000;
                 selectElement(dataC5el,delay,0);
                 delay+=3000;
@@ -5258,16 +5258,15 @@ class UALsimulation {
                 delay+=3000;
                 selectElement(dataREGel,delay,0);
                 delay+=3000;
-                  mainsimulation.DI.setContenu(mainsimulation.ACC.getContenu());
-                  selectElement(di,delay,mainsimulation.ACC.getContenu());
+                  mainsimul.DI.setContenu(mainsimul.ACC.getContenu());
+                  selectElement(di,delay,mainsimul.ACC.getContenu());
                 }
                   
                   break;
               }
                
            }
-       //    console.log("end instruct delay:"+delay);
-           return delay; 
+           return delay;
     }
 
     // Mode indirect format Court distination =0 
@@ -5275,33 +5274,36 @@ class UALsimulation {
       let m = 0 ; 
       let n = 0; 
       switch (param1) {
-        case "000": m = mainsimulation.AX.getContenu(); mainsimulation.ACC.setContenu(m); break;
-        case "001": m = mainsimulation.BX.getContenu(); mainsimulation.ACC.setContenu(m); break;
-        case "010": m = mainsimulation.CX.getContenu(); mainsimulation.ACC.setContenu(m); break;
-        case "011": m = mainsimulation.DX.getContenu(); mainsimulation.ACC.setContenu(m); break;
-        case "100": m = mainsimulation.EX.getContenu(); mainsimulation.ACC.setContenu(m); break;
-        case "101": m = mainsimulation.FX.getContenu(); mainsimulation.ACC.setContenu(m); break;
-        case "110": m = mainsimulation.SI.getContenu(); mainsimulation.ACC.setContenu(m); break;
-        case "111": m = mainsimulation.DI.getContenu(); mainsimulation.ACC.setContenu(m); break;
+        case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); break;
+        case "001": m = main.BX.getContenu(); main.ACC.setContenu(m); break;
+        case "010": m = main.CX.getContenu(); main.ACC.setContenu(m); break;
+        case "011": m = main.DX.getContenu(); main.ACC.setContenu(m); break;
+        case "100": m = main.EX.getContenu(); main.ACC.setContenu(m); break;
+        case "101": m = main.FX.getContenu(); main.ACC.setContenu(m); break;
+        case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); break;
+        case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); break;
 
     }
     let i  ; 
     switch (param2) {
       case "001":
-        i = util.chercherAdr(dataTab,(mainsimulation.BX.getContenu()).slice(1)) ; 
-        mainsimulation.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
+        i = util.chercherAdr(dataTab,(main.BX.getContenu()).slice(-3)) ; 
+        if(i==dataTab.length) {dataTab.push(new CaseMc((main.BX.getContenu()).slice(1),"0000",""));}
+        main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
         break;
       
       case "110":
-        i = util.chercherAdr(dataTab,(mainsimulation.SI.getContenu()).slice(1)) ;
-        mainsimulation.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
+        i = util.chercherAdr(dataTab,(main.SI.getContenu()).slice(-3)) ;
+        if(i==dataTab.length) {dataTab.push(new CaseMc((main.SI.getContenu()).slice(1),"0000",""));}
+        main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
         break;
       case "111":
-        i = util.chercherAdr(dataTab,(mainsimulation.DI.getContenu()).slice(1)) ;
-        mainsimulation.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
+        i = util.chercherAdr(dataTab,(main.DI.getContenu()).slice(-3)) ;
+        if(i==dataTab.length) {dataTab.push(new CaseMc((main.DI.getContenu()).slice(1),"0000",""));}
+        main.ACC.setContenu(this.operation(code,(dataTab[i].getVal()),m));
         break;
     }
-    dataTab[i].setVal(mainsimulation.ACC.getContenu()) ; 
+    dataTab[i].setVal(main.ACC.getContenu()) ; 
     } //Fin Mode indirect format Court distination =0 
 
     //Mode indirect format Court distination =1
@@ -5311,60 +5313,63 @@ class UALsimulation {
       let i=0 ; 
       switch (param2) {
         case "001":
-          i = util.chercherAdr(dataTab,(mainsimulation.BX.getContenu()).slice(1)) ;
+          i = util.chercherAdr(dataTab,(main.BX.getContenu()).slice(-3)) ;
+          if(i==dataTab.length) {dataTab.push(new CaseMc((main.BX.getContenu()).slice(1),"0000",""));}
           m = (dataTab[i].getVal()).slice(1)  
           break;
         
         case "110":
-          i = util.chercherAdr(dataTab,(mainsimulation.SI.getContenu()).slice(1)) ;
+          i = util.chercherAdr(dataTab,(main.SI.getContenu()).slice(-3)) ;
+          if(i==dataTab.length) {dataTab.push(new CaseMc((main.SI.getContenu()).slice(1),"0000",""));}
           m = (dataTab[i].getVal()).slice(1) 
           break;
         case "111":
-          i = util.chercherAdr(dataTab,(mainsimulation.DI.getContenu()).slice(1)) ;
+          i = util.chercherAdr(dataTab,(main.DI.getContenu()).slice(-3)) ;
+          if(i==dataTab.length) {dataTab.push(new CaseMc((main.DI.getContenu()).slice(1),"0000",""));}
           m = (dataTab[i].getVal()).slice(1) 
           break;
       }
 
       switch (param1) {
         case "000":
-          n = mainsimulation.AX.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.AX.setContenu(mainsimulation.ACC.getContenu());
+          n = main.AX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.AX.setContenu(main.ACC.getContenu());
           break;
         case "001":
-          n = mainsimulation.BX.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.BX.setContenu(mainsimulation.ACC.getContenu());
+          n = main.BX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.BX.setContenu(main.ACC.getContenu());
           break;
         case "010":
-          n = mainsimulation.CX.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.CX.setContenu(mainsimulation.ACC.getContenu());
+          n = main.CX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.CX.setContenu(main.ACC.getContenu());
           break;
         case "011":
-          n = mainsimulation.DX.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.DX.setContenu(mainsimulation.ACC.getContenu());
+          n = main.DX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.DX.setContenu(main.ACC.getContenu());
           break;
         case "100":
-          n = mainsimulation.EX.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.EX.setContenu(mainsimulation.ACC.getContenu());
+          n = main.EX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.EX.setContenu(main.ACC.getContenu());
           break;
         case "101":
-          n = mainsimulation.FX.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.FX.setContenu(mainsimulation.ACC.getContenu());
+          n = main.FX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.FX.setContenu(main.ACC.getContenu());
           break;
         case "110":
-          n = mainsimulation.SI.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.SI.setContenu(mainsimulation.ACC.getContenu());
+          n = main.SI.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.SI.setContenu(main.ACC.getContenu());
           break;
         case "111":
-          n = mainsimulation.DI.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.DI.setContenu(mainsimulation.ACC.getContenu());
+          n = main.DI.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.DI.setContenu(main.ACC.getContenu());
           break;
       }
 
@@ -5377,31 +5382,32 @@ class UALsimulation {
       let i=0 ; 
       switch (param2) {
         case "001":
-          mainsimulation.ACC.setContenu(mainsimulation.BX.getContenu());  m=util.additionHexa(n,mainsimulation.BX.getContenu().slice(1)) ; mainsimulation.ACC.setContenu(m); break;
+          main.ACC.setContenu(main.BX.getContenu());  m=util.additionHexa(n,main.BX.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
         case "110":
-          mainsimulation.ACC.setContenu(mainsimulation.SI.getContenu());  m=util.additionHexa(n,mainsimulation.SI.getContenu().slice(1)) ; mainsimulation.ACC.setContenu(m); break;
+          main.ACC.setContenu(main.SI.getContenu());  m=util.additionHexa(n,main.SI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
         case "111":
-          mainsimulation.ACC.setContenu(mainsimulation.DI.getContenu());  m=util.additionHexa(n,mainsimulation.DI.getContenu().slice(1)) ; mainsimulation.ACC.setContenu(m); break;
+          main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
       }
       
-      i = util.chercherAdr(mainsimulation.getDataTab(),util.remplirZero(m,3,0)) ;
-      m=mainsimulation.getDataTab()[i].getVal() ; 
+      i = util.chercherAdr(main.getDataTab(),util.remplirZero(m,3,0)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc((util.remplirZero(m,3,0)).slice(-3),"0000",""));}
+      m=main.getDataTab()[i].getVal() ; 
       switch (param1) {
-        case "000": n = mainsimulation.AX.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.AX.setContenu(mainsimulation.ACC.getContenu());
+        case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
           break;
-        case "001": n = mainsimulation.BX.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.BX.setContenu(mainsimulation.ACC.getContenu());
+        case "001": n = main.BX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.BX.setContenu(main.ACC.getContenu());
           break;
-        case "010": n = mainsimulation.CX.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.CX.setContenu(mainsimulation.ACC.getContenu());
+        case "010": n = main.CX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.CX.setContenu(main.ACC.getContenu());
           break;
-        case "011": n = mainsimulation.DX.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.DX.setContenu(mainsimulation.ACC.getContenu());
+        case "011": n = main.DX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DX.setContenu(main.ACC.getContenu());
           break;
-        case "100": n = mainsimulation.EX.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.EX.setContenu(mainsimulation.ACC.getContenu());
+        case "100": n = main.EX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.EX.setContenu(main.ACC.getContenu());
           break;
-        case "101": n = mainsimulation.FX.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.FX.setContenu(mainsimulation.ACC.getContenu());
+        case "101": n = main.FX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.FX.setContenu(main.ACC.getContenu());
           break;
-        case "110": n = mainsimulation.SI.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.SI.setContenu(mainsimulation.ACC.getContenu());
+        case "110": n = main.SI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.SI.setContenu(main.ACC.getContenu());
           break;
-        case "111": n = mainsimulation.DI.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.DI.setContenu(mainsimulation.ACC.getContenu());
+        case "111": n = main.DI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DI.setContenu(main.ACC.getContenu());
           break;
       }
 
@@ -5413,105 +5419,114 @@ class UALsimulation {
       let n=0 ;
       
       switch (param2) {
-        case "001": mainsimulation.ACC.setContenu(mainsimulation.BX.getContenu()); m=util.additionHexa(m.toString(16),mainsimulation.BX.getContenu()) ; mainsimulation.ACC.setContenu(m);  break;
-        case "110": mainsimulation.ACC.setContenu(mainsimulation.SI.getContenu()); m=util.additionHexa(m.toString(16),mainsimulation.SI.getContenu()) ; mainsimulation.ACC.setContenu(m);  break;
-        case "111": mainsimulation.ACC.setContenu(mainsimulation.DI.getContenu()); m=util.additionHexa(m.toString(16),mainsimulation.DI.getContenu()) ; mainsimulation.ACC.setContenu(m);  break;
+        case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
       }
       let i = util.chercherAdr(dataTab,util.remplirZero(m,3,0)) ;
-      if(i==dataTab.length) {dataTab.push(new CaseMc((util.remplirZero(m,3,0)),0,"")); } 
+      if(i==dataTab.length) {dataTab.push(new CaseMc((util.remplirZero(m,3,0)).slice(-3),"0000",""));}
       m=dataTab[i].getVal() ;  
       switch (param1) {
-        case "000": n = mainsimulation.AX.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "000": n = main.AX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "001": n = mainsimulation.BX.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "001": n = main.BX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "010": n = mainsimulation.CX.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "010": n = main.CX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "011": n = mainsimulation.DX.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "011": n = main.DX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "100": n = mainsimulation.EX.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "100": n = main.EX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "101": n = mainsimulation.FX.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "101": n = main.FX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "110": n = mainsimulation.SI.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "110": n = main.SI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "111": n = mainsimulation.DI.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "111": n = main.DI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
       }
-      dataTab[i].setVal(mainsimulation.ACC.getContenu()) ; 
+      dataTab[i].setVal(main.ACC.getContenu()) ; 
     } // Fin Mode BaseIndexe format Long  distination =0
     // Mode direct indexe format Long  distination =0
     directIndexeLongNonDest = function(code,param1,param2,dataTab,instrTab,cpt) {
-      let m = instrTab[cpt+1].getVal() ; 
-      
+      let m=0 ; 
+      if(main.Nbinst == 3) {
+       m = instrTab[cpt+1].getVal() ; } else m=0 ;
+       
       let n=0 ;
       
       switch (param2) {
-        case "001": mainsimulation.ACC.setContenu(mainsimulation.BX.getContenu()); m=util.additionHexa(m.toString(16),mainsimulation.BX.getContenu()) ; mainsimulation.ACC.setContenu(m);  break;
-        case "110": mainsimulation.ACC.setContenu(mainsimulation.SI.getContenu()); m=util.additionHexa(m.toString(16),mainsimulation.SI.getContenu()) ; mainsimulation.ACC.setContenu(m);  break;
-        case "111": mainsimulation.ACC.setContenu(mainsimulation.DI.getContenu()); m=util.additionHexa(m.toString(16),mainsimulation.DI.getContenu()) ; mainsimulation.ACC.setContenu(m);  break;
+        case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
       }
-
-      let adretiq = instrTab[cpt+2].getVal() ; 
+      
+      let adretiq =0 ; 
+      if(main.Nbinst== 3) {
+      adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
       let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16);   
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
       m=dataTab[i].getVal() ;  
       switch (param1) {
-        case "000": n = mainsimulation.AX.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "000": n = main.AX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "001": n = mainsimulation.BX.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "001": n = main.BX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "010": n = mainsimulation.CX.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "010": n = main.CX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "011": n = mainsimulation.DX.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "011": n = main.DX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "100": n = mainsimulation.EX.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "100": n = main.EX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "101": n = mainsimulation.FX.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "101": n = main.FX.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "110": n = mainsimulation.SI.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "110": n = main.SI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
-        case "111": n = mainsimulation.DI.getContenu(); mainsimulation.ACC.setContenu(n); mainsimulation.ACC.setContenu(this.operation(code,m,n));
+        case "111": n = main.DI.getContenu(); main.ACC.setContenu(n); main.ACC.setContenu(this.operation(code,m,n));
           break;
       }
-      dataTab[i].setVal(mainsimulation.ACC.getContenu()) ; 
+      dataTab[i].setVal(main.ACC.getContenu()) ; 
     } // FIN  Mode direct indexe format Long  distination =0
 
     // Mode direct indexe format Long  distination =1
 
     directIndexeLongDest = function(code,param1,param2,dataTab,instrTab,cpt) {
-      let n = instrTab[cpt+1].getVal() ; 
+      let n=0 ; 
+      if(main.Nbinst == 3) {
+        n = instrTab[cpt+1].getVal() ; } else n=0 ;
+  
       let m=0 ; 
       let i=0 ; 
       switch (param2) {
         case "001":
-          mainsimulation.ACC.setContenu(mainsimulation.BX.getContenu());  m=util.additionHexa(n,mainsimulation.BX.getContenu().slice(1)) ; mainsimulation.ACC.setContenu(m); break;
+          main.ACC.setContenu(main.BX.getContenu());  m=util.additionHexa(n,main.BX.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
         case "110":
-          mainsimulation.ACC.setContenu(mainsimulation.SI.getContenu());  m=util.additionHexa(n,mainsimulation.SI.getContenu().slice(1)) ; mainsimulation.ACC.setContenu(m); break;
+          main.ACC.setContenu(main.SI.getContenu());  m=util.additionHexa(n,main.SI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
         case "111":
-          mainsimulation.ACC.setContenu(mainsimulation.DI.getContenu());  m=util.additionHexa(n,mainsimulation.DI.getContenu().slice(1)) ; mainsimulation.ACC.setContenu(m); break;
+          main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
       }
       
-      let adretiq = instrTab[cpt+2].getVal() ; 
+      let adretiq =0 ; 
+      if(main.Nbinst == 3) {
+      adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
       i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16);   
-      m=dataTab[i].getVal() ;   
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);  
+      m=dataTab[i].getVal() ;    
       switch (param1) {
-        case "000": n = mainsimulation.AX.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.AX.setContenu(mainsimulation.ACC.getContenu());
+        case "000": n = main.AX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu());
           break;
-        case "001": n = mainsimulation.BX.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.BX.setContenu(mainsimulation.ACC.getContenu());
+        case "001": n = main.BX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.BX.setContenu(main.ACC.getContenu());
           break;
-        case "010": n = mainsimulation.CX.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.CX.setContenu(mainsimulation.ACC.getContenu());
+        case "010": n = main.CX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.CX.setContenu(main.ACC.getContenu());
           break;
-        case "011": n = mainsimulation.DX.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.DX.setContenu(mainsimulation.ACC.getContenu());
+        case "011": n = main.DX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DX.setContenu(main.ACC.getContenu());
           break;
-        case "100": n = mainsimulation.EX.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.EX.setContenu(mainsimulation.ACC.getContenu());
+        case "100": n = main.EX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.EX.setContenu(main.ACC.getContenu());
           break;
-        case "101": n = mainsimulation.FX.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.FX.setContenu(mainsimulation.ACC.getContenu());
+        case "101": n = main.FX.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.FX.setContenu(main.ACC.getContenu());
           break;
-        case "110": n = mainsimulation.SI.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.SI.setContenu(mainsimulation.ACC.getContenu());
+        case "110": n = main.SI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.SI.setContenu(main.ACC.getContenu());
           break;
-        case "111": n = mainsimulation.DI.getContenu(); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.DI.setContenu(mainsimulation.ACC.getContenu());
+        case "111": n = main.DI.getContenu(); main.ACC.setContenu(this.operation(code,n,m)); main.DI.setContenu(main.ACC.getContenu());
           break;
       }
 
@@ -5535,44 +5550,44 @@ class UALsimulation {
       let n=0 ;
       switch (param1) {
         case "000":
-          n = mainsimulation.AX.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.AX.setContenu(mainsimulation.ACC.getContenu());
+          n = main.AX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.AX.setContenu(main.ACC.getContenu());
           break;
         case "001":
-          n = mainsimulation.BX.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.BX.setContenu(mainsimulation.ACC.getContenu());
+          n = main.BX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.BX.setContenu(main.ACC.getContenu());
           break;
         case "010":
-          n = mainsimulation.CX.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.CX.setContenu(mainsimulation.ACC.getContenu());
+          n = main.CX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.CX.setContenu(main.ACC.getContenu());
           break;
         case "011":
-          n = mainsimulation.DX.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.DX.setContenu(mainsimulation.ACC.getContenu());
+          n = main.DX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.DX.setContenu(main.ACC.getContenu());
           break;
         case "100":
-          n = mainsimulation.EX.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.EX.setContenu(mainsimulation.ACC.getContenu());
+          n = main.EX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.EX.setContenu(main.ACC.getContenu());
           break;
         case "101":
-          n = mainsimulation.FX.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.FX.setContenu(mainsimulation.ACC.getContenu());
+          n = main.FX.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.FX.setContenu(main.ACC.getContenu());
           break;
         case "110":
-          n = mainsimulation.SI.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.SI.setContenu(mainsimulation.ACC.getContenu());
+          n = main.SI.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.SI.setContenu(main.ACC.getContenu());
           break;
         case "111":
-          n = mainsimulation.DI.getContenu(); mainsimulation.ACC.setContenu(n);
-          mainsimulation.ACC.setContenu(this.operation(code,n,m));
-          mainsimulation.DI.setContenu(mainsimulation.ACC.getContenu());
+          n = main.DI.getContenu(); main.ACC.setContenu(n);
+          main.ACC.setContenu(this.operation(code,n,m));
+          main.DI.setContenu(main.ACC.getContenu());
           break;
       }
  
@@ -5581,12 +5596,13 @@ class UALsimulation {
      //Mode immediate direct  format Long  distination =0
     immediaDirectLongNonDest = function(code,instrTab,cpt) {
       let m = instrTab[cpt+1].getVal() ;
-      let i = util.chercherAdr(mainsimulation.getDataTab(),m.slice(1)) ;
-      m=mainsimulation.getDataTab()[i].getVal() ;
-      mainsimulation.ACC.setContenu(m);
+      let i = util.chercherAdr(main.getDataTab(),m.slice(1)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc((instrTab[cpt+1].getVal()).slice(-3),"0000",""));}
+      m=main.getDataTab()[i].getVal() ;
+      main.ACC.setContenu(m);
       let n= instrTab[cpt+2].getVal() ; ; 
-      mainsimulation.ACC.setContenu(this.operation(code,m,n)); 
-      mainsimulation.getDataTab()[i].setVal(mainsimulation.ACC.getContenu()) ;
+      main.ACC.setContenu(this.operation(code,m,n)); 
+      main.getDataTab()[i].setVal(main.ACC.getContenu()) ;
     }  // Fin Mode immediate direct  format Long  distination =0 
 
       //Mode immediate indirect  format Long  distination =0 
@@ -5596,18 +5612,21 @@ class UALsimulation {
       let m=0 ; 
       switch (param1) {
         case "001":
-          i = util.chercherAdr(mainsimulation.getDataTab(),mainsimulation.BX.getContenu().slice(1)) ;
-           m=mainsimulation.getDataTab()[i].getVal() ; mainsimulation.ACC.setContenu(m); 
-           m=this.operation(code,m,n) ; mainsimulation.ACC.setContenu(m); mainsimulation.getDataTab()[i].setVal(m);
+          i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
+           m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+           m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
          break;
         case "110": 
-        i = util.chercherAdr(mainsimulation.getDataTab(),mainsimulation.SI.getContenu().slice(1)) ;
-        m=mainsimulation.getDataTab()[i].getVal() ; mainsimulation.ACC.setContenu(m); 
-        m=this.operation(code,m,n) ; mainsimulation.ACC.setContenu(m); mainsimulation.getDataTab()[i].setVal(m);
+        i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
+        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+        m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m);
         break ; 
-        case "111": i = util.chercherAdr(mainsimulation.getDataTab(),mainsimulation.DI.getContenu().slice(1)) ;
-        m=mainsimulation.getDataTab()[i].getVal() ; mainsimulation.ACC.setContenu(m); 
-        m=this.operation(code,m,n) ; mainsimulation.ACC.setContenu(m); mainsimulation.getDataTab()[i].setVal(m); break ; 
+        case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
+        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
+        m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.getDataTab()[i].setVal(m); break ; 
       } 
     } // FIN Mode immediate indirect  format Long  distination =0 
 
@@ -5617,45 +5636,76 @@ class UALsimulation {
       let i=0 ;
       let n=instrTab[cpt+2].getVal() ;
       switch (param1) {
-        case "001": mainsimulation.ACC.setContenu(mainsimulation.BX.getContenu().slice(1));
-          m = util.additionHexa(mainsimulation.BX.getContenu().slice(1),instrTab[cpt+1].getVal()) ; mainsimulation.ACC.setContenu(m);
-          i = util.chercherAdr(mainsimulation.dataTab,util.remplirZero(m,3,0)) ;
-           m=mainsimulation.dataTab[i].getVal() ; mainsimulation.ACC.setContenu(m); 
-           m=this.operation(code,m,n) ; mainsimulation.ACC.setContenu(m); mainsimulation.dataTab[i].setVal(m);
+        case "001": main.ACC.setContenu(main.BX.getContenu().slice(1));
+          m = util.additionHexa(main.BX.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
+          i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
+          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
+           m=main.dataTab[i].getVal() ; main.ACC.setContenu(m); 
+           m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
          break;
         case "110": 
-        mainsimulation.ACC.setContenu(mainsimulation.SI.getContenu().slice(1));
-        m = util.additionHexa(mainsimulation.SI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; mainsimulation.ACC.setContenu(m);
-        i = util.chercherAdr(mainsimulation.dataTab,util.remplirZero(m,3,0)) ;
-         m=mainsimulation.dataTab[i].getVal() ; mainsimulation.ACC.setContenu(m);
-         m=this.operation(code,m,n) ; mainsimulation.ACC.setContenu(m); mainsimulation.dataTab[i].setVal(m);
+        main.ACC.setContenu(main.SI.getContenu().slice(1));
+        m = util.additionHexa(main.SI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
+        i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
+         m=main.dataTab[i].getVal() ; main.ACC.setContenu(m);
+         m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
         break ; 
-        case "111": mainsimulation.ACC.setContenu(mainsimulation.DI.getContenu().slice(1));
-        m = util.additionHexa(mainsimulation.DI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; mainsimulation.ACC.setContenu(m);
-        i = util.chercherAdr(mainsimulation.dataTab,util.remplirZero(m,3,0)) ;
-         m=mainsimulation.dataTab[i].getVal() ; mainsimulation.ACC.setContenu(m); 
-         m=this.operation(code,m,n) ; mainsimulation.ACC.setContenu(m); mainsimulation.dataTab[i].setVal(m);
+        case "111": main.ACC.setContenu(main.DI.getContenu().slice(1));
+        m = util.additionHexa(main.DI.getContenu().slice(1),instrTab[cpt+1].getVal()) ; main.ACC.setContenu(m);
+        i = util.chercherAdr(main.dataTab,util.remplirZero(m,3,0)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(util.remplirZero(m,3,0).slice(-3),"0000",""));}
+         m=main.dataTab[i].getVal() ; main.ACC.setContenu(m); 
+         m=this.operation(code,m,n) ; main.ACC.setContenu(m); main.dataTab[i].setVal(m);
       } 
     }  // Fin Mode immediate BaseIndexe  format Long  distination =0 
+
+
+    immDirectIndexeLongNonDest = function(code,param1,dataTab,instrTab,cpt) {
+
+       let m=0 ; 
+      if(main.Nbinst== 4) {
+       m = instrTab[cpt+1].getVal() ; } else m=0 ;
+      
+      let n=0 ;
+      
+      switch (param1) {
+        case "001": main.ACC.setContenu(main.BX.getContenu()); m=util.additionHexa(m.toString(16),main.BX.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "110": main.ACC.setContenu(main.SI.getContenu()); m=util.additionHexa(m.toString(16),main.SI.getContenu()) ; main.ACC.setContenu(m);  break;
+        case "111": main.ACC.setContenu(main.DI.getContenu()); m=util.additionHexa(m.toString(16),main.DI.getContenu()) ; main.ACC.setContenu(m);  break;
+      }
+      
+      
+      let adretiq ; 
+      if(main.Nbinst== 4) {
+        adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
+      let i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16);   
+      m=dataTab[i].getVal() ;  
+      if(main.nbMot[main.Nbinst][1] == 4) {
+        n= instrTab[cpt+3].getVal() ;  } else n= instrTab[cpt+2].getVal() ; 
+      main.ACC.setContenu(this.operation(code,m,n))
+      dataTab[i].setVal(main.ACC.getContenu()) ; 
+    } 
 
     //  Mode immediate AccDirect  format COURT  
     immediaAccDirectCourt = function(code,param1) {
       switch (param1) {
-        case "000": mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),mainsimulation.AX.getContenu()));
+        case "000": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.AX.getContenu()));
          break;
-        case "001": mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),mainsimulation.BX.getContenu()));
+        case "001": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.BX.getContenu()));
          break;
-         case "010": mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),mainsimulation.CX.getContenu()));
+         case "010": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.CX.getContenu()));
          break; 
-         case "011": mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),mainsimulation.DX.getContenu()));
+         case "011": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.DX.getContenu()));
          break;
-         case "100": mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),mainsimulation.EX.getContenu()));
+         case "100": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.EX.getContenu()));
          break;
-         case "101": mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),mainsimulation.FX.getContenu()));
+         case "101": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.FX.getContenu()));
          break ; 
-        case "110": mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),mainsimulation.SI.getContenu()));
+        case "110": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.SI.getContenu()));
         break;
-        case "111": mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),mainsimulation.DI.getContenu()));
+        case "111": main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),main.DI.getContenu()));
          break;
         
       } 
@@ -5665,8 +5715,9 @@ class UALsimulation {
     immediaAccDirectLong = function(code,dataTab,instrTab,cpt) {
       let n = instrTab[cpt+1].getVal() ;
       let i = util.chercherAdr(dataTab,n.slice(1)) ;
+      if(i==dataTab.length) {dataTab.push(new CaseMc(n.slice(-3),"0000",""));}
       n=dataTab[i].getVal() ; 
-       mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),n)); 
+       main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),n)); 
 
     } //  FIN Mode immediate AccDirect  format Long 
     
@@ -5675,623 +5726,199 @@ class UALsimulation {
       let i=0 ; let m=0 ; 
       switch (param1) {
         case "001":
-          i = util.chercherAdr(mainsimulation.getDataTab(),mainsimulation.BX.getContenu().slice(1)) ;
-           m=mainsimulation.getDataTab()[i].getVal() ; mainsimulation.ACC.setContenu(m); 
+          i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+          if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
+           m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
          break;
         case "110": 
-        i = util.chercherAdr(mainsimulation.getDataTab(),mainsimulation.SI.getContenu().slice(1)) ;
-        m=mainsimulation.getDataTab()[i].getVal() ; mainsimulation.ACC.setContenu(m); 
+        i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
+        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
         break ; 
-        case "111": i = util.chercherAdr(mainsimulation.getDataTab(),mainsimulation.DI.getContenu().slice(1)) ;
-        m=mainsimulation.getDataTab()[i].getVal() ; mainsimulation.ACC.setContenu(m);  break ; 
+        case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
+        m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m);  break ; 
       } 
 
     }
 
     LoadDirectIndexe = function(param1,dataTab,instrTab,cpt) {
-      let n = instrTab[cpt+1].getVal() ; 
+      let n=0 ; 
+     
+      if(main.Nbinst == 3) {
+       n = main.instrTab[cpt+1].getVal() ; } else n=0 ;
+  
       let m=0 ; 
       let i=0 ; 
       switch (param1) {
         case "001":
-          mainsimulation.ACC.setContenu(mainsimulation.BX.getContenu());  m=util.additionHexa(n,mainsimulation.BX.getContenu().slice(1)) ; mainsimulation.ACC.setContenu(m);  break;
+          main.ACC.setContenu(main.BX.getContenu());  m=util.additionHexa(n,main.BX.getContenu().slice(1)) ; main.ACC.setContenu(m);  break;
         case "110":
-          mainsimulation.ACC.setContenu(mainsimulation.SI.getContenu());  m=util.additionHexa(n,mainsimulation.SI.getContenu().slice(1)) ; mainsimulation.ACC.setContenu(m); break;
+          main.ACC.setContenu(main.SI.getContenu());  m=util.additionHexa(n,main.SI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
         case "111":
-          mainsimulation.ACC.setContenu(mainsimulation.DI.getContenu());  m=util.additionHexa(n,mainsimulation.DI.getContenu().slice(1)) ; mainsimulation.ACC.setContenu(m); break;
+          main.ACC.setContenu(main.DI.getContenu());  m=util.additionHexa(n,main.DI.getContenu().slice(1)) ; main.ACC.setContenu(m); break;
       }
       
-      let adretiq = instrTab[cpt+2].getVal() ; 
+      let adretiq=0 ; 
+      if(main.Nbinst == 3) {
+        adretiq = instrTab[cpt+2].getVal() ; } else adretiq = instrTab[cpt+1].getVal() ;
+       
       i = util.chercherAdr(dataTab,adretiq.slice(1)) ;
-      i = parseInt(dataTab[i].getVal(), 16) + parseInt(m, 16) ;   
+      
+      i = parseInt(dataTab[i].getAdr(), 16) + parseInt(m, 16) ;   
+   
       m=dataTab[i].getVal() ;  
-      mainsimulation.ACC.setContenu(m);
+      main.ACC.setContenu(m);
+
+      
     }
     //  decalage / Rotation Logique
     decalageRotationLogique= function(code,param1,instrTab,cpt) {
       switch (param1) {
-        case "000": mainsimulation.ACC.setContenu(mainsimulation.AX.getContenu()) ;
-        mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),instrTab[cpt+1].getVal()));
-        mainsimulation.AX.setContenu(mainsimulation.ACC.getContenu() ) ; 
+        case "000": main.ACC.setContenu(main.AX.getContenu()) ;
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+        main.AX.setContenu(main.ACC.getContenu() ) ; 
         
          break;
-        case "001": mainsimulation.ACC.setContenu(mainsimulation.BX.getContenu()) ; 
-        mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),instrTab[cpt+1].getVal()));
-        mainsimulation.BX.setContenu(mainsimulation.ACC.getContenu() ) ;
+        case "001": main.ACC.setContenu(main.BX.getContenu()) ; 
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+        main.BX.setContenu(main.ACC.getContenu() ) ;
          break;
-         case "010": mainsimulation.ACC.setContenu(mainsimulation.CX.getContenu()) ; 
-         mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),instrTab[cpt+1].getVal()));
-         mainsimulation.CX.setContenu(mainsimulation.ACC.getContenu() ) ;
+         case "010": main.ACC.setContenu(main.CX.getContenu()) ; 
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+         main.CX.setContenu(main.ACC.getContenu() ) ;
          break; 
-         case "011":mainsimulation.ACC.setContenu(mainsimulation.DX.getContenu()) ; 
-         mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),instrTab[cpt+1].getVal()));
-         mainsimulation.DX.setContenu(mainsimulation.ACC.getContenu() ) ;
+         case "011":main.ACC.setContenu(main.DX.getContenu()) ; 
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+         main.DX.setContenu(main.ACC.getContenu() ) ;
          break;
-         case "100": mainsimulation.ACC.setContenu(mainsimulation.EX.getContenu()) ; 
-         mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),instrTab[cpt+1].getVal()));
-         mainsimulation.EX.setContenu(mainsimulation.ACC.getContenu() ) ;
+         case "100": main.ACC.setContenu(main.EX.getContenu()) ; 
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+         main.EX.setContenu(main.ACC.getContenu() ) ;
          break;
-         case "101": mainsimulation.ACC.setContenu(mainsimulation.FX.getContenu()) ; 
-         mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),instrTab[cpt+1].getVal()));
-         mainsimulation.FX.setContenu(mainsimulation.ACC.getContenu() ) ;
+         case "101": main.ACC.setContenu(main.FX.getContenu()) ; 
+         main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+         main.FX.setContenu(main.ACC.getContenu() ) ;
          break ; 
-        case "110": mainsimulation.ACC.setContenu(mainsimulation.SI.getContenu()) ; 
-        mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),instrTab[cpt+1].getVal()));
-        mainsimulation.SI.setContenu(mainsimulation.ACC.getContenu() ) ;
+        case "110": main.ACC.setContenu(main.SI.getContenu()) ; 
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+        main.SI.setContenu(main.ACC.getContenu() ) ;
         break;
-        case "111": mainsimulation.ACC.setContenu(mainsimulation.DI.getContenu()) ; 
-        mainsimulation.ACC.setContenu(this.operation(code,mainsimulation.ACC.getContenu(),instrTab[cpt+1].getVal()));
-        mainsimulation.DI.setContenu(mainsimulation.ACC.getContenu() ) ;
+        case "111": main.ACC.setContenu(main.DI.getContenu()) ; 
+        main.ACC.setContenu(this.operation(code,main.ACC.getContenu(),instrTab[cpt+1].getVal()));
+        main.DI.setContenu(main.ACC.getContenu() ) ;
          break;
         
       } 
-      console.log(mainsimulation.getIndicateurRetenue());
+   //   console.log(main.getIndicateurRetenue());
     }   //  FIN decalage / Rotation Logique
      // JMP 
-     jmp = function (code,indicateurTab,cpt,delay) {
-      let i = mainsimulation.getinstrTab()[cpt+1].getVal() ; 
-      i= util.chercherAdr(mainsimulation.getinstrTab(),i.slice(1)) ; 
+     jmp = function (code,indicateurTab,cpt) {
+      let i = main.getinstrTab()[cpt+1].getVal() ; 
+      i= util.chercherAdr(main.getinstrTab(),i.slice(1)) ; 
     switch ( code.toUpperCase())  {
     case "JMP": return i;   
-    case "JZ": if( mainsimulation.getIndicateurZero() == "1"){
-        selectElement(indZ,delay,"1");
-        return i; }
-        else {return cpt+2 ; 
-          
-        }
-    case "JNZ": if(mainsimulation.getIndicateurZero() != "1"){
-      selectElement(indZ,delay,"0");
-    return i; 
-    }else return cpt+2 ;
-    case "JC": if(mainsimulation.getIndicateurRetenue() == "1"){
-      selectElement(indR,delay,"1");
-    return i; 
-    }else return cpt+2 ; 
-    case "JNC": if(mainsimulation.getIndicateurRetenue() != "1") {
-      selectElement(indR,delay,"0");
-    return i; 
-    }else return cpt+2 ; 
+    case "JZ": if( main.getIndicateurZero() == "1")
+        return i; else return cpt+2 ; 
+    case "JNZ": if(main.getIndicateurZero() != "1")
+    return i; else return cpt+2 ;
+    case "JC": if(main.getIndicateurRetenue() == "1")
+    return i; else return cpt+2 ; 
+    case "JNC": if(main.getIndicateurRetenue() != "1") 
+    return i; else return cpt+2 ; 
 
-    case "JS": if(mainsimulation.getIndicateurSigne() == "1") {
-      selectElement(indS,delay,"1");
-      return i; 
-    }else return cpt+2 ;
-    case "JNS": if(mainsimulation.getIndicateurSigne() != "1") { 
-      selectElement(indS,delay,"0");
-      return i;
-     } else return cpt+2 ;
-    case "JO": if(mainsimulation.getIndicateurDebord() == "1") { 
-      selectElement(indD,delay,"1");
-      return i; 
-    }else return cpt+2 ;
-    case "JNO": if(mainsimulation.getIndicateurDebord() != "1"){
-      selectElement(indD,delay,"0");
-       return i ;} else return cpt+2 ;
-    case "JE": if(mainsimulation.getIndicateurZero() == "1" )  {
-      selectElement(indZ,delay,"1");
-      return i ;} else return cpt+2 ; 
-    case "JNE": if(mainsimulation.getIndicateurZero() != "1" ){ 
-      selectElement(indZ,delay,"0");
-      return i ;}
-     else return cpt+2 ;  
+    case "JS": if(main.getIndicateurSigne() == "1") return i; else return cpt+2 ;
+    case "JNS": if(main.getIndicateurSigne() != "1")  return i; else return cpt+2 ;
+    case "JO": if(main.getIndicateurDebord() == "1")  return i; else return cpt+2 ;
+    case "JNO": if(main.getIndicateurDebord() != "1")  return i ; else return cpt+2 ;
+    case "JE": if(main.getIndicateurZero() == "1" )  {return i ;} else return cpt+2 ; 
+    case "JNE": if(main.getIndicateurZero() != "1" ) return i ; else return cpt+2 ;  
   }
-  return delay;
 } //JMP 
    //  comparaison direct 
-  cmpDirect = function (code,param1,param2,delay) {             
+  cmpDirect = function (code,param1,param2) {
    let m=0 ;
    let n=0 ; 
-   switch (param2) {                   // on récupère le premier paramètre et on le met dans l'acc 
-    case "000":
-      m = mainsimulation.AX.getContenu();
-      selectElement(dataREG2el,delay,0);
-      delay+=3000;
-      selectElement(dataC1el,delay,0);
-      delay+=3000;
-      selectElement(dataC2el,delay,0);
-      delay+=3000;
-      selectElement(dataC3el,delay,0);
-      delay+=3000;
-      selectElement(ax,delay,m);
-      delay+=3000;
-      selectElement(dataREGel,delay,0);
-      delay+=3000;
-      selectElement(dataDATAel,delay,0);
-      delay+=3000;
-      selectElement(dataEUAL1el,delay,0);
-      delay+=3000;
-      selectElement(ual2,delay,m);
-      delay+=3000;
-      selectElement(acc,delay,m);
-      break;
-    case "001":
-      m = mainsimulation.BX.getContenu();
-      selectElement(dataREG2el,delay,0);
-      delay+=3000;
-      selectElement(dataC1el,delay,0);
-      delay+=3000;
-      selectElement(dataC2el,delay,0);
-      delay+=3000;
-      selectElement(dataC3el,delay,0);
-      delay+=3000;
-      selectElement(bx,delay,m);
-      delay+=3000;
-      selectElement(dataREGel,delay,0);
-      delay+=3000;
-      selectElement(dataDATAel,delay,0);
-      delay+=3000;
-      selectElement(dataEUAL1el,delay,0);
-      delay+=3000;
-      selectElement(ual2,delay,m);
-      delay+=3000;
-      selectElement(acc,delay,m);
-      break;
-    case "010":
-      m = mainsimulation.CX.getContenu();
-      selectElement(dataREG2el,delay,0);
-      delay+=3000;
-      selectElement(dataC1el,delay,0);
-      delay+=3000;
-      selectElement(dataC2el,delay,0);
-      delay+=3000;
-      selectElement(dataC3el,delay,0);
-      delay+=3000;
-      selectElement(cx,delay,m);
-      delay+=3000;
-      selectElement(dataREGel,delay,0);
-      delay+=3000;
-      selectElement(dataDATAel,delay,0);
-      delay+=3000;
-      selectElement(dataEUAL1el,delay,0);
-      delay+=3000;
-      selectElement(ual2,delay,m);
-      delay+=3000;
-      selectElement(acc,delay,m);
-      break;
-    case "011":
-      m = mainsimulation.DX.getContenu();
-      selectElement(dataREG2el,delay,0);
-      delay+=3000;
-      selectElement(dataC1el,delay,0);
-      delay+=3000;
-      selectElement(dataC2el,delay,0);
-      delay+=3000;
-      selectElement(dataC3el,delay,0);
-      delay+=3000;
-      selectElement(dx,delay,m);
-      delay+=3000;
-      selectElement(dataREGel,delay,0);
-      delay+=3000;
-      selectElement(dataDATAel,delay,0);
-      delay+=3000;
-      selectElement(dataEUAL1el,delay,0);
-      delay+=3000;
-      selectElement(ual2,delay,m);
-      delay+=3000;
-      selectElement(acc,delay,m);
-      break;
-    case "100":
-      m = mainsimulation.EX.getContenu();
-      selectElement(dataREG2el,delay,0);
-      delay+=3000;
-      selectElement(dataC1el,delay,0);
-      delay+=3000;
-      selectElement(dataC2el,delay,0);
-      delay+=3000;
-      selectElement(dataC3el,delay,0);
-      delay+=3000;
-      selectElement(ex,delay,m);
-      delay+=3000;
-      selectElement(dataREGel,delay,0);
-      delay+=3000;
-      selectElement(dataDATAel,delay,0);
-      delay+=3000;
-      selectElement(dataEUAL1el,delay,0);
-      delay+=3000;
-      selectElement(ual2,delay,m);
-      delay+=3000;
-      selectElement(acc,delay,m);
-      break;
-    case "101":
-      m = mainsimulation.FX.getContenu();
-      selectElement(dataREG2el,delay,0);
-      delay+=3000;
-      selectElement(dataC1el,delay,0);
-      delay+=3000;
-      selectElement(dataC2el,delay,0);
-      delay+=3000;
-      selectElement(dataC3el,delay,0);
-      delay+=3000;
-      selectElement(fx,delay,m);
-      delay+=3000;
-      selectElement(dataREGel,delay,0);
-      delay+=3000;
-      selectElement(dataDATAel,delay,0);
-      delay+=3000;
-      selectElement(dataEUAL1el,delay,0);
-      delay+=3000;
-      selectElement(ual2,delay,m);
-      delay+=3000;
-      selectElement(acc,delay,m);
-      break;
-    case "110":
-     m = mainsimulation.SI.getContenu();
-     selectElement(dataREG2el,delay,0);
-     delay+=3000;
-     selectElement(dataC1el,delay,0);
-     delay+=3000;
-     selectElement(dataC2el,delay,0);
-     delay+=3000;
-     selectElement(dataC3el,delay,0);
-     delay+=3000;
-     selectElement(si,delay,m);
-     delay+=3000;
-     selectElement(dataREGel,delay,0);
-     delay+=3000;
-     selectElement(dataDATAel,delay,0);
-     delay+=3000;
-     selectElement(dataEUAL1el,delay,0);
-     delay+=3000;
-     selectElement(ual2,delay,m);
-     delay+=3000;
-     selectElement(acc,delay,m);
-       break;
-      case "111":
-      m = mainsimulation.DI.getContenu();
-      selectElement(dataREG2el,delay,0);
-      delay+=3000;
-      selectElement(dataC1el,delay,0);
-      delay+=3000;
-      selectElement(dataC2el,delay,0);
-      delay+=3000;
-      selectElement(dataC3el,delay,0);
-      delay+=3000;
-      selectElement(di,delay,m);
-      delay+=3000;
-      selectElement(dataREGel,delay,0);
-      delay+=3000;
-      selectElement(dataDATAel,delay,0);
-      delay+=3000;
-      selectElement(dataEUAL1el,delay,0);
-      delay+=3000;
-      selectElement(ual2,delay,m);
-      delay+=3000;
-      selectElement(acc,delay,m);
-      break;
-  }
- 
-    switch (param1) {
+    switch (param2) {
       case "000":
-        n = mainsimulation.AX.getContenu();  
-        selectElement(dataREG1el,delay,0);
-        delay+=3000;
-        selectElement(dataC1el,delay,0);
-        delay+=3000;
-        selectElement(dataC2el,delay,0);
-        delay+=3000;
-        selectElement(dataC3el,delay,0);
-        delay+=3000;
-        selectElement(ax,delay,n);
-        delay+=3000;
-        mainsimulation.ACC.setContenu(n);
-        selectElement(dataREGel,delay,0);
-        delay+=3000;
-        selectElement(dataDATAel,delay,0);
-        delay+=3000;
-        selectElement(dataEUAL1el,delay,0);
-        delay+=3000;
-        selectElement(ual2,delay,n);
-        delay+=3000;
-        selectElement(dataC5el,delay,0);
-        delay+=3000;
-        selectElement(dataC4el,delay,0);
-        delay+=3000;
-        selectElement(dataACCel,delay,0);
-        delay+=3000;
-        selectElement(dataC6el,delay,0);
-        delay+=3000;
-        selectElement(ual1,delay,n);
-        // on fait l'op
-        mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
-        delay+=3000;
-        selectElement(acc,delay,mainsimulation.ACC.getContenu());
+        m = main.AX.getContenu();
         break;
       case "001":
-        n = mainsimulation.BX.getContenu();
-        selectElement(dataREG1el,delay,0);
-        delay+=3000;
-        selectElement(dataC1el,delay,0);
-        delay+=3000;
-        selectElement(dataC2el,delay,0);
-        delay+=3000;
-        selectElement(dataC3el,delay,0);
-        delay+=3000;
-        selectElement(bx,delay,n);
-        delay+=3000;
-        mainsimulation.ACC.setContenu(n);
-        selectElement(dataREGel,delay,0);
-        delay+=3000;
-        selectElement(dataDATAel,delay,0);
-        delay+=3000;
-        selectElement(dataEUAL1el,delay,0);
-        delay+=3000;
-        selectElement(ual2,delay,n);
-        delay+=3000;
-        selectElement(dataC5el,delay,0);
-        delay+=3000;
-        selectElement(dataC4el,delay,0);
-        delay+=3000;
-        selectElement(dataACCel,delay,0);
-        delay+=3000;
-        selectElement(dataC6el,delay,0);
-        delay+=3000;
-        selectElement(ual1,delay,n);
-        // on fait l'op
-        mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
-        delay+=3000;
-        selectElement(acc,delay,mainsimulation.ACC.getContenu());
+        m = main.BX.getContenu();
         break;
       case "010":
-        n = mainsimulation.CX.getContenu();
-        selectElement(dataREG1el,delay,0);
-        delay+=3000;
-        selectElement(dataC1el,delay,0);
-        delay+=3000;
-        selectElement(dataC2el,delay,0);
-        delay+=3000;
-        selectElement(dataC3el,delay,0);
-        delay+=3000;
-        selectElement(cx,delay,n);
-        delay+=3000;
-        mainsimulation.ACC.setContenu(n);
-        selectElement(dataREGel,delay,0);
-        delay+=3000;
-        selectElement(dataDATAel,delay,0);
-        delay+=3000;
-        selectElement(dataEUAL1el,delay,0);
-        delay+=3000;
-        selectElement(ual2,delay,n);
-        delay+=3000;
-        selectElement(dataC5el,delay,0);
-        delay+=3000;
-        selectElement(dataC4el,delay,0);
-        delay+=3000;
-        selectElement(dataACCel,delay,0);
-        delay+=3000;
-        selectElement(dataC6el,delay,0);
-        delay+=3000;
-        selectElement(ual1,delay,n);
-        // on fait l'op
-        mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
-        delay+=3000;
-        selectElement(acc,delay,mainsimulation.ACC.getContenu());
+        m = main.CX.getContenu();
         break;
       case "011":
-        n = mainsimulation.DX.getContenu();
-        selectElement(dataREG1el,delay,0);
-        delay+=3000;
-        selectElement(dataC1el,delay,0);
-        delay+=3000;
-        selectElement(dataC2el,delay,0);
-        delay+=3000;
-        selectElement(dataC3el,delay,0);
-        delay+=3000;
-        selectElement(dx,delay,n);
-        delay+=3000;
-        mainsimulation.ACC.setContenu(n);
-        selectElement(dataREGel,delay,0);
-        delay+=3000;
-        selectElement(dataDATAel,delay,0);
-        delay+=3000;
-        selectElement(dataEUAL1el,delay,0);
-        delay+=3000;
-        selectElement(ual2,delay,n);
-        delay+=3000;
-        selectElement(dataC5el,delay,0);
-        delay+=3000;
-        selectElement(dataC4el,delay,0);
-        delay+=3000;
-        selectElement(dataACCel,delay,0);
-        delay+=3000;
-        selectElement(dataC6el,delay,0);
-        delay+=3000;
-        selectElement(ual1,delay,n);
-        // on fait l'op
-        mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
-        delay+=3000;
-        selectElement(acc,delay,mainsimulation.ACC.getContenu());
+        m = main.DX.getContenu();
         break;
       case "100":
-        n = mainsimulation.EX.getContenu();
-        selectElement(dataREG1el,delay,0);
-        delay+=3000;
-        selectElement(dataC1el,delay,0);
-        delay+=3000;
-        selectElement(dataC2el,delay,0);
-        delay+=3000;
-        selectElement(dataC3el,delay,0);
-        delay+=3000;
-        selectElement(ex,delay,n);
-        delay+=3000;
-        mainsimulation.ACC.setContenu(n);
-        selectElement(dataREGel,delay,0);
-        delay+=3000;
-        selectElement(dataDATAel,delay,0);
-        delay+=3000;
-        selectElement(dataEUAL1el,delay,0);
-        delay+=3000;
-        selectElement(ual2,delay,n);
-        delay+=3000;
-        selectElement(dataC5el,delay,0);
-        delay+=3000;
-        selectElement(dataC4el,delay,0);
-        delay+=3000;
-        selectElement(dataACCel,delay,0);
-        delay+=3000;
-        selectElement(dataC6el,delay,0);
-        delay+=3000;
-        selectElement(ual1,delay,n);
-        // on fait l'op
-        mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
-        delay+=3000;
-        selectElement(acc,delay,mainsimulation.ACC.getContenu());
+        m = main.EX.getContenu();
         break;
       case "101":
-        n = mainsimulation.FX.getContenu();
-        selectElement(dataREG1el,delay,0);
-        delay+=3000;
-        selectElement(dataC1el,delay,0);
-        delay+=3000;
-        selectElement(dataC2el,delay,0);
-        delay+=3000;
-        selectElement(dataC3el,delay,0);
-        delay+=3000;
-        selectElement(fx,delay,n);
-        delay+=3000;
-        mainsimulation.ACC.setContenu(n);
-        selectElement(dataREGel,delay,0);
-        delay+=3000;
-        selectElement(dataDATAel,delay,0);
-        delay+=3000;
-        selectElement(dataEUAL1el,delay,0);
-        delay+=3000;
-        selectElement(ual2,delay,n);
-        delay+=3000;
-        selectElement(dataC5el,delay,0);
-        delay+=3000;
-        selectElement(dataC4el,delay,0);
-        delay+=3000;
-        selectElement(dataACCel,delay,0);
-        delay+=3000;
-        selectElement(dataC6el,delay,0);
-        delay+=3000;
-        selectElement(ual1,delay,n);
-        // on fait l'op
-        mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
-        delay+=3000;
-        selectElement(acc,delay,mainsimulation.ACC.getContenu());
+        m = main.FX.getContenu();
         break;
       case "110":
-        n = mainsimulation.SI.getContenu();
-        selectElement(dataREG1el,delay,0);
-        delay+=3000;
-        selectElement(dataC1el,delay,0);
-        delay+=3000;
-        selectElement(dataC2el,delay,0);
-        delay+=3000;
-        selectElement(dataC3el,delay,0);
-        delay+=3000;
-        selectElement(si,delay,n);
-        delay+=3000;
-        mainsimulation.ACC.setContenu(n);
-        selectElement(dataREGel,delay,0);
-        delay+=3000;
-        selectElement(dataDATAel,delay,0);
-        delay+=3000;
-        selectElement(dataEUAL1el,delay,0);
-        delay+=3000;
-        selectElement(ual2,delay,n);
-        delay+=3000;
-        selectElement(dataC5el,delay,0);
-        delay+=3000;
-        selectElement(dataC4el,delay,0);
-        delay+=3000;
-        selectElement(dataACCel,delay,0);
-        delay+=3000;
-        selectElement(dataC6el,delay,0);
-        delay+=3000;
-        selectElement(ual1,delay,n);
-        // on fait l'op
-        mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
-        delay+=3000;
-        selectElement(acc,delay,mainsimulation.ACC.getContenu());
+       m = main.SI.getContenu();
+         break;
+        case "111":
+        m = main.DI.getContenu();
+        break;
+    }
+    switch (param1) {
+      case "000":
+        n = main.AX.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "001":
+        n = main.BX.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "010":
+        n = main.CX.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "011":
+        n = main.DX.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "100":
+        n = main.EX.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "101":
+        n = main.FX.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
+        break;
+      case "110":
+        n = main.SI.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m));
         break;
       case "111":
-        n = mainsimulation.DI.getContenu();
-        selectElement(dataREG1el,delay,0);
-        delay+=3000;
-        selectElement(dataC1el,delay,0);
-        delay+=3000;
-        selectElement(dataC2el,delay,0);
-        delay+=3000;
-        selectElement(dataC3el,delay,0);
-        delay+=3000;
-        selectElement(di,delay,n);
-        delay+=3000;
-        mainsimulation.ACC.setContenu(n);
-        selectElement(dataREGel,delay,0);
-        delay+=3000;
-        selectElement(dataDATAel,delay,0);
-        delay+=3000;
-        selectElement(dataEUAL1el,delay,0);
-        delay+=3000;
-        selectElement(ual2,delay,n);
-        delay+=3000;
-        selectElement(dataC5el,delay,0);
-        delay+=3000;
-        selectElement(dataC4el,delay,0);
-        delay+=3000;
-        selectElement(dataACCel,delay,0);
-        delay+=3000;
-        selectElement(dataC6el,delay,0);
-        delay+=3000;
-        selectElement(ual1,delay,n);
-        // on fait l'op
-        mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
-        delay+=3000;
-        selectElement(acc,delay,mainsimulation.ACC.getContenu());
+        n = main.DI.getContenu();
+        main.ACC.setContenu(n);
+        main.ACC.setContenu(this.operation("SUB",n,m)); 
         break;
     }
-  delay+=3000;
 
-   // console.log(n," ",m);
     if(util.compareHexValues(n,m)>0) { 
-      mainsimulation.setIndicateurZero("0") ;
-      selectElement(indZ,delay,"0");
-       mainsimulation.setIndicateurSigne("0") ; 
-       selectElement(indS,delay,"0");
-       mainsimulation.setIndicateurRetenue("0") ;
-       selectElement(indR,delay,"0");
+      main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
     }else if(util.compareHexValues(n,m)<0) {
-      mainsimulation.setIndicateurZero("0") ; 
-      selectElement(indZ,delay,"0");
-      mainsimulation.setIndicateurSigne("1") ; 
-      selectElement(indS,delay,"1");
-      mainsimulation.setIndicateurRetenue("0") ;
-      selectElement(indR,delay,"0");
+      main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
     }
     else { 
-      mainsimulation.setIndicateurZero("1") ; 
-      selectElement(indZ,delay,"1");
-      mainsimulation.setIndicateurSigne("0") ; 
-      selectElement(indS,delay,"0");
-      mainsimulation.setIndicateurRetenue("0") ;
-      selectElement(indR,delay,"0");
-      mainsimulation.setIndicateurDebord("0"); 
-      selectElement(indD,delay,"0");
+      main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+      main.setIndicateurDebord("0"); 
     }
 
-      return delay;
+      
   }  // FIN   comparaison direct
 
 
@@ -6302,52 +5929,71 @@ class UALsimulation {
      let n=0 ; 
     switch (param2) {
       case "001":
-        i = util.chercherAdr(mainsimulation.getDataTab(),mainsimulation.BX.getContenu().slice(1)) ;
-         m=mainsimulation.getDataTab()[i].getVal() ; mainsimulation.ACC.setContenu(m); 
+        i = util.chercherAdr(main.getDataTab(),main.BX.getContenu().slice(1)) ;
+        if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.BX.getContenu().slice(-3),"0000",""));}
+         m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
        break;
       case "110": 
-      i = util.chercherAdr(mainsimulation.getDataTab(),mainsimulation.SI.getContenu().slice(1)) ;
-      m=mainsimulation.getDataTab()[i].getVal() ; mainsimulation.ACC.setContenu(m); 
+      i = util.chercherAdr(main.getDataTab(),main.SI.getContenu().slice(1)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.SI.getContenu().slice(-3),"0000",""));}
+      m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
       break ; 
-      case "111": i = util.chercherAdr(mainsimulation.getDataTab(),mainsimulation.DI.getContenu().slice(1)) ;
-      m=mainsimulation.getDataTab()[i].getVal() ; mainsimulation.ACC.setContenu(m); 
+      case "111": i = util.chercherAdr(main.getDataTab(),main.DI.getContenu().slice(1)) ;
+      if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(main.DI.getContenu().slice(-3),"0000",""));}
+      m=main.getDataTab()[i].getVal() ; main.ACC.setContenu(m); 
       break;
     } 
 
      switch (param1) {
        case "000":
-         n = mainsimulation.AX.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
+         n = main.AX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "001":
-         n = mainsimulation.BX.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
+         n = main.BX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "010":
-         n = mainsimulation.CX.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
+         n = main.CX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "011":
-         n = mainsimulation.DX.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
-         case "111":
-         n = mainsimulation.DI.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m)); 
+         n = main.DX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "100":
+         n = main.EX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "101":
+         n = main.FX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "110":
+         n = main.SI.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
+         break;
+       case "111":
+         n = main.DI.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m)); 
          break;
      }
      if(util.compareHexValues(n,m)>0) {
-       mainsimulation.setIndicateurZero("0") ; mainsimulation.setIndicateurSigne("0") ; mainsimulation.setIndicateurRetenue("0") ;
+       main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
      }else if(util.compareHexValues(n,m)<0) {
-       mainsimulation.setIndicateurZero("0") ; mainsimulation.setIndicateurSigne("1") ; mainsimulation.setIndicateurRetenue("0") ;
+       main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
      }
      else { 
-       mainsimulation.setIndicateurZero("1") ; mainsimulation.setIndicateurSigne("0") ; mainsimulation.setIndicateurRetenue("0") ;
-       mainsimulation.setIndicateurDebord("0"); 
+       main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+       main.setIndicateurDebord("0"); 
      }
  
        
@@ -6360,76 +6006,78 @@ class UALsimulation {
     let n=0 ; 
      switch(param1) {
        case "000":
-         n = mainsimulation.AX.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
+         n = main.AX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "001":
-         n = mainsimulation.BX.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
+         n = main.BX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "010":
-         n = mainsimulation.CX.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
+         n = main.CX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "011":
-         n = mainsimulation.DX.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
+         n = main.DX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "100":
-         n = mainsimulation.EX.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m)); 
+         n = main.EX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m)); 
          break;
        case "101":
-         n = mainsimulation.FX.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
+         n = main.FX.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "110":
-         n = mainsimulation.SI.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
+         n = main.SI.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
        case "111":
-         n = mainsimulation.DI.getContenu();
-         mainsimulation.ACC.setContenu(n);
-         mainsimulation.ACC.setContenu(this.operation("SUB",n,m));
+         n = main.DI.getContenu();
+         main.ACC.setContenu(n);
+         main.ACC.setContenu(this.operation("SUB",n,m));
          break;
      }
+     
      if(util.compareHexValues(n,m)>0) {
-      mainsimulation.setIndicateurZero("0") ; mainsimulation.setIndicateurSigne("0") ; mainsimulation.setIndicateurRetenue("0") ;
+      main.setIndicateurZero("0") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
     }else if(util.compareHexValues(n,m)<0) {
-      mainsimulation.setIndicateurZero("0") ; mainsimulation.setIndicateurSigne("1") ; mainsimulation.setIndicateurRetenue("0") ;
+      main.setIndicateurZero("0") ; main.setIndicateurSigne("1") ; main.setIndicateurRetenue("0") ;
     }
     else { 
-      mainsimulation.setIndicateurZero("1") ; mainsimulation.setIndicateurSigne("0") ; mainsimulation.setIndicateurRetenue("0") ;
-      mainsimulation.setIndicateurDebord("0"); 
+      main.setIndicateurZero("1") ; main.setIndicateurSigne("0") ; main.setIndicateurRetenue("0") ;
+      main.setIndicateurDebord("0"); 
     }
        
    } //  DIN comparaison Imm
 
    store = function(cpt) {
-    let i = mainsimulation.getinstrTab()[cpt+1].getVal() ; 
-    i= util.chercherAdr(mainsimulation.getDataTab(),i.slice(1)) ; 
-    mainsimulation.getDataTab()[i].setVal(mainsimulation.ACC.getContenu())  ; 
+    let i = main.getinstrTab()[cpt+1].getVal() ; 
+    i= util.chercherAdr(main.getDataTab(),i.slice(1)) ; 
+    if(i==main.dataTab.length) {main.dataTab.push(new CaseMc(i,"0000",""));}
+    main.getDataTab()[i].setVal(main.ACC.getContenu())  ; 
    } 
 
    NotDirect = function(code,param1) {
     let m = 0 ; 
     let n = 0;   
     switch (param1) { 
-      case "000": m = mainsimulation.AX.getContenu(); mainsimulation.ACC.setContenu(m); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.AX.setContenu(mainsimulation.ACC.getContenu()); break;
-      case "001": m = mainsimulation.BX.getContenu(); mainsimulation.ACC.setContenu(m); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.BX.setContenu(mainsimulation.ACC.getContenu()); break;
-      case "010": m = mainsimulation.CX.getContenu(); mainsimulation.ACC.setContenu(m); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.CX.setContenu(mainsimulation.ACC.getContenu()); break;
-      case "011": m = mainsimulation.DX.getContenu(); mainsimulation.ACC.setContenu(m); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.DX.setContenu(mainsimulation.ACC.getContenu()); break;
-      case "100": m = mainsimulation.EX.getContenu(); mainsimulation.ACC.setContenu(m); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.EX.setContenu(mainsimulation.ACC.getContenu()); break;
-      case "101": m = mainsimulation.FX.getContenu(); mainsimulation.ACC.setContenu(m); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.FX.setContenu(mainsimulation.ACC.getContenu()); break;
-      case "110": m = mainsimulation.SI.getContenu(); mainsimulation.ACC.setContenu(m); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.SI.setContenu(mainsimulation.ACC.getContenu()); break;
-      case "111": m = mainsimulation.DI.getContenu(); mainsimulation.ACC.setContenu(m); mainsimulation.ACC.setContenu(this.operation(code,n,m)); mainsimulation.DI.setContenu(mainsimulation.ACC.getContenu()); break;
+      case "000": m = main.AX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.AX.setContenu(main.ACC.getContenu()); break;
+      case "001": m = main.BX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.BX.setContenu(main.ACC.getContenu()); break;
+      case "010": m = main.CX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.CX.setContenu(main.ACC.getContenu()); break;
+      case "011": m = main.DX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.DX.setContenu(main.ACC.getContenu()); break;
+      case "100": m = main.EX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.EX.setContenu(main.ACC.getContenu()); break;
+      case "101": m = main.FX.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.FX.setContenu(main.ACC.getContenu()); break;
+      case "110": m = main.SI.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.SI.setContenu(main.ACC.getContenu()); break;
+      case "111": m = main.DI.getContenu(); main.ACC.setContenu(m); main.ACC.setContenu(this.operation(code,n,m)); main.DI.setContenu(main.ACC.getContenu()); break;
 
   }
    }
@@ -6437,16 +6085,16 @@ class UALsimulation {
    // mettre a jour les indicateurs          
    mettreAjourIndicateur = function(val) {   
     let binaryRes = (util.remplirZero(util.hexEnBinaire(val),16,0)).slice(-16) ;
-    if(val=="0000"){mainsimulation.setIndicateurZero("1") ;}
-    else {mainsimulation.setIndicateurZero("0");}
-    if (val.length>4){mainsimulation.setIndicateurDebord("1"); mainsimulation.setIndicateurRetenue("1");}
+    if(val=="0000"){main.setIndicateurZero("1") ;}
+    else {main.setIndicateurZero("0");}
+    if (val.length>4){main.setIndicateurDebord("1"); main.setIndicateurRetenue("1");}
     else {
-      mainsimulation.setIndicateurDebord("0"); 
-      mainsimulation.setIndicateurRetenue("0");
+      main.setIndicateurDebord("0"); 
+      main.setIndicateurRetenue("0");
       
     }
-    if (binaryRes[0]== "1") {mainsimulation.setIndicateurSigne("1");}
-    else {mainsimulation.setIndicateurSigne("0");}
+    if (binaryRes[0]== "1") {main.setIndicateurSigne("1");}
+    else {main.setIndicateurSigne("0");}
 
    } // FIN mettre a jour les indicateurs 
     operation = function(code,n,m ) {
@@ -6454,9 +6102,9 @@ class UALsimulation {
       switch (code.toUpperCase()) {
         case "MOV": res=util.remplirZero(m,4,0); this.mettreAjourIndicateur(res);  break; 
         case "ADD": res=util.remplirZero(util.additionHexa(n,m),4,0); 
-        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
+        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
         break;
-        case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ;
+        case "SUB": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; 
         break;
         case "CMP": res=util.compareHexValues(n,m) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
         case "OR": res=util.remplirZero(util.OrHex(n,m),4,0) ; util.setIndicateursAccumulateur(res.slice(-4)); break;
@@ -6487,13 +6135,13 @@ class UALsimulation {
         case "STOP": ins = "011110"; break;
         case "MOVI": res=util.remplirZero(m,4,0); util.setIndicateursAccumulateur(res.slice(-4)); break;
         case "ADDI": res=util.remplirZero(util.additionHexa(n,m),4,0); 
-        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
+        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
         break;
         case "ADAI": res=util.remplirZero(util.additionHexa(n,m),4,0); 
-        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
+        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
         break;
         case "ADA": res=util.remplirZero(util.additionHexa(n,m),4,0) ;  
-        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndZeroAddition(n,m) ; 
+        util.setIndDebordAddition(n,m) ; util.setIndRetenueAddition(n,m) ; util.setIndZeroAddition(n,m) ; util.setIndSigneAddition(n,m) ; 
         break; 
         case "SUBI": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break;
         case "SBA": res=util.remplirZero(util.SoustractionHex(n,m),4,0) ; break ;
@@ -6512,13 +6160,16 @@ class UALsimulation {
 }
 
 
-// l'objet mainsimulation : ce n'est pas le mainsimulation il contient juste des opérations élémentaires 
-var mainsimulation = {
+
+// Le main qui est dans execute 
+export var mainsimul = {
   dataTab: [],
   instrTab :[],
   tabEtiq : [],
+  nbMot : [] ,
+  Nbinst :0 ,
   indic: new registre("INDIC","0000") , 
-  ualsimulation: new UALsimulation("0", "0"),
+  ual: new UALsimul("0", "0"),
   AX: new registre("AX", "0000"),
   BX: new registre("BX", "0000"),
   CX: new registre("CX", "0000"),
@@ -6529,7 +6180,9 @@ var mainsimulation = {
   DI: new registre("DI", "0000"),
   CO: new registre("CO", "000"),
   ACC: new registre("ACC", "0000"),
-  ri: new RI(), 
+  ri: new RI(),
+
+  
   getinstrTab: function () {
     return this.instrTab;
   },
@@ -6610,17 +6263,16 @@ var mainsimulation = {
     contenuBin = (contenuBin.substring(0,12)).concat(val,contenuBin.slice(-3)) ;
     this.indic.setContenu(util.remplirZero((util.binaryToHex(contenuBin)),4,0)) ;
   },
+  
   coder: function (contents) {
- 
+
     const messageDiv= document.getElementById("messageDiv");
     messageDiv.innerHTML = ""; 
     let indice = 0;
     let co;
-    let delay = 0;
     let adr = "";
     let lines = contents.split('\n');
     console.log(contents);
-    console.log("ih");
     lines = lines.filter(line => line.trim() !== '');    // remove the empty lines from my filecontents : the table lines which represents the lines of the file 
     let fileLength = lines.length;  
     let nbLigne = 0;                     // file length without  the empty lines 
@@ -6632,19 +6284,37 @@ var mainsimulation = {
       ligne_str = ligne_str.replace(",", " ");
       ligne_str = util.removeExtraSpaces(ligne_str);
       ligne_str = ligne_str.split(" ");
-      console.log(ligne_str[0]);
       if (ligne_str[0] == "ORG") {
-        console.log("hh");
         if (ligne_str[1].indexOf("H") != -1) {
           adr = ligne_str[1].slice(0, ligne_str[1].length - 1);
-      
         } 
-               // la première phase 
-        console.log("aha");
         co = adr;
         this.setCO(co);
+        let tab = codingExecute.coderInst(ligne_str, co, this.getDataTab());
+          main.nbMot.push([main.instrTab.length,tab.length]) ;
+          main.instrTab=main.getinstrTab().concat(tab) ;
+          co = util.incrementHex(co, tab.length);
       } else if (ligne_str[0] == "START") {
-      } else if (ligne_str[0] == "SET") {
+      }else if (ligne_str[0] == "SETZ") {
+          this.getDataTab().push(
+            new CaseMc(
+              util.remplirZero(indice.toString(16),3,0),"0000",
+              ligne_str[1]
+            )
+          );
+          indice++;
+          for (let k=1; k < parseInt(ligne_str[2]); k++) {
+            this.getDataTab().push(
+              new CaseMc(
+                util.remplirZero(indice.toString(16),3,0),"0000",
+                ""
+              )
+            );
+            indice++;
+          }
+        
+        }
+       else if (ligne_str[0] == "SET") {
         this.getDataTab().push(
           new CaseMc(
             util.remplirZero(indice.toString(16),3,0),
@@ -6653,17 +6323,18 @@ var mainsimulation = {
           )
         );
         indice++;
-      } else if (ligne_str[0] == "STOP") {
+       
       } else {
-        let tab = coding.coderInst(ligne_str, co, this.getDataTab());
-        mainsimulation.instrTab=mainsimulation.getinstrTab().concat(tab) ;
+        let tab = codingExecute.coderInst(ligne_str, co, this.getDataTab());
+        main.nbMot.push([main.instrTab.length,tab.length]) ; //+co
+        main.instrTab=main.getinstrTab().concat(tab) ;
         co = util.incrementHex(co, tab.length);
       } 
     }
    }
 
 
-messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  Data Segment *** </span></p>";
+/*messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  Data Segment *** </span></p>";
     console.log("***  Data Segment *** ");
 
     for (let i = 0; i < this.getDataTab().length; i++){
@@ -6677,212 +6348,291 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
     console.log("***  Code Segment *** ");
     messageDiv.innerHTML +="<p class='executemsg' > <span style='color: white;'>***  Code Segment *** </span></p>";
 
-    for (let i = 0; i < mainsimulation.getinstrTab().length; i++) {
-    mainsimulation.getinstrTab()[i].afficher();
-    mainsimulation.getinstrTab()[i].afficherHTML();}
+    for (let i = 0; i < main.getinstrTab().length; i++) {
+    main.getinstrTab()[i].afficher();
+    main.getinstrTab()[i].afficherHTML();}
 
     console.log("********************** ");
-    messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";
+    messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";*/
 
-  // delay +=3000;
-   //console.log(delay);
-    this.Execute(mainsimulation.getinstrTab());
+    console.log("***  Data Segment *** ");
+    for (let i = 0; i < this.getDataTab().length; i++)
+      this.getDataTab()[i].afficher();
+    console.log("********************** ");
+    console.log("");
+    console.log("***  Code Segment *** ");
+    console.log(mainsimul.getinstrTab().length);
+    for (let i = 0; i < mainsimul.getinstrTab().length; i++) main.getinstrTab()[i].afficher();
+    console.log("********************** ");
+    this.Execute(main.getinstrTab());
+    main.afficherRegistres() ;
+    main.afficherIndicateurs() ;
+    console.log("***  Data Segment *** ");
+    for (let i = 0; i < this.getDataTab().length; i++)
+      this.getDataTab()[i].afficher();
+    console.log("********************** ");
+    console.log(""); 
+    console.log("DECODAGE");
+    decodage.fonctionDecodage() ; 
+    console.log("********************** ");
+   /* this.Execute(main.getinstrTab());
 
-    console.log("***  REGISTRES ***");
-    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  REGISTRES  *** </span></p>";
+    main.afficherRegistres() ;
+    main.afficherRegistresHTML();
 
-    mainsimulation.afficherRegistres() ;
-    mainsimulation.afficherRegistresHTML();
+    main.afficherIndicateurs() ;
+    main.afficherIndicateursHTML(); */
 
-    console.log("***  FLAGS ***");
-    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  FLAGS  *** </span></p>";
-    mainsimulation.afficherIndicateurs() ;
-    mainsimulation.afficherIndicateursHTML();
-
-    console.log("***  Data Segment ***");
-    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  Data Segment *** </span></p>";
+    console.log("*** LES DONNEES **** ");
+    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***   LES DONNEES *** </span></p>";
 
     for (let i = 0; i < this.getDataTab().length; i++){
       this.getDataTab()[i].afficher();
       this.getDataTab()[i].afficherHTML();}
 
-    console.log("**********************");
+    console.log("********************** ");
     messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";
     console.log(""); 
-      
-    
+
+
   },
 
-
-
-  Execute: function (instrTab) {
+   Execute:  function (instrTab) {
     let j = 0 ;
     let i = 0 ;
+    this.Nbinst=0 ;
     let delay=0;
-      while (j < instrTab.length) {
-        let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
-        this.setRI(instrBin) ;
-       let adr=instrTab[j].getAdr();
-     //  console.log("j"+j);
-    
-      
-        let d = premierePhase(adr,delay,instrTab[j].getVal());  
-        delay=d+3000;
-       console.log("instruct:"+j+" delay="+delay);
-        selectElement(cop,delay,this.getRI().getCOP());
-        selectElement(MA,delay,this.getRI().getMA());
-        selectElement(F,delay,this.getRI().getF());
-        selectElement(D,delay,this.getRI().getD());
-        selectElement(REG1,delay,this.getRI().getReg1());
-        selectElement(REG2,delay,this.getRI().getreg2());
-       
-        delay+=3000;
-        switch (this.getRI().getCOP()) {
-          case "000000": 
+    while (j < instrTab.length ) {
+      let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
+      let adr = instrTab[j].getAdr();
+      this.setRI(instrBin) ;
+      this.Nbinst =  main.nbMot[util.chercherDansTableauDeuxDimension(main.nbMot,j)][1] ; 
+      let d = premierePhase(adr,delay,instrTab[j].getVal());  
+      delay=d+3000;
+      selectElement(dataDATAel,delay,'R');
+      delay+=2000;
+      selectElement(dataRIel,delay,'L');
+      delay+=2000;
+     console.log("instruct:"+j+" delay="+delay);
+      selectElement(cop,delay,this.getRI().getCOP());
+      selectElement(MA,delay,this.getRI().getMA());
+      selectElement(F,delay,this.getRI().getF());
+      selectElement(D,delay,this.getRI().getD());
+      selectElement(REG1,delay,this.getRI().getReg1());
+      selectElement(REG2,delay,this.getRI().getreg2());
+     
+      delay+=3000;
+      switch (this.getRI().getCOP()) {
+          
+        case "000000":
           selectElement(instname,delay,"MOV");
-          i = this.ualsimulation.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-          delay = i.p2;
-          console.log("operation.p2="+i.p2);
-          j = i.p1 ; break ;
-          case "100000": 
-          selectElement(instname,delay,"MOVI");
-          i = this.ualsimulation.opeRation("MOVI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-          j = i ; break ;
-          case "000001":
-            selectElement(instname,delay,"ADD");
-          i = this.ualsimulation.opeRation("ADD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-          delay=i.p2
-          j=i.p1 ; break ;
-          case "000011":
-            selectElement(instname,delay,"SUB");
-          i = this.ualsimulation.opeRation("SUB",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-          j=i ; break ;
-            case "000111":
-              selectElement(instname,delay,"AND");
-              i = this.ualsimulation.opeRation("AND",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-              j=i ; break ;
-            case "000110":
-              selectElement(instname,delay,"OR");
-              i = this.ualsimulation.opeRation("OR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-              j=i ; break ;
-            case "011010":
-              selectElement(instname,delay,"NOT");
-              i = this.ualsimulation.opeRation("NOT",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-              j=i ; break ;
-            case "100001":
-              selectElement(instname,delay,"ADDI");
-              i = this.ualsimulation.opeRation("ADDI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-              j=i ; break ;
-            case "100011":
-              selectElement(instname,delay,"SUBI");
-              i = this.ualsimulation.opeRation("SUBI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-              j=i ; break ;
-              case "001001":
-                selectElement(instname,delay,"SHL");
-                i = this.ualsimulation.opeRation("SHL",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
-              case "001000":
-                selectElement(instname,delay,"SHR");
-                i = this.ualsimulation.opeRation("SHR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
-              case "100100":
-                selectElement(instname,delay,"SBAI");
-                i = this.ualsimulation.opeRation("SBAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
-              case "011000":
-                selectElement(instname,delay,"INC");
-                i = this.ualsimulation.opeRation("INC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
-              case "011001":
-                selectElement(instname,delay,"DEC");
-                i = this.ualsimulation.opeRation("DEC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
-              case "000101":
-                selectElement(instname,delay,"CMP");
-                i = this.ualsimulation.opeRation("CMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                delay=i.p2;
-                j=i.p1 ; break ;
-              case "100101":
-                selectElement(addinstel,delay,"CMPI");
-                i = this.ualsimulation.opeRation("CMPI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
-              case "011011":
-                selectElement(instname,delay,"JMP");
-                i = this.ualsimulation.opeRation("JMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                delay=i.p2;
-                j=i.p1 ; break ;
-              case "001100":
-                selectElement(instname,delay,"JZ");
-                i = this.ualsimulation.opeRation("JZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                delay=i.p2;
-                j=i.p1 ; break ; 
-              case "001101":
-                selectElement(instname,delay,"JNZ");
-                i = this.ualsimulation.opeRation("JNZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                delay=i.p2;
-                j=i.p1 ; break ;
-              case "001110":
-                selectElement(instname,delay,"JC");
-                i = this.ualsimulation.opeRation("JC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                delay=i.p2;
-                j=i.p1 ; break ;
-              case "001111":
-                selectElement(instname,delay,"JNC");
-                i = this.ualsimulation.opeRation("JNC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                delay=i.p2;
-                j=i.p1 ; break ;
-              case "010000":
-                selectElement(instname,delay,"JS");
-                i = this.ualsimulation.opeRation("JS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                delay=i.p2;
-                j=i.p1 ; break ;
-              case "010001":
-                selectElement(instname,delay,"JNS");
-                i = this.ualsimulation.opeRation("JNS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                delay=i.p2;
-                j=i.p1 ; break ;
-              case "010010":
-                selectElement(instname,delay,"JO");
-                i = this.ualsimulation.opeRation("JO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                delay=i.p2;
-                j=i.p1 ; break ;
-              case "010011":
-                selectElement(instname,delay,"JNO");
-                i = this.ualsimulation.opeRation("JNO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                delay=i.p2;
-                j=i.p1 ; break ;
-              case "010100":
-                selectElement(instname,delay,"JE");
-                i = this.ualsimulation.opeRation("JE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                delay=i.p2;
-                j=i.p1 ; break ;
-              case "010101":
-                selectElement(instname,delay,"JNE");
-                i = this.ualsimulation.opeRation("JNE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                delay=i.p2;
-                j=i.p1 ; break ;
-              case "010110":
-                selectElement(instname,delay,"LOAD");
-                i = this.ualsimulation.opeRation("LOAD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
-              case "110110":
-                selectElement(instname,delay,"LOADI");
-                i = this.ualsimulation.opeRation("LOADI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
-              case "010111":
-                selectElement(instname,delay,"");
-                i = this.ualsimulation.opeRation("STORE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
-                j=i ; break ;
-            
-              default:
-                break ; 
-  
-        }
-      delay+=5000;
+           i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+        delay=i.p2;
+        j = i.p1 ; break ;
+        case "100000":
+          selectElement(instname,delay,"MOVI"); 
+        i = this.ual.opeRation("MOVI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+        delay=i.p2;
+        j = i.p1 ; break ;
+        case "000001":
+          selectElement(instname,delay,"ADD");
+        i = this.ual.opeRation("ADD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+      delay=i.p2;
+        j=i.p1 ; break ;
+        case "000011":
+          selectElement(instname,delay,"SUB");
+        delay=i.p2;
+        i = this.ual.opeRation("SUB",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+        j=i.p1 ; break ;
+        case "000111":
+          selectElement(instname,delay,"AND");
+        i = this.ual.opeRation("AND",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+        delay=i.p2;
+        j=i.p1 ; break ;
+        case "000110":
+          selectElement(instname,delay,"OR");
+        i = this.ual.opeRation("OR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+        delay=i.p2;
+        j=i.p1 ; break ;
+        case "011010":
+          selectElement(instname,delay,"NOT");
+        i = this.ual.opeRation("NOT",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+        delay=i.p2;
+        j=i.p1 ; break ;
+        case "100001":
+          selectElement(instname,delay,"ADDI");
+        i = this.UALsimul.opeRation("ADDI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+        delay=i.p2;
+        j=i.p1 ; break ;
+        case "100011":
+          selectElement(instname,delay,"SUBI");
+        i = this.ual.opeRation("SUBI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+       delay=i.p2;
+        j=i.p1 ; break ;
+        case "001001":
+          selectElement(instname,delay,"SHL");
+        i = this.ual.opeRation("SHL",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+        delay=i.p2;
+        j=i.p1 ; break ;
+        case "001000":
+          selectElement(instname,delay,"SHR");
+        i = this.ual.opeRation("SHR",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+       delay=i.p2;
+        j=i.p1 ; break ;
+        case "100100":
+          selectElement(instname,delay,"SBAI");
+        i = this.ual.opeRation("SBAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+        delay=i.p2;
+        j=i.p1 ; break ;
+        case "011000":
+          selectElement(instname,delay,"INC");
+        i = this.ual.opeRation("INC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+        delay=i.p2;
+        j=i.p1 ; break ;
+        case "011001":
+          selectElement(instname,delay,"DEC");
+        i = this.ual.opeRation("DEC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+        delay=i.p2;    
+        j=i.p1 ; break ;
+            case "000101":
+              selectElement(instname,delay,"CMP");
+              i = this.ual.opeRation("CMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+            delay=i.p2;
+              j=i.p1 ; break ;
+            case "100101":
+              selectElement(instname,delay,"CMPI");
+              i = this.ual.opeRation("CMPI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+              delay=i.p2;
+              j=i.p1 ; break ;
+            case "011011":
+              selectElement(instname,delay,"JMP");
+              i = this.ual.opeRation("JMP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+              delay=i.p2;
+              j=i.p1; break ;
+            case "001100":
+              selectElement(instname,delay,"JZ");
+              i = this.ual.opeRation("JZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+             delay=i.p2;
+              j=i.p1 ; break ; 
+            case "001101":
+              selectElement(instname,delay,"JNZ");
+              i = this.ual.opeRation("JNZ",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+              delay=i.p2;
+              j=i.p1 ; break ;
+            case "001110":
+              selectElement(instname,delay,"JC");
+              i = this.ual.opeRation("JC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+             delay=i.p2;
+              j=i.p1 ; break ;
+            case "001111":
+              selectElement(instname,delay,"JNC");
+              i = this.ual.opeRation("JNC",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+              delay=i.p2;
+              j=i.p1 ; break ;
+            case "010000":
+              selectElement(instname,delay,"JS");
+              i = this.ual.opeRation("JS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+              delay=i.p2;
+              j=i.p1 ; break ;
+            case "010001":
+              selectElement(instname,delay,"JNS");
+              i = this.ual.opeRation("JNS",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+             delay=i.p2;
+              j=i.p1 ; break ;
+            case "010010":
+              selectElement(instname,delay,"JO");
+              i = this.ual.opeRation("JO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+             delay=i.p2;
+              j=i.p1 ; break ;
+            case "010011":
+              selectElement(instname,delay,"JNO");
+              i = this.ual.opeRation("JNO",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+            delay=i.p2;
+              j=i.p1 ; break ;
+            case "010100":
+              selectElement(instname,delay,"JE");
+              i = this.ual.opeRation("JE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+              delay=i.p2;
+              j=i.p1 ; break ;
+            case "010101":
+              selectElement(instname,delay,"JNE");
+              i = this.ual.opeRation("JNE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+              delay=i.p2;
+              j=i.p1 ; break ;
+            case "010110":
+              selectElement(instname,delay,"LOAD");
+              i = this.ual.opeRation("LOAD",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+              delay=i.p2;
+              j=i.p1 ; break ;
+            case "110110":
+              selectElement(instname,delay,"LOADI");
+              i = this.ual.opeRation("LOADI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+              delay=i.p2;
+              j=ip1 ; break ;
+            case "010111":
+              selectElement(instname,delay,"STORE");
+              i = this.ual.opeRation("STORE",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+              delay=i.p2;
+              j=i.p1 ; break ;
+            case "000010":
+              selectElement(instname,delay,"ADA");
+              i = this.ual.opeRation("ADA",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+              delay=i.p2;
+              j=i.p1 ; break ;
+            case "100010":
+              selectElement(instname,delay,"ADAI");
+              i = this.ual.opeRation("ADAI",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+              delay=i.p2;
+              j=i.p1 ; break ;
+            case "000100": 
+            selectElement(instname,delay,"SBA");
+            i = this.ual.opeRation("SBA",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+           delay=i.p2;
+            j=i.p1 ; break ;
+            case "011110": 
+            selectElement(instname,delay,"STOP");
+            i = this.ual.opeRation("STOP",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2(),delay);
+           delay=i.p2;
+            j=i.p1 ; break ;
+            case "101000": //START
+            j++ ; break ;
+            case "101010": //ORG
+            j=j+2 ; break ;
+            case "011111": //SET
+            j=j+2 ; break ;
+            case "101001": //SETZ
+            j=j+2 ; break ;
+            case "011100": 
+            //saisie.style.display = "block";
+          var x = prompt();
+          main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[j+1].getVal().slice(1))].setVal(x) ;
+         /*   valider.addEventListener("click", function() {
+              // Fermer la boîte de saisie
+              console.log("Nom entré :", nom.value);
+              nom.value ="";
+              // Continuer l'exécution du programme ici
+              console.log("Suite du programme...");
+              main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[1].getVal().slice(1))].setVal(nom.value) ;
+              // Autres instructions...
+              saisie.style.display = "none";
+              b=true;
+            });*/
+          
+        
+            j=j+2;
+             break ;
+            default:
+              break ; 
+
+      }
       //j++ ;
-    }
-    
+      //this.Nbinst ++ ; 
+      delay+=3000;
+    } 
+
   },
+
+
 
   afficherIndicateurs: function () {
     console.log("I_ZERO: ", this.getIndicateurZero());
@@ -6890,7 +6640,6 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
     console.log("I_RETENUE: ", this.getIndicateurRetenue());
     console.log("I_DEBORD: ", this.getIndicateurDebord());
   },
-
   afficherIndicateursHTML: function (){
     messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_ZERO: </span>"+"<span style='color: white;'>"+ this.getIndicateurZero() +"</span></p>";
     messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_SIGNE: </span>"+"<span style='color: white;'>"+ this.getIndicateurSigne() +"</span></p>";
@@ -6898,7 +6647,7 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
     messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_DEBORD: </span>"+"<span style='color: white;'>"+ this.getIndicateurDebord() +"</span></p>";
 
   },
- 
+
     afficherRegistres: function () {
     console.log("AX: ", this.getAX().getContenu());
     console.log("BX: ", this.getBX().getContenu());
@@ -6927,11 +6676,9 @@ messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  
   
  
 };
-// fin obj mainsimulation
-
-//___________________________________________ end of functions of simulation _______________________________________________
 
 
+//________________________________________ End of functions of Simualtion  _________________________________________________
 
 
 
@@ -7137,8 +6884,9 @@ function selectElement(Element, delay ,string) {
       else{
       if(Element==instname){
         Element.textContent= string;
-        Element.style.color='#00FF00';
+        Element.style.color='#390b40';
         Element.style.fontSize='22px';
+        Element.style.animation= 'flicker 1s infinite';
        // Element.style.backgroundColor='white';
       //  Element.style.filter='blur(1px)';
       }
@@ -7186,7 +6934,9 @@ var caseMemoire = document.getElementById("caseMemoire");
 var instname = document.getElementById("instname");
 
 function premierePhase(adr,delay,info){
-   
+  
+       selectElement(dataincco,delay,'L');
+       delay+=2000;
        selectElement(co, delay , adr);
        delay += 3000; 
        selectElement(dataCOel,delay,'L');
@@ -7226,9 +6976,9 @@ function ecriturememoire(adr,delay,info){
 }
 function lecturememoire(adr,delay,info){
   
-  selectElement(dataDATAel,delay,0);
+  selectElement(dataDATAel,delay,'R');
   delay+=3000;
-  selectElement(dataTDAel,delay,0);
+  selectElement(dataTDAel,delay,'L');
   delay+=3000;
   selectElement(ram,delay,adr);
   delay+=3000;
@@ -7423,7 +7173,7 @@ function simulation(){
   var ram = document.getElementById("RAM");
   let delay=0;
  // premierePhase(100);     // la phase 1 
-  mainsimulation.coder(contents,delay);   // l'exécution
+  mainsimul.coder(contents,delay);   // l'exécution
 
 
 
@@ -7459,7 +7209,7 @@ startbutton.addEventListener("click", () => {
     const messageDiv= document.getElementById("messageDiv");
     messageDiv.innerHTML = ""; 
    
-  mainsimulation.coder(contents);
+  mainsimul.coder(contents);
 
 });
 
