@@ -3023,4 +3023,265 @@ ion-icon {
   box-shadow: none;
   transform: none;
 }
+
+.textContainerCo {
+  position: absolute ;
+  width: 200px;
+  bottom: 625px;
+  left:585px;
+  height: 30px;
+  text-align: center; 
+  font-size: 20px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+  color: #000000;
+}
+
+.textContainerRam {
+  position: absolute;
+  transform: rotate(-90deg);
+  width: 220px;
+  height: 45px;
+  bottom: 442px ;
+  left: 715px;
+  z-index: 99;
+  color:rgb(0, 0, 0);
+  text-align: center;
+  font-size: 20px;
+  font-family: 'Impact', sans-serif;
+}
+
+.textContainerCop {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0);
+  width: 60px;
+  height: 25px;
+  transform: translate(9%,39.5%);
+  z-index: 99;
+  color:rgb(0, 0, 0);
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+}
+.textContainerMa {
+  position: absolute;
+  width: 30px;
+  height: 25px;
+  left: 67.5px;
+  top: -1.5px;
+  color: rgb(0, 0, 0);
+  transform: translate(27%, 45%);
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+.textContainerD {
+  position: absolute;
+  width: 20px;
+  height: 25px;
+  font-size: 18px;
+  left: 110px;
+  top: -1.5px ;
+  transform: translate(142%, 45%);
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerF {
+  position: absolute;
+  width: 20px;
+  height: 25px;
+  font-size: 15px;
+  left: 94.5px;
+  top: -1.5px;
+  transform: translate(92%, 45%);
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerReg1 {
+  position: absolute;
+  width: 50px;
+  height: 25px;
+  font-size: 15px;
+  left: 129.5px;
+  top: -20px;
+  transform: translate(70%,120%);
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerReg2 {
+  position: absolute;
+  width: 50px;
+  height: 25px;
+  font-size: 15px;
+  left: 184.5px;
+  top: 0px ;
+  transform: translate(77%, 39.5%);
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerAx {
+  position: absolute;
+  width: 170px;
+  bottom: 670px;
+  left: 300px;
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerBx {
+  position: absolute;
+  width: 170px;
+  bottom: 630px;
+  background-color:  #36539c00;
+  left: 300px;
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerCx {
+  position: absolute;
+  width: 170px;
+  bottom: 590px;
+  left: 300px;
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerDx {
+  position: absolute;
+  width: 170px;
+  bottom: 550px;
+  left: 300px;
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerEx {
+  position: absolute;
+  width: 170px;
+  bottom: 510px;
+  left: 300px;
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerFx {
+  position: absolute;
+  width: 170px;
+  bottom: 470px;
+  left: 300px;
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerDi {
+  position: absolute;
+  width: 170px;
+  bottom: 390px;
+  left: 300px;
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerSi {
+  position: absolute;
+  width: 170px;
+  bottom: 430px;
+  left: 300px;
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerEual1 {
+  position: absolute;
+  width: 90px;
+  bottom: 162px;
+  left: 94px;
+  height: 30px;
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerEual2 {
+  position: absolute;
+  width: 90px;
+  bottom: 162px;
+  left: 210px;
+  height: 30px;
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerRim {
+  position: absolute ;
+  width: 200px;
+  height: 45px;
+  bottom: -10px ;
+  left: 0px;
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
+
+.textContainerAcc {
+  position: absolute;
+  width: 108px;
+  bottom: 365px;
+  left: 150px;
+  height: 30px;
+  color:rgb(0, 0, 0) ;
+  text-align: center;
+  font-size: 18px;
+  font-family: 'Impact', sans-serif;
+  z-index: 99;
+}
 /* ----*/ 

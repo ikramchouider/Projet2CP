@@ -537,12 +537,280 @@ function selectElement(Element, delay ,string) {
          // delay+=3000;
          // hideData(Element,delay);
     }else{
-      Element.textContent = string ;
+      this.afficherTexteSurElement(Element,string) ;
     }
   }, delay);
 }
 
+function afficherTexteSurElement(Element,string) {
+  var previousTextContainer = "";
+  var textContainer = "" ;
+  switch (Element) {
+    case co :
+      previousTextContainer = document.querySelector(".textContainerCo");
+      if (previousTextContainer) {
+      previousTextContainer.parentNode.removeChild(previousTextContainer);
+      }
+      // Create a new textContainer element
+      textContainer = document.createElement("div");
+      textContainer.className = "textContainerCo";
+      textContainer.textContent = "@" + string;
 
+      // Append the textContainer above the element
+      Element.parentNode.insertBefore(textContainer, Element);  
+      break;
+      case ram :
+      previousTextContainer = document.querySelector(".textContainerRam");
+      if (previousTextContainer) {
+      previousTextContainer.parentNode.removeChild(previousTextContainer);
+      }
+      // Create a new textContainer element
+      textContainer = document.createElement("div");
+      textContainer.className = "textContainerRam";
+      textContainer.textContent = "@" + string;
+      // Append the textContainer above the element
+      Element.parentNode.insertBefore(textContainer, Element); 
+      break;
+
+      case cop:
+      previousTextContainer = document.querySelector(".textContainerCop");
+      if (previousTextContainer) {
+      previousTextContainer.parentNode.removeChild(previousTextContainer);
+      }
+      // Create a new textContainer element
+      textContainer = document.createElement("div");
+      textContainer.className = "textContainerCop";
+      textContainer.textContent = string;
+      // Append the textContainer above the element
+      Element.parentNode.insertBefore(textContainer, Element); 
+      break;
+
+      case MA: 
+      previousTextContainer = document.querySelector(".textContainerMa");
+      if (previousTextContainer) {
+      previousTextContainer.parentNode.removeChild(previousTextContainer);
+      }
+      // Create a new textContainer element
+      textContainer = document.createElement("div");
+      textContainer.className = "textContainerMa";
+      textContainer.textContent = string;
+      // Append the textContainer above the element
+      Element.parentNode.insertBefore(textContainer, Element); 
+      break;
+
+      case D:
+        previousTextContainer = document.querySelector(".textContainerD");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerD";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case F: 
+        previousTextContainer = document.querySelector(".textContainerF");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerF";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case REG1: 
+        previousTextContainer = document.querySelector(".textContainerReg1");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerReg1";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case REG2: 
+        previousTextContainer = document.querySelector(".textContainerReg2");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerReg2";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case ax: 
+        previousTextContainer = document.querySelector(".textContainerAx");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerAx";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case bx: 
+        previousTextContainer = document.querySelector(".textContainerBx");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerBx";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case cx: 
+        previousTextContainer = document.querySelector(".textContainerCx");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerCx";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case dx: 
+        previousTextContainer = document.querySelector(".textContainerDx");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerDx";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case ex: 
+        previousTextContainer = document.querySelector(".textContainerEx");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerEx";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case fx: 
+        previousTextContainer = document.querySelector(".textContainerFx");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerFx";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case di: 
+        previousTextContainer = document.querySelector(".textContainerDi");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerDi";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case si: 
+        previousTextContainer = document.querySelector(".textContainerSi");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerSi";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case ual1: 
+        previousTextContainer = document.querySelector(".textContainerEual1");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerEual1";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case ual2: 
+        previousTextContainer = document.querySelector(".textContainerEual2");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerEual2";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case acc: 
+        previousTextContainer = document.querySelector(".textContainerAcc");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerAcc";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+        case rim: 
+        previousTextContainer = document.querySelector(".textContainerRim");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerRim";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+
+
+    }
+
+
+}
 
 var co = document.getElementById("CO");
 var ram = document.getElementById("RAM");
@@ -555,10 +823,18 @@ var ax=document.getElementById("AX");
 var bx=document.getElementById("BX");
 var cx=document.getElementById("CX");
 var dx=document.getElementById("DX");
+var ex=document.getElementById("EX");
+var fx=document.getElementById("FX");
+var si=document.getElementById("SI");
+var di=document.getElementById("DI");
 var caseMemoire = document.getElementById("caseMemoire");
 let instTAB = ['00000001000001',1,2,3,4];
-
-
+var cop=document.getElementById("COP");
+var MA=document.getElementById("MA");
+var F=document.getElementById("F");
+var D=document.getElementById("DD");
+var reg1=document.getElementById("REG1");
+var reg2=document.getElementById("REG2");
 
 function premierePhase(adr,delay){
        selectElement(co, delay , adr);
