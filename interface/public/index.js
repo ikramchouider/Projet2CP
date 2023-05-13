@@ -477,7 +477,7 @@ export var Translate = {
     let i=0;    
     console.log("lines.length  : "+lines.length);           
     for (const line of lines) {
-      main.instrTab.push(new CaseMc("",line,""))
+      main.instrTab.push(new CaseMc("",line.toString().trim(),""))
      i++;
     }
     console.log("main.instrTab.length  : "+main.instrTab.length);           
@@ -502,7 +502,14 @@ textDiv2.innerHTML += tab[i].getVal() + '\n';
   Translate.translateFunction(textDiv2.value);
   decodage.fonctionDecodage();
   for(let i=0;i< decodage.tabInstrMnemonique.length;i++){
-    textDiv1.innerHTML += decodage.tabInstrMnemonique[i] + '\n';
+    let str="" ; 
+    for(let j=0;j<decodage.tabInstrMnemonique[i].length;j++) {
+      if(decodage.tabInstrMnemonique[i][j] != "") 
+      str = str+" "+decodage.tabInstrMnemonique[i][j] }
+      textDiv1.innerHTML += str + '\n';
+    
+    
+     
     }
 
 
@@ -885,8 +892,7 @@ instUnSeulOp: function(str) {
      str== 'JNO' || str == 'JO' || str=='JNS' || str=='JS' || str=='JNC' || str=='JC' || str=='JNZ' || str== 'JZ' ) return true ; 
      else return false ; 
 },
-instUnSeulOpHexa: function(str) {
- 
+instUnSeulOpHexa: function(str) {  
   if (str== '000010' || str == '100010' ||str=="010110" || str=="011000" || str=='011001' || str=='011010' || str=='110110' || str=='010111' || str=='000100' || 
   str=='100100' ) return true ; 
   else return false ; 
@@ -1639,9 +1645,10 @@ var decodage = {
      
        let i=0 ; 
       while(i<main.instrTab.length){
-              console.log(main.instrTab[i].getVal());
+              console.log("val:",main.instrTab[i].getVal());
               console.log("inside while");
               let motBinaire =util.hexEnBinaire(main.instrTab[i].getVal()) ;
+              console.log("motBinaire: ",motBinaire);
               let ind=0 ; 
               let cop = motBinaire.substring(0, 6); // capable de changer le 5 à 6 etc ..
               let ma = motBinaire.substring(6, 8);
@@ -1652,62 +1659,63 @@ var decodage = {
               let Etiqt="" ; 
               if(main.instrTab[i].getEtiq() != ""){
               Etiqt = main.instrTab[i].getEtiq().concat(":") ; }
-            
+             console.log("ma:",ma," f:",f);
              if(cop == "011111" || cop == "101001"  ) { 
               i=i+2 ; 
              }
               else if(this.getNom(cop)[0] == "J"){
                let indice=util.chercherAdr(main.instrTab,main.instrTab[i+1].getVal().slice(1)) ; 
                console.log("   ",main.instrTab,main.instrTab[i+1].getVal());
-                tabInstrMnemonique.push([this.getNom(cop),main.instrTab[indice].getEtiq(),"",""]) ; 
+                this.tabInstrMnemonique.push([this.getNom(cop),main.instrTab[indice].getEtiq(),"",""]) ; 
                 i=i+2; 
               } else if((cop[0] == "1"  && this.getNom(cop) != "START" && cop != "101010" ) || (cop=="001000" || cop=="001001" || cop=="001010" || cop=="001011" )) {
                 if(util.instUnSeulOpHexa(cop)){
                     if(ma == "00" && f=="1" ){
-                      tabInstrMnemonique.push([Etiqt,this.getNom(cop),util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H"),"",""]) ;
+                      this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H"),"",""]) ;
                     }
                     i=i+2; 
                 }
                 else if(ma == "00" && f=="1" && d=="1"){
                   if(cop=="001000" || cop=="001001" || cop=="001010" || cop=="001011" )
-                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal())]) ;
-                  else tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                  this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal())]) ;
+                  else this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
                 i=i+2;  
                 } else if(ma == "00" && f=="1" && d=="0"){
                  
                   let indice=util.chercherAdr(main.dataTab,main.instrTab[i+1].getVal().slice(1)) ;
                   if(indice == main.dataTab.length) main.dataTab.push(new CaseMc("0000",main.dataTab[indice].getAdr(),"")) ; 
                   if(main.dataTab[indice].getEtiq() != ""){
-                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),main.dataTab[indice].getEtiq(),",",util.supprimerToutZerosGauche(main.instrTab[i+2].getVal()).concat("H")]) ;}
-                  else tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(util.remplirZero(main.instrTab[i+1].getVal().slice(1)),"H]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                  this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),main.dataTab[indice].getEtiq(),",",util.supprimerToutZerosGauche(main.instrTab[i+2].getVal()).concat("H")]) ;}
+                  else this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(util.remplirZero(main.instrTab[i+1].getVal().slice(1)),"H]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
                   i=i+3;
                 }
                 else if(ma == "01" && f=="1" &&  d=="0") {
-                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(this.getNomReg(reg1),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                  this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(this.getNomReg(reg1),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
                   i++ ; 
                 } else if(ma == "10" && f=="1" &&  d=="0"){
-                  tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg1),"+",util.supprimerToutZerosGauche(main.instrTab[i+2].getVal()),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
+                  this.tabInstrMnemonique.push([this.getNom(cop),"[".concat(this.getNomReg(reg1),"+",util.supprimerToutZerosGauche(main.instrTab[i+2].getVal()),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H")]) ;
                   i=i+3; 
                 } else if(ma == "11" && f=="1"  &&  d=="0") {
                   if(main.instrTab[i+1].getVal() == "0000") {  
                    let  etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;   
-                    tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg1),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+3].getVal()).concat("H")]) ;  
+                    this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg1),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+3].getVal()).concat("H")]) ;  
                     }
                     else{
                        let etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;  
-                       tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg1),"+",parseInt(main.instrTab[i+1].getVal(), 16),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+3].getVal()).concat("H")]) ;
+                       this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg1),"+",parseInt(main.instrTab[i+1].getVal(), 16),"]"),",",util.supprimerToutZerosGauche(main.instrTab[i+3].getVal()).concat("H")]) ;
                     } i = i+4 ; 
                 }
                     
 
               }
               else {
-                
+               
                 if(util.instUnSeulOpHexa(cop)){
+                  
                   console.log("cop",this.getNom(cop));
                   this.getNom(cop) ;
                   if(ma == "00" && f=="0" ){
-                    tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),"",""]) ; 
+                    this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),"",""]) ; 
                     i++ ; 
                   }else if(ma == "00" && f=="1") {
                   
@@ -1715,74 +1723,75 @@ var decodage = {
                     
                     if(indice == main.dataTab.length) main.dataTab.push(new CaseMc("0000",main.dataTab[indice].getAdr(),"")) ; 
                     if(main.dataTab[indice].getEtiq() != ""){
-                    tabInstrMnemonique.push([Etiqt,this.getNom(cop),main.dataTab[indice].getEtiq()]) ; 
+                    this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),main.dataTab[indice].getEtiq()]) ; 
                     }
-                    else {tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(main.instrTab[i+1].getVal().slice(1),"H]"),"",""]) ;
+                    else {this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(main.instrTab[i+1].getVal().slice(1),"H]"),"",""]) ;
                   } i=i+2;
                   }else if(ma == "01" && f=="0" ) {
-                    tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(this.getNomReg(reg1),"]"),"",""]) ; 
+                    this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(this.getNomReg(reg1),"]"),"",""]) ; 
                     i++ ; 
                   }else if(ma == "11" && f=="1") {
                     let etiq ; 
                     if(main.instrTab[i+1].getVal() == "0000") {   
                     etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;   
-                    tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg1),"]"),"",""]) ;  
+                    this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg1),"]"),"",""]) ;  
                     i=i+3;}
                     else{
                        etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;      
-                       tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg1),"+",parseInt(main.instrTab[i+1].getVal(), 16),"]"),"",""]) ;
+                       this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg1),"+",parseInt(main.instrTab[i+1].getVal(), 16),"]"),"",""]) ;
                     i=i+3;}
                   }
               }
               else if(ma == "00" && f=="0"  ){
+             
                 if(cop == "101010") { 
                   console.log(" dkheel");
-                  tabInstrMnemonique.push([this.getNom(cop),util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H"),"",""]) ; i=i+2;  }
-                else  if(this.getNom(cop)=="START" || this.getNom(cop)=="STOP"  ){ tabInstrMnemonique.push([Etiqt,this.getNom(cop),"","",""]) ; i++ }
-                else{ tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",this.getNomReg(reg2)]) ; 
+                  this.tabInstrMnemonique.push([this.getNom(cop),util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H"),"",""]) ; i=i+2;  }
+                else  if(this.getNom(cop)=="START" || this.getNom(cop)=="STOP"  ){ this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),"","",""]) ; i++ }
+                else{ this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",this.getNomReg(reg2)]) ; 
               i++; }
               }
               else if(ma == "00" && f=="1" && d=="1"){
                  
                   let indice=util.chercherAdr(main.dataTab,main.instrTab[i+1].getVal().slice(1)) ; 
-                  if(indice == main.dataTab.length) main.dataTab.push(new CaseMc("0000",main.dataTab[indice].getAdr(),"")) ; 
+                  if(indice == main.dataTab.length) main.dataTab.push(new CaseMc("0000",main.instrTab[i+1].getVal().slice(1),"")) ; 
                   if(main.dataTab[indice].getEtiq() != ""){
-                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",main.dataTab[indice].getEtiq()]) ;}  
-                  else tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",","[".concat(main.instrTab[i+1].getVal().slice(1),"H]")]) ;
+                  this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",main.dataTab[indice].getEtiq()]) ;}  
+                  else this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",","[".concat(main.instrTab[i+1].getVal().slice(1),"H]")]) ;
                   i=i+2 ; 
                 }
               else if (ma == "00" && f=="1" && d=="0"){
                   let indice=util.chercherAdr(main.dataTab,main.instrTab[i+1].getVal().slice(1)) ; 
-                  if(indice == main.dataTab.length) main.dataTab.push(new CaseMc("0000",main.dataTab[indice].getAdr(),"")) ; 
+                  if(indice == main.dataTab.length) main.dataTab.push(new CaseMc("0000",main.instrTab[i+1].getVal().slice(1),"")) ; 
                   if(main.dataTab[indice].getEtiq() != ""){
-                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),main.dataTab[indice].getEtiq(),",",this.getNomReg(reg1)]) ;}
-                  else tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(main.instrTab[i+1].getVal().slice(1),"H]"),",",this.getNomReg(reg1),]) ;
+                  this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),main.dataTab[indice].getEtiq(),",",this.getNomReg(reg1)]) ;}
+                  else this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(main.instrTab[i+1].getVal().slice(1),"H]"),",",this.getNomReg(reg1),]) ;
                   i=i+2;
                 }
               else if(ma == "01" &&  d=="1") {
-                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",","[".concat(this.getNomReg(reg2),"]")]) ; 
+                  this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",","[".concat(this.getNomReg(reg2),"]")]) ; 
                    i++ ; 
                 }
               else if(ma == "01" &&  d=="0"){
-                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(this.getNomReg(reg2),"]"),",",this.getNomReg(reg1)]) ; 
+                  this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(this.getNomReg(reg2),"]"),",",this.getNomReg(reg1)]) ; 
                   i++ ;
                 }
               else if(ma == "10" &&  d=="1"){
-                   tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",","[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]")]) ;
+                   this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",","[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]")]) ;
                   i=i+2;
                 }
             else if(ma == "10" &&  d=="0"){
-                 tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]"),",",this.getNomReg(reg1)]) ;
+                 this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),"[".concat(this.getNomReg(reg2),"+",util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()),"]"),",",this.getNomReg(reg1)]) ;
                  i=i+2; 
                 }
                 else if(ma == "11" &&  d=="1"){
                   let etiq ; 
                   if(main.instrTab[i+1].getVal() == "0000") {
                   etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+1].getVal().slice(1))].getEtiq(); 
-                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",etiq,"[".concat(this.getNomReg(reg2),"]")]) ;
+                  this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",etiq,"[".concat(this.getNomReg(reg2),"]")]) ;
                    i=i+3;} 
                   else { etiq= main.dataTab[util.chercherAdr(main.dataTab,main.instrTab[i+2].getVal().slice(1))].getEtiq() ;                     
-                    tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",etiq,"[".concat(this.getNomReg(reg2),"+",parseInt(main.instrTab[i+1].getVal(), 16),"]")]) ;
+                    this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",etiq,"[".concat(this.getNomReg(reg2),"+",parseInt(main.instrTab[i+1].getVal(), 16),"]")]) ;
                   i=i+3;}
 
                 }
@@ -1793,19 +1802,19 @@ var decodage = {
                   if(main.instrTab[i+1].getVal() == "0000") {  
                   
                   etiq= main.dataTab[indice].getEtiq() ;   
-                  tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"]"),",",this.getNomReg(reg1)]) ;  
+                  this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"]"),",",this.getNomReg(reg1)]) ;  
                   i=i+3;}
                   else{
                      etiq= main.dataTab[indice].getEtiq() ;               
-                     tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"+",parseInt(main.instrTab[i+1].getVal()),"]"),",",this.getNomReg(reg1)]) ;
+                     this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),etiq,"[".concat(this.getNomReg(reg2),"+",parseInt(main.instrTab[i+1].getVal()),"]"),",",this.getNomReg(reg1)]) ;
                   i=i+3;}
                 }
               
               }   
-        
+       
       }
-      for(let i=0;i<tabInstrMnemonique.length;i++)
-      console.log(i+1," ",tabInstrMnemonique[i]);
+      for(let i=0;i<this.tabInstrMnemonique.length;i++)
+      console.log(i+1," ",this.tabInstrMnemonique[i]);
   },
 
 
