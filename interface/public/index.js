@@ -398,7 +398,7 @@ export var assembler = {
 
   },// fin fonction error
 
-  fromFileInputToTextZone: function (fileId, textZoneId) {
+  fromFileInputToTextZone: function (fileId, textZoneId, secondtextZoneId) {
 
     const fileInput = document.getElementById(fileId);
      
@@ -407,15 +407,21 @@ export var assembler = {
       return;
     }else 
     alert("fichier importé avec succès ! cliquer sur afficher contenu pour travailler sur son contenu ")*/
+    var textDiv ;
     const file = fileInput.files[0];
     const reader = new FileReader();
-    const textDiv = document.getElementById(textZoneId);
-    textDiv.style.backgroundColor="#010232";
     //textDiv.style.color="white";
     reader.onload = (event) => {
       const contents = event.target.result;
       let lines = contents.split('\n');
-      lines = lines.filter(line => line.trim() !== '');    
+      lines = lines.filter(line => line.trim() !== '');   
+      let l =lines[0].split(' ');
+      if (l[0].toUpperCase()=="ORG"){
+         textDiv = document.getElementById(textZoneId);
+      }else {
+        textDiv = document.getElementById(secondtextZoneId);
+      }
+      textDiv.style.backgroundColor="#010232";
       const fileLength = lines.length;                     
       let textContent = "";
       for (const line of lines) {
@@ -427,11 +433,18 @@ export var assembler = {
   },
    
  fromFileNameToTextZone: function (contents){
-  const textDiv = document.getElementById("code");
+  var textDiv;
   messageDiv.innerHTML = ""; 
   console.log("contents from fromFileNameToTextZone     : \n"+ contents);
   let lines = contents.split('\n');
-  lines = lines.filter(line => line.trim() !== '');    
+  lines = lines.filter(line => line.trim() !== '');   
+   let l =lines[0].split(' ');
+  if (l[0].toUpperCase()=="ORG"){
+    console.log("inside == org ");
+     textDiv = document.getElementById("code");
+  }else{
+    var textDiv = document.getElementById("code2");
+  }
   let textContent = "";
   for (const line of lines) {
     textContent += line + "\n";
@@ -449,6 +462,65 @@ export var assembler = {
 
 
  //-------------------------------------  Fin erreur function and all related stuff with it -------------------------------------
+
+
+
+
+//______________________________________fonctions decodage / traduction _________________________________________________________
+
+export var Translate = {
+  translateFunction: function (contents) {
+    messageDiv.innerHTML = ""; 
+    let lines = contents.split('\n');
+    console.log(contents);
+    lines = lines.filter(line => line.trim() !== '');  // remove the empty lines from my filecontents : the table lines which represents the lines of the file 
+    let i=0;    
+    console.log("lines.length  : "+lines.length);           
+    for (const line of lines) {
+      main.instrTab.push(new CaseMc("",line,""))
+     i++;
+    }
+    console.log("main.instrTab.length  : "+main.instrTab.length);           
+
+  }
+}
+
+const translateButton = document.getElementById("translate_id")
+translateButton.addEventListener("click",  () => {
+  const textDiv1 = document.getElementById("code");
+  const textDiv2 = document.getElementById("code2");
+if (textDiv1.value != '') {
+assembler.errorFunction(textDiv1.value);
+main.coder(textDiv1.value);
+let tab=main.getinstrTab();
+for(let i=0;i< tab.length;i++){
+console.log(tab[i].afficher());
+textDiv2.innerHTML += tab[i].getVal() + '\n';
+}
+} else {
+
+  Translate.translateFunction(textDiv2.value);
+  decodage.fonctionDecodage();
+  for(let i=0;i< decodage.tabInstrMnemonique.length;i++){
+    textDiv1.innerHTML += decodage.tabInstrMnemonique[i] + '\n';
+    }
+
+
+  
+}
+
+
+});
+
+
+  /*let contents = textDiv.value; // récupère le contenu initial de la div
+  contents = textDiv.value; // met à jour le contenu de la variable lorsque la div est modifiée
+  assembler.errorFunction(contents);*/
+
+
+
+//______________________________________FIN Traduction___________________________________________________________________________
+
 
 
 
@@ -1561,12 +1633,14 @@ return instrTab;
 
 // la variable decodage qui sera utilisé pour l'execution seulemnt 
 var decodage = {
+
+  tabInstrMnemonique : [] ,
   fonctionDecodage: function() { 
-      let tabInstrMnemonique =[] ; 
+     
        let i=0 ; 
-      
       while(i<main.instrTab.length){
               console.log(main.instrTab[i].getVal());
+              console.log("inside while");
               let motBinaire =util.hexEnBinaire(main.instrTab[i].getVal()) ;
               let ind=0 ; 
               let cop = motBinaire.substring(0, 6); // capable de changer le 5 à 6 etc ..
@@ -1661,7 +1735,9 @@ var decodage = {
                   }
               }
               else if(ma == "00" && f=="0"  ){
-                if(cop == "101010") { tabInstrMnemonique.push([this.getNom(cop),util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H"),"",""]) ; i=i+2;  }
+                if(cop == "101010") { 
+                  console.log(" dkheel");
+                  tabInstrMnemonique.push([this.getNom(cop),util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H"),"",""]) ; i=i+2;  }
                 else  if(this.getNom(cop)=="START" || this.getNom(cop)=="STOP"  ){ tabInstrMnemonique.push([Etiqt,this.getNom(cop),"","",""]) ; i++ }
                 else{ tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",this.getNomReg(reg2)]) ; 
               i++; }
@@ -6875,7 +6951,11 @@ ShowElemById: function (idElem) {
 
 
 
+
+
+
 //________________  Random Little function (event listners ...) __________________________________
+
 
 
 
@@ -6910,7 +6990,7 @@ ExecuteButton.addEventListener("click", () => {
 /** the event listener of getting the input of a file button and then putting the content on the texte zone **/
 const fileInputButton = document.getElementById("fileInput")
 fileInputButton.addEventListener("change",() => {
- assembler.fromFileInputToTextZone("fileInput","code");
+ assembler.fromFileInputToTextZone("fileInput","code","code2");
 })
 
 

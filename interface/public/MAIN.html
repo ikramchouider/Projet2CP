@@ -423,6 +423,7 @@
             <option value="program_6.txt"> program_6 </option>
             </select>
             <button type="button" id="compile_id">Assembler</button>
+            <button type="button" id="translate_id">Traduire</button>
             <button id="run_id">Exécuter</button>
             <button type="button" id="simulate_id">Simuler</button>
             <button id="help_id">Aide</button>
@@ -448,26 +449,22 @@
             </div>
             <div class="nbLigne" id="NbLigne"></div>
              
-              <textarea class="textzone"   value="aha"  name="code1" id="code" placeholder="   
-    ORG  100H 
-    SET A 4H
-    SET C 0H
-    START
-    MOV AX , A
-    MOV [BX+4], AX
-    ADD AX,BX
-    MOV C,3H
-    STOP " ></textarea>
+            <textarea class="textzone"   value="aha"  name="code1" id="code" placeholder="
+          Ecrivez votre 
+        code assembleur ici " ></textarea>
 
-              <div class="messagediv" id="messageDiv"> 
-              </div>
+  <textarea  name="code2" id="code2"  placeholder="
+          Ecrivez votre 
+        code héxadécimal ici"></textarea>
 
-          </div>
-         </section>
-       
-         
-              
-    </main> 
+            <div class="messagediv" id="messageDiv"> 
+            </div>
+
+        </div>
+
+       </section>
+
+    </main>
    
     <script>
 

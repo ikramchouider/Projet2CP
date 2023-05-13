@@ -1235,21 +1235,30 @@ textarea::-webkit-input-placeholder {
 
 }
 
+
 .textzone{
   font-family: "Courier New", monospace;
   box-shadow:  var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   grid-column: span 7 ;
   border-radius: 25px;
   background:none;
-  border: 0.2rem dashed rgba(255, 255, 255, 0.103);
+  border: 4px dashed rgba(255, 255, 255, 0.103);
   padding: 11px;
-  width: 800px;
+  width: 400px;
   height: 345px;
-  
 }
-.textzone:hover{
-  box-shadow: 0 0.1rem 1.4rem 0 rgb(86, 42, 114);
+
+
+#code2{
+  font-family: "Courier New", monospace;
+  border: 4px dashed rgba(255, 255, 255, 0.103);
+  background: none;
+  border-radius: 25px;
+  padding: 11px;
+  width: 400px;
+  height: 345px;
 }
+
 
 
 p.errormsg {
@@ -1366,6 +1375,11 @@ animation: flicker 1s infinite;
   font-weight: 500;
   border: 0.11rem solid white;
   }
+  #translate_id{
+    font-weight: 500;
+  border: 0.11rem solid white;
+  }
+
   #run_id{
     font-weight: 500;
     border: 0.11rem solid white;
@@ -1382,6 +1396,12 @@ animation: flicker 1s infinite;
 box-shadow:0 0.2rem 1.4rem 0 white;
 animation: flicker 1s infinite;
 }
+
+#translate_id:hover{
+  box-shadow:0 0.2rem 1.4rem 0 white;
+  animation: flicker 1s infinite;
+  }
+
 #run_id:hover{
   box-shadow:0 0.2rem 1.4rem 0 white;
   animation: flicker 1s infinite;
@@ -1773,10 +1793,10 @@ bottom: 268px;
 }
 .caseMemoire{
   position: absolute;
-  width: 150px;
+  width: 200px;
   height: 30px;
-  right: 5px;
-  background-color: rgb(25, 0, 38);
+  right: 6px;
+  background-color: rgb(45, 3, 69);
   text-align: center;
   margin: auto;
   top: 50%;
@@ -1785,6 +1805,40 @@ bottom: 268px;
   font-weight: bold;
   border-radius: 10px;
   z-index: 4;
+}
+
+#caseAdresse{
+  position: absolute;
+  width: 55px;
+  height: 30px;
+  right: 155px;
+  left: 7px;
+  background-color: rgb(31, 0, 46);
+  text-align: center;
+  margin: auto;
+  top: 50%;
+  bottom: 50%;
+  font-size:larger;
+  font-weight: bold;
+  border-radius: 10px;
+  z-index: 4;
+}
+
+#caseMemoire{
+  position: absolute;
+  width: 150px;
+  height: 30px;
+  right: 6px;
+  background-color: rgb(31, 0, 46);
+  text-align: center;
+  margin: auto;
+  top: 50%;
+  bottom: 50%;
+  font-size:larger;
+  font-weight: bold;
+  border-radius: 10px;
+  z-index: 4;
+
 }
 .REG{
   position:absolute;
