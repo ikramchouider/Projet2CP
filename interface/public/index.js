@@ -4184,13 +4184,13 @@ class UALsimulation {
         case "110":  m = mainsimulation.SI.getContenu(); break;
         case "111":  m = mainsimulation.DI.getContenu(); break;
       }
-      selectElement(dataREG1el,delay,0);
+      selectElement(dataREG1el,delay,'L');
       delay+=3000; 
-      selectElement(dataC1el,delay,0);
+      selectElement(dataC1el,delay,'L');
       delay+=3000;
-      selectElement(dataC2el,delay,0);
+      selectElement(dataC2el,delay,'L');
       delay+=3000;
-      selectElement(dataC3el,delay,0);
+      selectElement(dataC3el,delay,'L');
       delay+=3000;
       switch (param1) {
         case "000":
@@ -7075,41 +7075,51 @@ var returnBtn = document.getElementById("return");
 returnBtn.addEventListener("click",()=>{
   utilAnimation.HideElemById(ArchiDiv);
   utilAnimation.ShowElemById(PasseConsole);
-  hide(dataCOel);
-  hide(dataRAMel);
-  hide(dataRIMel);
-  hide(dataDATAel);
-  hide(dataREGel); 
-  hide(dataREG1el);
-  hide(dataREG2el);
-  hide(dataACCel);
-  hide(dataC1el);
-  hide(dataC2el);
-  hide(dataC3el);
-  hide(dataC4el);
-  hide(dataC5el);
-  hide(dataEUAL1el);
-  hide(dataEUAL2el);
+  hide(dataCOel,0);
+  hide(dataRAMel,0);
+  hide(dataRIMel,0);
+  hide(dataDATAel,0);
+  hide(dataREGel,0); 
+  hide(dataREG1el,0);
+  hide(dataREG2el,0);
+  hide(dataACCel,0);
+  hide(dataC1el,0);
+  hide(dataC2el,0);
+  hide(dataC3el,0);
+  hide(dataC4el,0);
+  hide(dataC5el,0);
+  hide(dataEUAL1el,0);
+  hide(dataEUAL2el,0);
+  hide(dataTDAel,0);
 }) ;
 
 
 
 
 function hide(el, delay){
-  setTimeout(function() { el.style.visibility='hidden';
+  setTimeout(function() { 
+    el.style.animation="none";
+    el.style.visibility='hidden';
 },delay);
 }
 
 
 //l'animation de flow de data
-function moveData(Bus,delay){         // on redéfinit vers glowdata
+function moveData(Bus,direction){         // on redéfinit vers glowdata
   
     var computedStyle = window.getComputedStyle(Bus);
     var left = computedStyle.getPropertyValue('left');
-  
-       Bus.style.visibility='visible';
-       Bus.style.animation= 'slide-left 3s';
-       // Bus.style.left='100%';
+        if(direction==='L'){
+          Bus.style.visibility='visible';
+          Bus.style.animation= 'slide-left 3s';
+        }
+        else{
+          Bus.style.left='100%';
+          Bus.style.visibility='visible';
+          Bus.style.animation= 'slide-right 3s';
+        }
+       
+       
   }
 
 
@@ -7117,8 +7127,8 @@ function moveData(Bus,delay){         // on redéfinit vers glowdata
 function selectElement(Element, delay ,string) {
   setTimeout(function() {
     if (Element.className==='dataflux'){
-          moveData(Element);
-          hide(Element, delay);
+          moveData(Element,string);
+          hide(Element,3000);
     }else{
       if((Element==co) || (Element==ram)){
         
@@ -7179,9 +7189,9 @@ function premierePhase(adr,delay,info){
    
        selectElement(co, delay , adr);
        delay += 3000; 
-       selectElement(dataCOel,delay,0);
+       selectElement(dataCOel,delay,'L');
        delay+=3000;
-       selectElement(dataRAMel,delay,0);
+       selectElement(dataRAMel,delay,'L');
        delay+=3000;
        selectElement(ram,delay,adr);
        delay+=3000;
@@ -7189,7 +7199,7 @@ function premierePhase(adr,delay,info){
        delay+=3000;
        selectElement(rim,delay,info);
        delay+=3000;
-       selectElement(dataRIMel,delay,0);
+       selectElement(dataRIMel,delay,'L');
        return delay;
 
        
@@ -7242,6 +7252,170 @@ function ecriturememoiremov(adr,delay,info){
   selectElement(caseMemoire,delay,info);
   
   return delay;
+}
+function moveAccEual1(info,delay){
+  selectElement(dataC5el,delay,'R');
+  delay+=3000;
+  selectElement(dataC4el,delay,'R');
+  delay+=3000;
+  selectElement(dataACCel,delay,'R');
+  delay+=3000;
+  selectElement(dataC6el,delay,'R');
+  delay+=3000;
+  selectElement(ual1,delay,info);
+  delay+=3000;
+  return delay ;
+}
+function moveAccReg(info,delay,reg){
+  selectElement(dataC5el,delay,'R');
+  delay+=3000;
+  selectElement(dataC5el,delay,'R');
+  delay+=3000;
+  selectElement(dataACCel,delay,'R');
+  delay+=3000;
+  selectElement(dataDATAel,delay,'R');
+  delay+=3000;
+  selectElement(dataREGel,delay,'R');
+  delay+=3000;
+  selectElement(reg,delay,info);
+  delay+=3000;
+  return delay;
+}
+function moveAccRam(info,delay){
+  selectElement(dataC5el,delay,'R');
+  delay+=3000;
+  selectElement(dataC5el,delay,'R');
+  delay+=3000;
+  selectElement(dataACCel,delay,'R');
+  delay+=3000;
+  selectElement(dataDATAel,delay,'R');
+  delay+=3000;
+  selectElement(dataTDAel,delay,'R');
+  delay+=3000;
+  selectElement(ram,delay,info);
+  delay+=3000;
+  return delay ;
+}
+function moveAccRim(info,delay){
+  selectElement(dataC5el,delay,'R');
+  delay+=3000;
+  selectElement(dataC5el,delay,'R');
+  delay+=3000;
+  selectElement(dataACCel,delay,'R');
+  delay+=3000;
+  selectElement(dataDATAel,delay,'R');
+  delay+=3000;
+  selectElement(dataRIMel,delay,'R');
+  delay+=3000;
+  selectElement(rim,delay,info);
+  delay+=3000;
+  return delay;
+}
+function moveRimRam(info,delay){
+  selectElement(dataRIMel,delay,'L');
+  delay+=3000;
+  selectElement(dataDATAel,delay,'L');
+  delay+=3000;
+  selectElement(dataTDAel,delay,'L');
+  delay+=3000;
+  selectElement(ram,delay,info);
+  delay+=3000;
+  return delay;
+}
+function moveRimRi(info,delay){
+  selectElement(dataRIMel,delay,'L');
+  delay+=3000;
+  selectElement(dataDATAel,delay,'L');
+  delay+=3000;
+  selectElement(dataRIel,delay,'L');
+  delay+=3000;
+  selectElement(ri,delay,info);
+  delay+=3000;
+  return delay;
+}
+function moveRimReg(info,delay,reg){
+  selectElement(dataRIMel,delay,'L');
+  delay+=3000;
+  selectElement(dataDATAel,delay,'L');
+  delay+=3000;
+  selectElement(dataREGel,delay,'L');
+  delay+=3000;
+  selectElement(reg,delay,info);
+  delay+=3000;
+  return delay;
+}
+function moveRimUal2(info,delay){
+  selectElement(dataRIMel,delay,'L');
+  delay+=3000;
+  selectElement(dataDATAel,delay,'L');
+  delay+=3000;
+  selectElement(dataREGel,delay,'L');
+  delay+=3000;
+  selectElement(ual2,delay,info);
+  delay+=3000;
+  return delay;
+}
+function moveRegUal2(info,delay){
+  selectElement(dataREGel,delay,'R');
+  delay+=3000;
+  selectElement(dataDATAel,delay,'L');
+  delay+=3000;
+  selectElement(dataEUAL2el,delay,'L');
+  delay+=3000;
+  selectElement(ual2,delay,info);
+  delay+=3000;
+  return delay;
+
+}
+function moveRegRam(info,delay){
+  selectElement(dataREGel,delay,'R');
+  delay+=3000;
+  selectElement(dataDATAel,delay,'R');
+  delay+=3000;
+  selectElement(dataTDAel,delay,'L');
+  delay+=3000;
+  selectElement(ram,delay,info);
+  delay+=3000;
+  return delay;
+
+}
+function moveRegRim(info,delay){
+  selectElement(dataREGel,delay,'R');
+  delay+=3000;
+  selectElement(dataDATAel,delay,'R');
+  delay+=3000;
+  selectElement(dataRIMel,delay,'R');
+  delay+=3000;
+  selectElement(rim,delay,info);
+  delay+=3000;
+  return delay;
+
+}
+function moveReg1Reg(info,delay,reg){
+  selectElement(dataREG1el,delay,'L');
+  delay+=3000;
+  selectElement(dataC1el,delay,'L');
+  delay+=3000;
+  selectElement(dataC2el,delay,'L');
+  delay+=3000;
+  selectElement(dataC3el,delay,'L');
+  delay+=3000;
+  selectElement(reg,delay,info);
+  delay+=3000;
+  return delay ;
+}
+function moveReg2Reg(info,delay,reg){
+  selectElement(dataREG2el,delay,'L');
+  delay+=3000;
+  selectElement(dataC1el,delay,'L');
+  delay+=3000;
+  selectElement(dataC2el,delay,'L');
+  delay+=3000;
+  selectElement(dataC3el,delay,'L');
+  delay+=3000;
+  selectElement(reg,delay,info);
+  delay+=3000;
+  return delay ;
 }
 
 function simulation(){
