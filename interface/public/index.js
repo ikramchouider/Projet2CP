@@ -3187,10 +3187,7 @@ export var main = {
         } 
         co = adr;
         this.setCO(co);
-        let tab = codingExecute.coderInst(ligne_str, co, this.getDataTab());
-          main.nbMot.push([main.instrTab.length,tab.length]) ;
-          main.instrTab=main.getinstrTab().concat(tab) ;
-          co = util.incrementHex(co, tab.length);
+       
       } else if (ligne_str[0] == "START") {
       }else if (ligne_str[0] == "SETZ") {
           this.getDataTab().push(
@@ -4696,13 +4693,14 @@ class UALsimul {
               case "110": m = mainsimul.SI.getContenu(); selectElement(si,delay,m);  mainsimul.ACC.setContenu(m); break;
               case "111": m = mainsimul.DI.getContenu(); selectElement(di,delay,m);  mainsimul.ACC.setContenu(m); break;
             }
-          //  console.log("mmm = "+dataTab[i].getVal()+"      "+m);
+            //console.log("mmm = "+dataTab[i].getVal()+"      "+m);
           delay+=3000;
           delay = premierePhase(instrTab[cpt+1].getAdr(),delay,dataTab[i].getAdr());
           delay+=3000;
           delay= lecturememoire(instrTab[i].getVal(),delay,dataTab[i].getVal());
           delay+=3000;
           if(code=="MOV"){
+            //console.log(m);
             delay= ecriturememoiremov(dataTab[i].getAdr(),delay,m);
           }
           else{
@@ -6290,10 +6288,7 @@ export var mainsimul = {
         } 
         co = adr;
         this.setCO(co);
-        let tab = codingExecute.coderInst(ligne_str, co, this.getDataTab());
-          main.nbMot.push([main.instrTab.length,tab.length]) ;
-          main.instrTab=main.getinstrTab().concat(tab) ;
-          co = util.incrementHex(co, tab.length);
+     
       } else if (ligne_str[0] == "START") {
       }else if (ligne_str[0] == "SETZ") {
           this.getDataTab().push(
