@@ -3370,4 +3370,9 @@ position: absolute;
  .popup button:hover{
   animation: flicker 1s infinite;
  }
+ .removeAniamte{
+  -webkit-animation: none;
+	animation:none;
+}
+
 /* ----*/ 

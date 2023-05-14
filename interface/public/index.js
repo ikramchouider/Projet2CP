@@ -7803,31 +7803,54 @@ const ArchiDiv = document.getElementById("arch-id");
 simulbtn.addEventListener("click", () => {
   utilAnimation.HideElemById(PasseConsole);
   utilAnimation.ShowElemById(ArchiDiv);
+   show()
   }) ;
 
-  
+  function show(el,delay){
+    
+    el.style.display="block";
+   
+  }
 
 // the event listener of the return button in the ArchiDiv
-var returnBtn = document.getElementById("return");
+const returnBtn = document.getElementById("return");
 returnBtn.addEventListener("click",()=>{
   utilAnimation.HideElemById(ArchiDiv);
   utilAnimation.ShowElemById(PasseConsole);
   hide(dataCOel,0);
+  dataincco.style.animation='none';
+  dataCOel.style.animation="none";
   hide(dataRAMel,0);
-  hide(dataRIMel,0);
-  hide(dataDATAel,0);
+  dataRAMel.style.animation="none";
+   hide(dataRIMel,0);
+   hide(dataRIel,0);
+  dataRIMel.style.animation="none"
+  hide(dataDATAel,1000);
+  dataDATAel.style.animation="none";
   hide(dataREGel,0); 
+  dataREGel.style.animation="none";
   hide(dataREG1el,0);
+  dataREG1el.style.animation="none";
   hide(dataREG2el,0);
+  dataREG2el.style.animation="none";
   hide(dataACCel,0);
+  dataACCel.style.animation="none";
   hide(dataC1el,0);
+  dataC1el.style.animation="none";
   hide(dataC2el,0);
+  dataC2el.style.animation="none";
   hide(dataC3el,0);
+  dataC3el.style.animation="none";
   hide(dataC4el,0);
+  dataC4el.style.animation="none";
   hide(dataC5el,0);
+  dataC5el.style.animation="none";
   hide(dataEUAL1el,0);
+  dataEUAL1el.style.animation="none";
   hide(dataEUAL2el,0);
+  dataEUAL2el.style.animation="none";
   hide(dataTDAel,0);
+  dataTDAel.style.animation="none";
 }) ;
 
 
@@ -7835,8 +7858,8 @@ returnBtn.addEventListener("click",()=>{
 
 function hide(el, delay){
   setTimeout(function() { 
-    el.style.animation="none";
-    el.style.visibility='hidden';
+    el.style.display='none';
+    el.style.visibility="hidden";
 },delay);
 }
 
@@ -7848,12 +7871,12 @@ function moveData(Bus,direction){         // on redéfinit vers glowdata
     var left = computedStyle.getPropertyValue('left');
         if(direction==='L'){
           Bus.style.visibility='visible';
-          Bus.style.animation= 'slide-left 1.5s';
+          Bus.style.animation= 'slide-left 3s';
         }
         else{
           Bus.style.left='100%';
           Bus.style.visibility='visible';
-          Bus.style.animation= 'slide-right 1.5s';
+          Bus.style.animation= 'slide-right 3s';
         }
        
        
