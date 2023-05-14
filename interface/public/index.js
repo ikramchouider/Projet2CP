@@ -7858,8 +7858,8 @@ returnBtn.addEventListener("click",()=>{
 
 function hide(el, delay){
   setTimeout(function() { 
-    el.style.display='none';
-    el.style.visibility="hidden";
+    el.style.animation='none';
+    el.style.visibility='hidden';
 },delay);
 }
 
