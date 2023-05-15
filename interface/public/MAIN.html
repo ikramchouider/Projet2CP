@@ -28,7 +28,6 @@
 
                <span class="logo">
                   <img src="./img/logo.png" alt="#">
-                  <p class="passe"> Asse </p>
               </span>
             </div>
             <ul class="tap" id="ttt">
@@ -50,15 +49,15 @@
             </ul>
         </nav>
          <div class="welcom">
-                <div class="message">
-                  <br>
-                  <br>
-                  <h3 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;"> Bienvenue sur votre endroit PASSE</h3>
-                  <p class="m" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;"> Ce site vous permettera de simuler un ensemble d’instructions<br>
-                       ecrites en langage bas niveau et suivre le flux de l’information<br>
-                        sur une architecture conçue pour un but pédagogique</p>
-                       
-                </div>
+          <div class="message">
+            <br>
+            <br>
+            <h3 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;"> Bienvenue sur votre endroit <span style="color: rgb(202, 152, 26);font-size: larger;font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">PASSE</span> </h3>
+            <p class="m" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;"> Ce site vous permettera de  simuler un ensemble  d’instructions<br>
+                 ecrites en language bas niveau et suivre le flux de l’information<br>
+                  sur une architecture conçue pour un but pédagogique</p>
+                 
+          </div>
                 <div class="cpu">
                   <img src="./img/cpu.png" alt="CPU image">
                 </div>
@@ -87,7 +86,6 @@
          <div id="archimg">
              <img  src="img/newarchi.png" alt="#">
          </div>  
-         <a href="./Documentation sur la machine pédagogique.pdf" class="learnmore" target="_blank">Savoir plus</a>
          <br>
          <br>
          <br>
@@ -95,31 +93,31 @@
          <section class="contain" id="prg">
           <div class="carte pgm">
 <h3> Addition </h3>
-<a href="./Docs.html#prg1" class="btn">Savoir plus</a>
+<button class="btn" id="Consulter1" type="button">Consulter</button>
           </div>
 
           <div class="carte pgm">
 <h3> Multiplication </h3>
-<a href="./Docs.html#prg2" class="btn">Savoir plus</a>
+<button class="btn" id="Consulter2" type="button">Consulter</button>
           </div>
 
           <div class="carte pgm">
 <h3>program_3</h3>
-<a href="./Docs.html#prg3" class="btn" >Savoir plus</a>
+<button class="btn" id="Consulter3" type="button">Consulter</button>
           </div>
           <div class="carte pgm">
             <h3>program_4</h3>
-            <a href="./Docs.html#prg4" class="btn">Savoir plus</a>
+            <button class="btn" id="Consulter4" type="button">Consulter</button>
                       </div>
             
                       <div class="carte pgm">
             <h3>program_5</h3>
-            <a href="./Docs.html#prg5" class="btn">Savoir plus</a>
+            <button class="btn" id="Consulter5" type="button">Consulter</button>
                       </div>
             
                       <div class="carte pgm">
             <h3>Inverser tableau</h3>
-            <a href="./Docs.html#prg6" class="btn">Savoir plus</a>
+            <button  class="btn" id="Consulter6" type="button">Consulter</button>
                       </div>
          </section>
          <br>
@@ -460,15 +458,22 @@
           Ecrivez votre 
         code assembleur ici " ></textarea>
 
-  <textarea  name="code2" id="code2"  placeholder="
+               <textarea  name="code2" id="code2"  placeholder="
           Ecrivez votre 
         code héxadécimal ici"></textarea>
 
-            <div class="messagediv" id="messageDiv"> 
+             <div class="messagediv" id="messageDiv"> 
             </div>
 
         </div>
 
+ <!-- Fenêtre modale -->
+ <div id="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p id="programContent" style="font-family: 'Courier New', 'monospace'; color: white;"></p>
+  </div>
+</div>
        </section>
 
     </main>

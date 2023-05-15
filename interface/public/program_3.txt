@@ -1,0 +1,5 @@
+ORG 27H
+SET A  0H
+START
+IN A 
+STOP

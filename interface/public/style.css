@@ -687,7 +687,7 @@ nav:hover{
   transition-duration: 300ms;
   text-decoration: none;
   --tw-content: '';
-  content: var(--tw-content);
+  /*content: var(--tw-content);*/
 }
 
 .tp:hover::after {
@@ -759,7 +759,7 @@ h3:hover {
   justify-content: center;
   border-radius: 0.5rem;
   --tw-bg-opacity: 1;
-  background-color: rgb(233, 216, 241);
+  background-color: rgb(255, 255, 255);
   --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
@@ -1099,7 +1099,7 @@ body{
   animation: flicker 1s infinite;
 }
 .card-image{
-  background-color:#4a4a6b;
+  background-color:#1e1f47;
   height: 200px;
   margin-bottom: 15px;
   background-size:cover;
@@ -1131,7 +1131,8 @@ body{
 }
 .learnmore{
   position: absolute;
-  left: 0px;
+  right: 40%;
+  left: 40%;
   width:auto;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -3370,9 +3371,44 @@ position: absolute;
  .popup button:hover{
   animation: flicker 1s infinite;
  }
- .removeAniamte{
-  -webkit-animation: none;
-	animation:none;
+
+
+
+ /* Styles pour la fenêtre modale */
+ #modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  overflow: auto;
+  padding: 50px;
+  box-sizing: border-box;
+}
+
+.modal-content {
+  background-color: #3d027d;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #666;
 }
 
 /* ----*/ 

@@ -895,7 +895,7 @@ instUnSeulOp: function(str) {
 },
 instUnSeulOpHexa: function(str) {  
   if (str== '000010' || str == '100010' ||str=="010110" || str=="011000" || str=='011001' || str=='011010' || str=='110110' || str=='010111' || str=='000100' || 
-  str=='100100' ) return true ; 
+  str=='100100' || str=='011100' || str=='011101') return true ; 
   else return false ; 
 },
 
@@ -1100,6 +1100,7 @@ convertToAscii: function(string) {
 
 
 // la variable coding qui sera utilisé pour l'execution seulemnt 
+
 var codingExecute = {
   // debut coderInst "codage des instructions " return tableau des mots memoir apres codage de l'instruction 
   coderInst: function (strLigne, adr, dataTab) 
@@ -1282,8 +1283,8 @@ return instrTab;
              main.tabEtiq.push(new CaseMc(adr,"",strLigne[1])) ; 
            }
       }
-      else if(this.getFormat(strLigne) == "1" ||  strLigne[0]=="ORG" ) {
-        if(strLigne[0][strLigne[0].length - 1].toUpperCase() != "I" && strLigne[0]!="ORG"){
+      else if(this.getFormat(strLigne) == "1"  ) {
+        if(strLigne[0][strLigne[0].length - 1].toUpperCase() != "I" ){
         if (strLigne[1].indexOf("[") != -1 ) {
           if(strLigne[1][0] != "[") {
             let regEtDepl = strLigne[1].slice(strLigne[1].indexOf("[")+1, strLigne[1].length - 1) ;
@@ -1313,16 +1314,13 @@ return instrTab;
         return  instrTab ; 
       }
       else {
+       
         adr = util.incrementHex(adr, 1);
         instrTab.push(new CaseMc(adr,strLigne[1].slice(0, strLigne[1].length - 1), ""));
         for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }  
         return  instrTab ; 
       }}
-      else if(strLigne[1]== "IN" ){
-             adr = util.incrementHex(adr, 1);
-           let indice = util.chercherDansTableau(main.dataTab,strLigne[1]) ; 
-           instrTab.push(new CaseMc(adr,dataTab[indice].getAdr(), ""));
-      }
+    
     } 
   
     for (let j=0; j<instrTab.length;j++){ instrTab[j].setVal(util.remplirZero(instrTab[j].getVal(),4,0)) }
@@ -1334,7 +1332,7 @@ return instrTab;
     // return code binaire de l'instruction 
     getCode: function (str) {
       let code; 
-      if(str[0] == "STOP" || str[0] == "IN" || str[0] == "START" || str[0] == "ORG" ) {
+      if(str[0] == "STOP" || str[0] == "IN" || str[0] == "START" || str[0] == "OUT" ) {
         console.log( this.getCop(str[0]));
         code = this.getCop(str[0]).concat("0000000000");
       }
@@ -1636,7 +1634,9 @@ return instrTab;
     }, // fin getFormat 
 
 
-} // fin  codingExecute
+} 
+
+// fin  codingExecute
 
 // la variable decodage qui sera utilisé pour l'execution seulemnt 
 var decodage = {
@@ -1646,10 +1646,7 @@ var decodage = {
      
        let i=0 ; 
       while(i<main.instrTab.length){
-              console.log("val:",main.instrTab[i].getVal());
-              console.log("inside while");
               let motBinaire =util.hexEnBinaire(main.instrTab[i].getVal()) ;
-              console.log("motBinaire: ",motBinaire);
               let ind=0 ; 
               let cop = motBinaire.substring(0, 6); // capable de changer le 5 à 6 etc ..
               let ma = motBinaire.substring(6, 8);
@@ -1660,13 +1657,11 @@ var decodage = {
               let Etiqt="" ; 
               if(main.instrTab[i].getEtiq() != ""){
               Etiqt = main.instrTab[i].getEtiq().concat(":") ; }
-             console.log("ma:",ma," f:",f);
-             if(cop == "011111" || cop == "101001"  ) { 
+             if(cop == "011111" || cop == "101001" || cop=="101010" ) { 
               i=i+2 ; 
              }
               else if(this.getNom(cop)[0] == "J"){
                let indice=util.chercherAdr(main.instrTab,main.instrTab[i+1].getVal().slice(1)) ; 
-               console.log("   ",main.instrTab,main.instrTab[i+1].getVal());
                 this.tabInstrMnemonique.push([this.getNom(cop),main.instrTab[indice].getEtiq(),"",""]) ; 
                 i=i+2; 
               } else if((cop[0] == "1"  && this.getNom(cop) != "START" && cop != "101010" ) || (cop=="001000" || cop=="001001" || cop=="001010" || cop=="001011" )) {
@@ -1712,13 +1707,10 @@ var decodage = {
               else {
                
                 if(util.instUnSeulOpHexa(cop)){
-                  
-                  console.log("cop",this.getNom(cop));
-                  this.getNom(cop) ;
-                  if(ma == "00" && f=="0" ){
+                  if(ma == "00" && f=="0" && cop !="011100" && cop!="011101" ){
                     this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),"",""]) ; 
                     i++ ; 
-                  }else if(ma == "00" && f=="1") {
+                  }else if((ma == "00" && f=="1") || cop =="011100" || cop == "011101") {
                   
                     let indice=util.chercherAdr(main.dataTab,main.instrTab[i+1].getVal().slice(1)) ; 
                     
@@ -1744,11 +1736,7 @@ var decodage = {
                   }
               }
               else if(ma == "00" && f=="0"  ){
-             
-                if(cop == "101010") { 
-                  console.log(" dkheel");
-                  this.tabInstrMnemonique.push([this.getNom(cop),util.supprimerToutZerosGauche(main.instrTab[i+1].getVal()).concat("H"),"",""]) ; i=i+2;  }
-                else  if(this.getNom(cop)=="START" || this.getNom(cop)=="STOP"  ){ this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),"","",""]) ; i++ }
+                  if(this.getNom(cop)=="START" || this.getNom(cop)=="STOP"  ){ this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),"","",""]) ; i++ }
                 else{ this.tabInstrMnemonique.push([Etiqt,this.getNom(cop),this.getNomReg(reg1),",",this.getNomReg(reg2)]) ; 
               i++; }
               }
@@ -3190,10 +3178,6 @@ export var main = {
         } 
         co = adr;
         this.setCO(co);
-        let tab = codingExecute.coderInst(ligne_str, co, this.getDataTab());
-          main.nbMot.push([main.instrTab.length,tab.length]) ;
-          main.instrTab=main.getinstrTab().concat(tab) ;
-          co = util.incrementHex(co, tab.length);
       } else if (ligne_str[0] == "START") {
       }else if (ligne_str[0] == "SETZ") {
           this.getDataTab().push(
@@ -7280,10 +7264,6 @@ export var mainsimul = {
         } 
         co = adr;
         this.setCO(co);
-        let tab = codingExecute.coderInst(ligne_str, co, this.getDataTab());
-          main.nbMot.push([main.instrTab.length,tab.length]) ;
-          main.instrTab=main.getinstrTab().concat(tab) ;
-          co = util.incrementHex(co, tab.length);
       } else if (ligne_str[0] == "START") {
       }else if (ligne_str[0] == "SETZ") {
           this.getDataTab().push(
@@ -8527,3 +8507,52 @@ function afficherTexteSurElement(Element,string) {
 
 
 //_______________________________________________________________________________________________
+
+// needed things in interface ______________________________________________
+
+  // Récupération des éléments pour l'affichage de la fenetre où on peut consulter les programmes
+  var modal = document.getElementById('modal');
+  var programContent = document.getElementById('programContent');
+  var button1 = document.getElementById('Consulter1');
+  var button2 = document.getElementById('Consulter2');
+  var button3 = document.getElementById('Consulter3');
+  var button4 = document.getElementById('Consulter4');
+  var button5 = document.getElementById('Consulter5');
+  var button6 = document.getElementById('Consulter6');
+  var close = document.querySelector('.close');
+
+  button1.addEventListener('click', function() {
+    modal.style.display = 'block';
+    programContent.innerHTML = "<br>ORG 100H <br>SET A 4H <br>SET B 4H <br>SET C 0H <br>START    <br>MOV AX,A <br>MOV BX,B <br>ADD AX,BX<br>MOV C,AX <br>STOP     <br>";
+  });
+
+  button2.addEventListener('click', function() {
+    modal.style.display = 'block';
+    programContent.innerHTML = "<br>ORG 100H <br>SET A 10H <br>SET B AH <br>SET C 0H <br>START    <br>MOV AX,A <br>MOV BX,B <br>ADD AX,BX<br>MOV C,AX <br>STOP     <br>";
+  });
+
+  button3.addEventListener('click', function() {
+    modal.style.display = 'block';
+    programContent.textContent = "Contenu du programme 3";
+  });
+
+  button4.addEventListener('click', function() {
+    modal.style.display = 'block';
+    programContent.textContent = "Contenu du programme 4";
+  });
+
+  button5.addEventListener('click', function() {
+    modal.style.display = 'block';
+    programContent.textContent = "Contenu du programme 5";
+  });
+
+  button6.addEventListener('click', function() {
+    modal.style.display = 'block';
+    programContent.textContent = "Contenu du programme 6";
+  });
+
+  close.addEventListener('click', function() {
+    modal.style.display = 'none';
+  });
+
+//__________________________________________________________________________
