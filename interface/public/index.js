@@ -454,9 +454,26 @@ export var assembler = {
 
 },
 
-  fromTextZoneToPASSE_File: function(){
-    
+// if by choosing a file we have the assembly code from this content we will create the hexa code and put it next to it in the 2nd div
+  fromContentToHexDiv: function(content){
+    if (content != ''){
+    main.coder(content);
+    main.dataTab=[];
+    const textDiv = document.getElementById("code2");
+    textDiv.innerHTML="";
+    let tab=[];
+    let textContent = "";
+    for(let r=0;r<main.getinstrTab().length;r++){
+      tab[r]=main.getinstrTab()[r].getVal();
+    }
+
+  for (const line of tab) {
+    textContent += line + "\n";
+  }
+  textDiv.textContent = textContent;}
   },
+
+
 
 }// fin obj assembler
 
@@ -470,21 +487,25 @@ export var assembler = {
 //______________________________________fonctions decodage / traduction _________________________________________________________
 
 export var Translate = {
+
+  //creates the instruction table from the contents of the hexa div , the instab contains the hexa values  
   translateFunction: function (contents) {
     messageDiv.innerHTML = ""; 
     let lines = contents.split('\n');
     console.log(contents);
     lines = lines.filter(line => line.trim() !== '');  // remove the empty lines from my filecontents : the table lines which represents the lines of the file 
     let i=0;    
-    console.log("lines.length  : "+lines.length);           
     for (const line of lines) {
       main.instrTab.push(new CaseMc("",line.toString().trim(),""))
      i++;
     }
-    console.log("main.instrTab.length  : "+main.instrTab.length);           
-
   }
+
+
 }
+
+
+
 
 const translateButton = document.getElementById("translate_id")
 translateButton.addEventListener("click",  () => {
@@ -493,15 +514,19 @@ translateButton.addEventListener("click",  () => {
 if (textDiv1.value != '') {
 assembler.errorFunction(textDiv1.value);
 main.coder(textDiv1.value);
+main.dataTab=[];
 let tab=main.getinstrTab();
+if(textDiv2.value == ''){
 for(let i=0;i< tab.length;i++){
 console.log(tab[i].afficher());
-textDiv2.innerHTML += tab[i].getVal() + '\n';
+textDiv2.innerHTML += tab[i].getVal() + '\n';}
 }
 } else {
 
   Translate.translateFunction(textDiv2.value);
+  console.log("textDiv2.value : "+ textDiv2.value);
   decodage.fonctionDecodage();
+  if(textDiv1.value == ''){
   for(let i=0;i< decodage.tabInstrMnemonique.length;i++){
     let str="" ; 
     for(let j=0;j<decodage.tabInstrMnemonique[i].length;j++) {
@@ -509,21 +534,12 @@ textDiv2.innerHTML += tab[i].getVal() + '\n';
       str = str+" "+decodage.tabInstrMnemonique[i][j] }
       textDiv1.innerHTML += str + '\n';
     
-    
-     
-    }
-
-
-  
+    }}  
 }
 
 
 });
 
-
-  /*let contents = textDiv.value; // récupère le contenu initial de la div
-  contents = textDiv.value; // met à jour le contenu de la variable lorsque la div est modifiée
-  assembler.errorFunction(contents);*/
 
 
 
@@ -3199,6 +3215,7 @@ export var main = {
         
         }
        else if (ligne_str[0] == "SET") {
+
         this.getDataTab().push(
           new CaseMc(
             util.remplirZero(indice.toString(16),3,0),
@@ -3218,65 +3235,9 @@ export var main = {
    }
 
 
-/*messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***  Data Segment *** </span></p>";
-    console.log("***  Data Segment *** ");
-
-    for (let i = 0; i < this.getDataTab().length; i++){
-      this.getDataTab()[i].afficher();
-      this.getDataTab()[i].afficherHTML();}
-
-    console.log(" ********************** ");
-    //messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";
-    console.log("");
-
-    console.log("***  Code Segment *** ");
-    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: white;'>***  Code Segment *** </span></p>";
-
-    for (let i = 0; i < main.getinstrTab().length; i++) {
-    main.getinstrTab()[i].afficher();
-    main.getinstrTab()[i].afficherHTML();}
-
-    console.log("********************** ");
-    messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";*/
-
-    console.log("***  Data Segment *** ");
-    for (let i = 0; i < this.getDataTab().length; i++)
-      this.getDataTab()[i].afficher();
-    console.log("********************** ");
-    console.log("");
-    console.log("***  Code Segment *** ");
-    for (let i = 0; i < main.getinstrTab().length; i++) main.getinstrTab()[i].afficher();
-    console.log("********************** ");
-    this.Execute(main.getinstrTab());
-    main.afficherRegistres() ;
-    main.afficherIndicateurs() ;
-    console.log("***  Data Segment *** ");
-    for (let i = 0; i < this.getDataTab().length; i++)
-      this.getDataTab()[i].afficher();
-    console.log("********************** ");
-    console.log(""); 
     console.log("DECODAGE");
     decodage.fonctionDecodage() ; 
     console.log("********************** ");
-   /* this.Execute(main.getinstrTab());
-
-    main.afficherRegistres() ;
-    main.afficherRegistresHTML();
-
-    main.afficherIndicateurs() ;
-    main.afficherIndicateursHTML(); */
-
-    console.log("*** LES DONNEES **** ");
-    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>***   LES DONNEES *** </span></p>";
-
-    for (let i = 0; i < this.getDataTab().length; i++){
-      this.getDataTab()[i].afficher();
-      this.getDataTab()[i].afficherHTML();}
-
-    console.log("********************** ");
-    messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>********************** </span> </p>";
-    console.log(""); 
-
 
   },
 
@@ -3288,7 +3249,7 @@ export var main = {
       let instrBin = util.remplirZero(parseInt((instrTab[j].getVal()), 16).toString(2),16,0);
       this.setRI(instrBin) ;
       this.Nbinst =  main.nbMot[util.chercherDansTableauDeuxDimension(main.nbMot,j)][1] ; 
-  
+  console.log("Execute : ",this.getRI().getCOP());
       switch (this.getRI().getCOP()) {
         case "000000": i = this.ual.opeRation("MOV",this.getDataTab(),this.getIndicateurSigne(),instrTab,this.getRI().getMA(),j,this.getRI().getD(),this.getRI().getF(),this.getRI().getReg1(),this.getRI().getreg2());
         j = i ; break ;
@@ -3421,12 +3382,11 @@ export var main = {
               break ; 
 
       }
+      console.log('fg',j);
       //j++ ;
       //this.Nbinst ++ ; 
     } 
   },
-
-
 
   afficherIndicateurs: function () {
     console.log("I_ZERO: ", this.getIndicateurZero());
@@ -3434,7 +3394,9 @@ export var main = {
     console.log("I_RETENUE: ", this.getIndicateurRetenue());
     console.log("I_DEBORD: ", this.getIndicateurDebord());
   },
+
   afficherIndicateursHTML: function (){
+    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>__________________________________________   LES INDICATEURS __________________________________</span></p><br>";
     messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_ZERO: </span>"+"<span style='color: white;'>"+ this.getIndicateurZero() +"</span></p>";
     messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_SIGNE: </span>"+"<span style='color: white;'>"+ this.getIndicateurSigne() +"</span></p>";
     messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_RETENUE: </span>"+"<span style='color: white;'>"+ this.getIndicateurRetenue() +"</span></p>";
@@ -3456,6 +3418,7 @@ export var main = {
   },
 
   afficherRegistresHTML: function () {
+    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>_____________________________________  LES REGISTRES ________________________________________</span></p><br>";
    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> AX: </span>"+"<span style='color: white;'>"+this.getAX().getContenu() +"</span></p>";
    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> BX: </span>"+"<span style='color: white;'>"+ this.getBX().getContenu() +"</span></p>";
    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> CX: </span>"+"<span style='color: white;'>"+ this.getCX().getContenu()+"</span></p>";
@@ -3467,7 +3430,22 @@ export var main = {
    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> ACC: </span>"+"<span style='color: white;'>"+ this.getACC().getContenu() +"</span></p>";
 
   },
+
+  afficherAllHTML: function(){
   
+    this.afficherRegistresHTML();
+    this.afficherIndicateursHTML();
+    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>________________________________________   LES DONNEES _________________________________________ </span></p><br>";
+    console.log("length of data tab  :"+ main.getDataTab().length);
+        for (let i = 0; i < main.getDataTab().length; i++){
+          main.getDataTab()[i].afficher();
+          main.getDataTab()[i].afficherHTML();}
+    
+        console.log("********************** ");
+        messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>_________________________________________________________________________________________________</span> </p>";
+        console.log(""); 
+    
+      },
  
 };
 
@@ -9236,6 +9214,7 @@ export var mainsimul = {
     console.log("I_RETENUE: ", this.getIndicateurRetenue());
     console.log("I_DEBORD: ", this.getIndicateurDebord());
   },
+
   afficherIndicateursHTML: function (){
     messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_ZERO: </span>"+"<span style='color: white;'>"+ this.getIndicateurZero() +"</span></p>";
     messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_SIGNE: </span>"+"<span style='color: white;'>"+ this.getIndicateurSigne() +"</span></p>";
@@ -9333,8 +9312,12 @@ ExecuteButton.addEventListener("click", () => {
   });
   console.log("the click on the button execute has worked ! ");
   const messageDiv= document.getElementById("messageDiv");
+  messageDiv.style.background= '#010232';
   messageDiv.innerHTML = ""; 
-  main.coder(contents);
+  //main.coder(contents);
+  main.Execute(main.getinstrTab());
+  main.afficherAllHTML();
+
   
 });
 
@@ -9365,7 +9348,14 @@ const optionButton =document.getElementById("fileSelect")
 optionButton.addEventListener("change", () => {
   console.log("THE click on the option button worked !");  
   const messageDiv = document.getElementById("code")
+  const hexaDiv = document.getElementById("code2");
+  messageDiv.innerHTML="";
+  hexaDiv.innerHTML="";
+  
+  // changing the background of the div where the code will show 
   messageDiv.style.background= '#010232'; 
+  hexaDiv.style.background= '#010232'; 
+
   const option = optionButton.options[optionButton.selectedIndex];
   const file = option.value;
   const xhr = new XMLHttpRequest();// Create a new XMLHttpRequest object
@@ -9375,6 +9365,11 @@ optionButton.addEventListener("change", () => {
     const contents = xhr.responseText;
     console.log(contents);
     assembler.fromFileNameToTextZone(contents)
+    let lines = contents.split('\n');
+    lines = lines.filter(line => line.trim() !== '');   
+     let l =lines[0].split(' ');
+    if (l[0].toUpperCase()=="ORG"){
+    assembler.fromContentToHexDiv(contents);}
   };
   xhr.open("GET", file);  // Open the file
   xhr.send();  // Send the request
@@ -9392,7 +9387,7 @@ const n = 15;
 }*/
 for (let i = 1; i <= n; i++) {
   const p = document.createElement("p");
-  p.textContent = i;
+  p.textContent = i + ".";
   maDiv.appendChild(p);
 }
 
@@ -9421,6 +9416,7 @@ simulbtn.addEventListener("click", () => {
 // the event listener of the return button in the ArchiDiv
 const returnBtn = document.getElementById("return");
 returnBtn.addEventListener("click",()=>{
+  actualiser();
   utilAnimation.HideElemById(ArchiDiv);
   utilAnimation.ShowElemById(PasseConsole);
   hide(dataCOel,0);
@@ -9812,13 +9808,16 @@ function start() {
 }
 
 
-
+function actualiser() {
+  location.reload(); // Refresh the page
+}
 
 
 
 const startbutton  = document.getElementById("strt");
 startbutton.addEventListener("click", () => {
- // let delay=0;// fin obj assembler
+  startbutton.innerHTML = '<i class="fas fa-stop" style="color:#e5b029;"></i>';
+  // let delay=0;// fin obj assembler
   const textDiv = document.getElementById("code");
   let contents = textDiv.value;
   textDiv.addEventListener("input", function() {
@@ -10154,7 +10153,7 @@ function afficherTexteSurElement(Element,string) {
 
   button2.addEventListener('click', function() {
     modal.style.display = 'block';
-    programContent.innerHTML = "<br>ORG 100H <br>SET A 10H <br>SET B AH <br>SET C 0H <br>START    <br>MOV AX,A <br>MOV BX,B <br>ADD AX,BX<br>MOV C,AX <br>STOP     <br>";
+    programContent.innerHTML = "<br>ORG 100H <br>SET A 10H <br>SET B AH <br>SET C 0H <br>START    <br>MOV AX,A <br>MOV BX,B <br>MOVI CX,0H <br>CMPI BX,0H<br>JE resultZero<br>CMPI AX,0H<br>MOVI EX,0H<br>Bcl: ADD EX,A<br>INC CX<br>CMP CX,BX<br>JNE Bcl<br>JMP fin<br>resultZero: MOVI EX,0H<br>fin: MOV C,EX<br>STOP     <br>";
   });
 
   button3.addEventListener('click', function() {

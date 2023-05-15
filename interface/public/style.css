@@ -1220,13 +1220,12 @@ textarea::-webkit-input-placeholder {
   border-radius: 10px;
   border: 4px dashed rgba(255, 255, 255, 0.103);
   padding: 10px;
-  width: 40px;
+  width: 48px;
   align-items: var(--tw-ring-color);
   position: relative;
   left: 0px;
   max-height: 500px;
  overflow: hidden;
-    padding: 11px;
     height: 345px;
 
 
@@ -1259,7 +1258,6 @@ textarea::-webkit-input-placeholder {
   width: 400px;
   height: 345px;
 }
-
 
 
 p.errormsg {
@@ -1359,6 +1357,7 @@ p.errormsg {
   margin-bottom: 20px;
   margin-left: 200px;
 }
+
 .con{
   display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1417,18 +1416,16 @@ animation: flicker 1s infinite;
       }  
 
 .ARCHI{
-  align-items: left;
   width: 1200px;
   height: 750px;
   position: absolute;
   box-sizing: border-box;
-  margin:0px 150px;
   display: block ;
   visibility: hidden;
   border: 4px dashed rgba(44, 1, 79, 0.719);
   background-color: aliceblue;
 border-radius: 16px;
-
+transform: scale(0.75);
 }
 .bus{
   box-sizing: border-box;
@@ -1982,7 +1979,12 @@ bottom: 268px;
   width: 50px;
   height: 50px;
   font-size: 36px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 .start-pause:hover{
   box-shadow: 0 0.1rem 1.4rem 0 #19092f;
 }

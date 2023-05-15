@@ -1,931 +1,949 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="./img/logo.png">
-    <!--<link href="https://fonts.googleapis.com/css2family=Actor&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="./img/logo.png">
+  <!--<link href="https://fonts.googleapis.com/css2family=Actor&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     -->
-      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <title>PASSE</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <!--pour les icons-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-  </head>
-<body >        
-    <main>
-     
-        <nav>
-            <div class="gr">
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <title>PASSE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!--pour les icons-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
 
-              <span class="icon" >
-                <ion-icon name="menu" onclick="Menu(this)" ></ion-icon>
-              </span>
+<body>
+  <main>
 
-               <span class="logo">
-                  <img src="./img/logo.png" alt="#">
-              </span>
-            </div>
-            <ul class="tap" id="ttt">
-              <li>
-                <a class="tp" href="./Main.html" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Accueil</a>
-              </li>
-              <li>
-                <a class="tp" href="./Docs.html" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Docs</a>
-              </li>
-              <li>
-                <a class="tp" href="./quiz.html" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Quiz</a>
-              </li>
-              <li>
-                <a class="tp" href="./Aide.html" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Aide</a>
-              </li>
-              <li>
-                <a class="tp" href="./About.html" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Appropos de nous</a>
-              </li>
-            </ul>
-        </nav>
-         <div class="welcom">
-          <div class="message">
-            <br>
-            <br>
-            <h3 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;"> Bienvenue sur votre endroit <span style="color: rgb(202, 152, 26);font-size: larger;font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">PASSE</span> </h3>
-            <p class="m" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;"> Ce site vous permettera de  simuler un ensemble  d’instructions<br>
-                 ecrites en language bas niveau et suivre le flux de l’information<br>
-                  sur une architecture conçue pour un but pédagogique</p>
-                 
-          </div>
-                <div class="cpu">
-                  <img src="./img/cpu.png" alt="CPU image">
-                </div>
-         </div>
-         <section class="contain">
-          <div class="carte">
-            <div class="card-image car-1"> </div>
-<h4>Architecture de la machine</h4>
-<a href="#archimg" class="btn"> Go!</a>
-          </div>
+    <nav>
+      <div class="gr">
 
-          <div class="carte">
-            <div class="card-image car-2"> </div>
-<h4>Programmes</h4>
-<a href="#prg" class="btn">Go!</a>
-          </div>
+        <span class="icon">
+          <ion-icon name="menu" onclick="Menu(this)"></ion-icon>
+        </span>
 
-          <div class="carte">
-            <div class="card-image car-3"> </div>
-<h4>Simulation</h4>
-<a href="#sml" class="btn">Go!</a>
-          </div>
-         </section>
-         <h3>Architecture de la machine</h3>
-         <br>
-         <div id="archimg">
-             <img  src="img/newarchi.png" alt="#">
-         </div>  
-         <br>
-         <br>
-         <br>
-          <h3 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Programmes</h3> 
-         <section class="contain" id="prg">
-          <div class="carte pgm">
-<h3> Addition </h3>
-<button class="btn" id="Consulter1" type="button">Consulter</button>
-          </div>
+        <span class="logo">
+          <img src="./img/logo.png" alt="#">
+        </span>
+      </div>
+      <ul class="tap" id="ttt">
+        <li>
+          <a class="tp" href="./Main.html"
+            style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Accueil</a>
+        </li>
+        <li>
+          <a class="tp" href="./Docs.html"
+            style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Docs</a>
+        </li>
+        <li>
+          <a class="tp" href="./quiz.html"
+            style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Quiz</a>
+        </li>
+        <li>
+          <a class="tp" href="./Aide.html"
+            style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Aide</a>
+        </li>
+        <li>
+          <a class="tp" href="./About.html"
+            style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Appropos
+            de nous</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="welcom">
+      <div class="message">
+        <br>
+        <br>
+        <h3
+          style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+          Bienvenue sur votre endroit <span
+            style="color: rgb(202, 152, 26);font-size: larger;font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">PASSE</span>
+        </h3>
+        <p class="m"
+          style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+          Ce site vous permettera de simuler un ensemble d’instructions<br>
+          ecrites en language bas niveau et suivre le flux de l’information<br>
+          sur une architecture conçue pour un but pédagogique</p>
 
-          <div class="carte pgm">
-<h3> Multiplication </h3>
-<button class="btn" id="Consulter2" type="button">Consulter</button>
-          </div>
+      </div>
+      <div class="cpu">
+        <img src="./img/cpu.png" alt="CPU image">
+      </div>
+    </div>
+    <section class="contain">
+      <div class="carte">
+        <div class="card-image car-1"> </div>
+        <h4>Architecture de la machine</h4>
+        <a href="#archimg" class="btn"> Go!</a>
+      </div>
 
-          <div class="carte pgm">
-<h3>program_3</h3>
-<button class="btn" id="Consulter3" type="button">Consulter</button>
-          </div>
-          <div class="carte pgm">
-            <h3>program_4</h3>
-            <button class="btn" id="Consulter4" type="button">Consulter</button>
-                      </div>
-            
-                      <div class="carte pgm">
-            <h3>program_5</h3>
-            <button class="btn" id="Consulter5" type="button">Consulter</button>
-                      </div>
-            
-                      <div class="carte pgm">
-            <h3>Inverser tableau</h3>
-            <button  class="btn" id="Consulter6" type="button">Consulter</button>
-                      </div>
-         </section>
-         <br>
-         <br>
-         <br>
-         <h3>Simulation</h3> 
-         <div class="ARCHI" id="arch-id">
-          <div class="start-pause" >
-            <button id="strt"> 
-            <ion-icon name="caret-forward-outline"></ion-icon> 
-            </button>
-              
-          </div>
-          <span class="retour" id="return" >
-            <ion-icon name="arrow-undo-outline"></ion-icon>
-          </span>
-          <div class="bus" id="busDATA"> 
-            <div class="dataflux" id="dataDATA"></div>
-          </div>
-          <div class="bus" id="busREG">
-            <div class="dataflux" id="dataREG"></div>
-          </div>
-          <div class="bus" id="busRIM">
-            <div class="dataflux" id="dataRIM"></div>
-          </div>
-          <div class="bus" id="busRAM">
-            <div class="dataflux" id="dataRAM"></div>
-          </div>
-          <div class="bus" id="busEUAL2">
-            <div class="dataflux" id="dataEUAL2"></div>
-          </div>
-          <!-- <div class="bus" id="busEUAL2">
+      <div class="carte">
+        <div class="card-image car-2"> </div>
+        <h4>Programmes</h4>
+        <a href="#prg" class="btn">Go!</a>
+      </div>
+
+      <div class="carte">
+        <div class="card-image car-3"> </div>
+        <h4>Simulation</h4>
+        <a href="#sml" class="btn">Go!</a>
+      </div>
+    </section>
+    <h3>Architecture de la machine</h3>
+    <br>
+    <div id="archimg">
+      <img src="img/newarchi.png" alt="#">
+    </div>
+    <br>
+    <br>
+    <br>
+    <h3 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+      Programmes</h3>
+    <section class="contain" id="prg">
+      <div class="carte pgm">
+        <h3> Addition </h3>
+        <button class="btn" id="Consulter1" type="button">Consulter</button>
+      </div>
+
+      <div class="carte pgm">
+        <h3> Multiplication </h3>
+        <button class="btn" id="Consulter2" type="button">Consulter</button>
+      </div>
+
+      <div class="carte pgm">
+        <h3>program_3</h3>
+        <button class="btn" id="Consulter3" type="button">Consulter</button>
+      </div>
+      <div class="carte pgm">
+        <h3>program_4</h3>
+        <button class="btn" id="Consulter4" type="button">Consulter</button>
+      </div>
+
+      <div class="carte pgm">
+        <h3>program_5</h3>
+        <button class="btn" id="Consulter5" type="button">Consulter</button>
+      </div>
+
+      <div class="carte pgm">
+        <h3>Inverser tableau</h3>
+        <button class="btn" id="Consulter6" type="button">Consulter</button>
+      </div>
+    </section>
+    <br>
+    <br>
+    <br>
+    <h3>Simulation</h3>
+    <div class="ARCHI" id="arch-id">
+      <div class="start-pause">
+        <button id="strt">
+          <ion-icon name="caret-forward-outline"></ion-icon>
+        </button>
+
+      </div>
+      <span class="retour" id="return">
+        <ion-icon name="arrow-undo-outline"></ion-icon>
+      </span>
+      <div class="bus" id="busDATA">
+        <div class="dataflux" id="dataDATA"></div>
+      </div>
+      <div class="bus" id="busREG">
+        <div class="dataflux" id="dataREG"></div>
+      </div>
+      <div class="bus" id="busRIM">
+        <div class="dataflux" id="dataRIM"></div>
+      </div>
+      <div class="bus" id="busRAM">
+        <div class="dataflux" id="dataRAM"></div>
+      </div>
+      <div class="bus" id="busEUAL2">
+        <div class="dataflux" id="dataEUAL2"></div>
+      </div>
+      <!-- <div class="bus" id="busEUAL2">
             <div class="dataflux" id="dataEUAL2"></div>
           </div> -->
-          <div class="bus" id="busACC">
-            <div class="dataflux" id="dataACC"></div>
-          </div>
-          <div class="bus" id="busRI">
-            <div class="dataflux" id="dataRI"></div>
-          </div>
-          <div class="bus" id="busCO">
-            <div class="dataflux" id="dataCO"></div>
-            <div class="animation-Co-Rim" id="animationCoRim"></div> </div>
-          <div class="bus" id="busTDA">
-            <div class="dataflux" id="dataTDA"></div>
-          </div> 
-          <div class="bus" id="busREG1">
-            <div class="dataflux" id="dataREG1"></div>
-          </div>
-          <div class="bus" id="busREG2">
-            <div class="dataflux" id="dataREG2"></div>
-          </div>
-          <div class="bus" id="c1">
-            <div class="dataflux" id="dataC1"></div>
-          </div>
-          <div class="bus" id="c2">
-            <div class="dataflux" id="dataC2"></div>
-          </div>
-          <div class="bus" id="c3">
-            <div class="dataflux" id="dataC3"></div>
-          </div>
-          <div class="bus" id="c4">
-            <div class="dataflux" id="dataC4"></div>
-          </div>
-          <div class="bus" id="c5">
-            <div class="dataflux" id="dataC5"></div>
-          </div>
-          <div class="bus" id="c6">
-            <div class="dataflux" id="dataC6"></div>
-          </div>
-          <div class="bus" id="incco">
-            <div class="dataflux" id="dataincco"></div>
-          </div>
-          <div class="bus" id="LE"></div>
-          <!--les instructions-->
-          <div class="bus" id="Add"></div>
-          <div class="bus" id="Sub"></div>
-          <div class="bus" id="mov"></div>
-          
-          <!-- sorties du seq-->
-          <div class="bus" id="s1"></div>
-          <div class="arrow" id="a21"></div>
-          <div class="bus" id="s2"></div>
-          <div class="arrow" id="a22"></div>
-          <div class="bus" id="s3"></div>
-          <div class="arrow" id="a23"></div>
-          <!---->
-          <div class="rim" id="RIM">
-            <div class="formeRim" > </div>
-            <div class="ombreRim" > </div>
-            <div class="bordureRim" > </div>
-            <p id="Rimcontent"></p>
-          </div>
-          <div class="Ual" id="ual">
-            <p id="UALtxt">UAL</p>
-            <div class="formeUal" > </div>
-            <div class="ombreUal" > </div>
-            <div class="bordureUalFace" > </div>
-            <div class="bordureOmbreUal" > </div>
-          </div>
-          <div class="ram" id="RAM">
-            <div class="formeRam" > </div>
-            <div class="ombreRam" > </div>
-            <div class="bordureRam" > </div>
-          </div>
-          <div class="sequ" id="SEQ">
-            <p id="SEQtxt">SEQ</p>
-            <div class="formeSeq" > </div>
-            <div class="bordureSeq" > </div>
-            <div class="ombreSeq" > </div>
-            <div class="bordureOmbreSeq" > </div>
-          </div>
-          <div class="MC">
-            <div class="caseAdresse" id="caseAdresse"></div>
-            <div class="caseMemoire" id="caseMemoire"></div>
-            <div class="formeMc" > </div>
-            <div class="ombreMc" > </div>
-            <div class="bordureMc" > </div>
-          </div>
-          <div class="co" id="CO"> 
-            <div class="formeRim" > </div>
-            <div class="ombreRim" > </div>
-            <div class="bordureRim" > </div>
-          </div>
-          <div class="container">
-            <div class="shape shape1"></div>
-            <div class="shape shape2"></div>
-          </div>
-          <div class="REG" id="RI"> <!--on va mettre les champs de l'instruction dans le div RI-->
-               <div class="cop"  id="COP">
-                <div class="formeCop" > </div>
-                <div class="ombreCop" > </div>
-                <div class="bordureCop" > </div>
-               </div>
-               <div class="ma" id="MA">
-                <div class="formeMa" > </div>
-                <div class="ombreMa" > </div>
-                <div class="bordureMa" > </div>
-               </div>
-               <div class="f" id="F">
-                <div class="formeF" > </div>
-                <div class="ombreF" > </div>
-                <div class="bordureF" > </div>
-               </div>
-               <div class="dd" id="DD">
-                <div class="formeF" > </div>
-                <div class="ombreF" > </div>
-                <div class="bordureF" > </div>
-               </div>
-               <div class="reg1" id="REG1">
-                <div class="formeCop" > </div>
-                <div class="ombreCop" > </div>
-                <div class="bordureCop" > </div>
-               </div>
-               <div class="reg2" id="REG2">
-                <div class="formeCop" > </div>
-                <div class="ombreCop" > </div>
-                <div class="bordureCop" > </div>
-               </div>
-          </div>    
-          <div class="acc" id="ACC">
-            <div class="formeEual" > </div>
-            <div class="ombreEual" > </div>
-            <div class="bordureEual" > </div>
-          </div>
-          <div class="eual" id="EUAL1">
-            <div class="formeEual" > </div>
-            <div class="ombreEual" > </div>
-            <div class="bordureEual" > </div>
-          </div>
-          <div class="eual" id="EUAL2">
-            <div class="formeEual" > </div>
-            <div class="ombreEual" > </div>
-            <div class="bordureEual" > </div>
-          </div>
-          <div class="REG" id="AX">
-            <p id="AXtxt">AX</p>
-            <div class="formeEual" > </div>
-            <div class="ombreEual" > </div>
-            <div class="bordureEual" > </div>
-          </div>
-          <div class="REG" id="BX">
-            <p id="BXtxt">BX</p>
-            <div class="formeEual" > </div>
-            <div class="ombreEual" > </div>
-            <div class="bordureEual" > </div>
-          </div>
-          <div class="REG" id="CX">
-            <p id="CXtxt">CX</p>
-            <div class="formeEual" > </div>
-            <div class="ombreEual" > </div>
-            <div class="bordureEual" > </div>
-          </div>
-          <div class="REG" id="DX">
-            <p id="DXtxt">DX</p>
-            <div class="formeEual" > </div>
-            <div class="ombreEual" > </div>
-            <div class="bordureEual" > </div>
-          </div>
-          <div class="REG" id="EX">
-            <p id="EXtxt">EX</p>
-            <div class="formeEual" > </div>
-            <div class="ombreEual" > </div>
-            <div class="bordureEual" > </div>
-          </div>
-          <div class="REG" id="FX">
-            <p id="FXtxt">FX</p>
-            <div class="formeEual" > </div>
-            <div class="ombreEual" > </div>
-            <div class="bordureEual" > </div>
-          </div>
-          <div class="REG" id="SI">
-            <p id="DItxt">SI</p>
-            <div class="formeEual" > </div>
-            <div class="ombreEual" > </div>
-            <div class="bordureEual" > </div>
-          </div>
-          <div class="REG" id="DI">
-            <p id="SItxt">DI</p>
-            <div class="formeEual" > </div>
-            <div class="ombreEual" > </div>
-            <div class="bordureEual" > </div>
-          </div>
-          <div class="REG" id="Z">
-            <div class="formeFlag" > </div>
-            <div class="ombreFlag" > </div>
-            <div class="bordureFlag" > </div>
-          </div>
-          <div class="REG" id="S">
-            <div class="formeFlag" > </div>
-            <div class="ombreFlag" > </div>
-            <div class="bordureFlag" > </div>
-          </div>
-          <div class="REG" id="R">
-            <div class="formeFlag" > </div>
-            <div class="ombreFlag" > </div>
-            <div class="bordureFlag" > </div>
-          </div>
-          <div class="REG" id="D">
-            <div class="formeFlag" > </div>
-            <div class="ombreFlag" > </div>
-            <div class="bordureFlag" > </div>
-          </div>
-          <div class="glow" id="g2"></div>
-          
-  
-<div class="arrow" id="a1"></div>
-<div class="arrow" id="a2"></div>
-<div class="arrow" id="a3"></div>
-<div class="arrow" id="a4"></div>
-<div class="arrow" id="a5"></div>
-<div class="arrow" id="a6"></div>
-<div class="arrow" id="a7"></div>
-<div class="arrow" id="a8"></div>
-<div class="arrow" id="a9"></div>
-<div class="arrow" id="a10"></div>
-<div class="arrow" id="a11"></div>
-<div class="arrow" id="a12"></div>
-<div class="arrow" id="a13"></div>
-<div class="arrow" id="a14"></div>
-<div class="arrow" id="a15"></div>
-<div class="arrow" id="inc"></div>
-<div class="arrow" id="le"></div>
-<div class="arrow" id="a16"></div>
-<div class="arrow" id="a17"></div>
-<!-- <div class="arrow" id="a18"></div> -->
-<div class="arrow" id="a19"></div>
-<div class="arrow" id="a20"></div>
-<div class="arrow" id="addinst"></div>
-<div class="arrow" id="subinst"></div>
-<div class="arrow" id="movinst"></div>
-  
-  <p id="inctxt"> INC </p>
-  <p id="letxt"> L/E </p>
-  <p id="START"> START </p>
-  <p id="goback"> Go Back</p>
-  <p id="indZ"> Z </p>
-  <p id="indS"> S </p>
-  <p id="indR"> R </p>
-  <p id="indD"> D </p>
-  <p id="seq"> SEQ </p>
-  <p id="COtxt"> CO </p>
-  <p id="RAMtxt">RAM</p>
-  <p id="RIMtxt">RIM</p>
-  <p id="RItxt">RI</p>
-  <p id="ACCtxt">ACC</p>
-  <p id="EUAL1txt">EUAL2</p>
-  <p id="EUAL2txt">EUAL1</p>
-  <p id="pnt">... 
-  </p>
-  <div id="instname"></div>
- 
+      <div class="bus" id="busACC">
+        <div class="dataflux" id="dataACC"></div>
       </div>
-         <section class="emulator" id="sml">
-          <div class="popup" id="popupid">
-            <img src="tick.png">
-           <h2> Fin Simulation</h2>
-           <button type="button" id="popbtn"> OK </button>
-           </div>
-          <div class="option" >
-            <select name="file" id="fileSelect" >
-              <option selected disabled>fichier</option>
-            <option value="program_1.txt"> program_1 </option>
-            <option value="program_2.txt"> program_2 </option>
-            <option value="program_3.txt"> program_3 </option>
-            <option value="program_4.txt"> program_4 </option>
-            <option value="program_5.txt"> program_5 </option>
-            <option value="program_6.txt"> program_6 </option>
-            </select>
-            <button type="button" id="compile_id">Assembler</button>
-            <button type="button" id="translate_id">Traduire</button>
-            <button id="run_id">Exécuter</button>
-            <button type="button" id="simulate_id">Simuler</button>
-            <button id="help_id">Aide</button>
-  
+      <div class="bus" id="busRI">
+        <div class="dataflux" id="dataRI"></div>
+      </div>
+      <div class="bus" id="busCO">
+        <div class="dataflux" id="dataCO"></div>
+        <div class="animation-Co-Rim" id="animationCoRim"></div>
+      </div>
+      <div class="bus" id="busTDA">
+        <div class="dataflux" id="dataTDA"></div>
+      </div>
+      <div class="bus" id="busREG1">
+        <div class="dataflux" id="dataREG1"></div>
+      </div>
+      <div class="bus" id="busREG2">
+        <div class="dataflux" id="dataREG2"></div>
+      </div>
+      <div class="bus" id="c1">
+        <div class="dataflux" id="dataC1"></div>
+      </div>
+      <div class="bus" id="c2">
+        <div class="dataflux" id="dataC2"></div>
+      </div>
+      <div class="bus" id="c3">
+        <div class="dataflux" id="dataC3"></div>
+      </div>
+      <div class="bus" id="c4">
+        <div class="dataflux" id="dataC4"></div>
+      </div>
+      <div class="bus" id="c5">
+        <div class="dataflux" id="dataC5"></div>
+      </div>
+      <div class="bus" id="c6">
+        <div class="dataflux" id="dataC6"></div>
+      </div>
+      <div class="bus" id="incco">
+        <div class="dataflux" id="dataincco"></div>
+      </div>
+      <div class="bus" id="LE"></div>
+      <!--les instructions-->
+      <div class="bus" id="Add"></div>
+      <div class="bus" id="Sub"></div>
+      <div class="bus" id="mov"></div>
+
+      <!-- sorties du seq-->
+      <div class="bus" id="s1"></div>
+      <div class="arrow" id="a21"></div>
+      <div class="bus" id="s2"></div>
+      <div class="arrow" id="a22"></div>
+      <div class="bus" id="s3"></div>
+      <div class="arrow" id="a23"></div>
+      <!---->
+      <div class="rim" id="RIM">
+        <div class="formeRim"> </div>
+        <div class="ombreRim"> </div>
+        <div class="bordureRim"> </div>
+        <p id="Rimcontent"></p>
+      </div>
+      <div class="Ual" id="ual">
+        <p id="UALtxt">UAL</p>
+        <div class="formeUal"> </div>
+        <div class="ombreUal"> </div>
+        <div class="bordureUalFace"> </div>
+        <div class="bordureOmbreUal"> </div>
+      </div>
+      <div class="ram" id="RAM">
+        <div class="formeRam"> </div>
+        <div class="ombreRam"> </div>
+        <div class="bordureRam"> </div>
+      </div>
+      <div class="sequ" id="SEQ">
+        <p id="SEQtxt">SEQ</p>
+        <div class="formeSeq"> </div>
+        <div class="bordureSeq"> </div>
+        <div class="ombreSeq"> </div>
+        <div class="bordureOmbreSeq"> </div>
+      </div>
+      <div class="MC">
+        <div class="caseAdresse" id="caseAdresse"></div>
+        <div class="caseMemoire" id="caseMemoire"></div>
+        <div class="formeMc"> </div>
+        <div class="ombreMc"> </div>
+        <div class="bordureMc"> </div>
+      </div>
+      <div class="co" id="CO">
+        <div class="formeRim"> </div>
+        <div class="ombreRim"> </div>
+        <div class="bordureRim"> </div>
+      </div>
+      <div class="container">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+      </div>
+      <div class="REG" id="RI"> <!--on va mettre les champs de l'instruction dans le div RI-->
+        <div class="cop" id="COP">
+          <div class="formeCop"> </div>
+          <div class="ombreCop"> </div>
+          <div class="bordureCop"> </div>
+        </div>
+        <div class="ma" id="MA">
+          <div class="formeMa"> </div>
+          <div class="ombreMa"> </div>
+          <div class="bordureMa"> </div>
+        </div>
+        <div class="f" id="F">
+          <div class="formeF"> </div>
+          <div class="ombreF"> </div>
+          <div class="bordureF"> </div>
+        </div>
+        <div class="dd" id="DD">
+          <div class="formeF"> </div>
+          <div class="ombreF"> </div>
+          <div class="bordureF"> </div>
+        </div>
+        <div class="reg1" id="REG1">
+          <div class="formeCop"> </div>
+          <div class="ombreCop"> </div>
+          <div class="bordureCop"> </div>
+        </div>
+        <div class="reg2" id="REG2">
+          <div class="formeCop"> </div>
+          <div class="ombreCop"> </div>
+          <div class="bordureCop"> </div>
+        </div>
+      </div>
+      <div class="acc" id="ACC">
+        <div class="formeEual"> </div>
+        <div class="ombreEual"> </div>
+        <div class="bordureEual"> </div>
+      </div>
+      <div class="eual" id="EUAL1">
+        <div class="formeEual"> </div>
+        <div class="ombreEual"> </div>
+        <div class="bordureEual"> </div>
+      </div>
+      <div class="eual" id="EUAL2">
+        <div class="formeEual"> </div>
+        <div class="ombreEual"> </div>
+        <div class="bordureEual"> </div>
+      </div>
+      <div class="REG" id="AX">
+        <p id="AXtxt">AX</p>
+        <div class="formeEual"> </div>
+        <div class="ombreEual"> </div>
+        <div class="bordureEual"> </div>
+      </div>
+      <div class="REG" id="BX">
+        <p id="BXtxt">BX</p>
+        <div class="formeEual"> </div>
+        <div class="ombreEual"> </div>
+        <div class="bordureEual"> </div>
+      </div>
+      <div class="REG" id="CX">
+        <p id="CXtxt">CX</p>
+        <div class="formeEual"> </div>
+        <div class="ombreEual"> </div>
+        <div class="bordureEual"> </div>
+      </div>
+      <div class="REG" id="DX">
+        <p id="DXtxt">DX</p>
+        <div class="formeEual"> </div>
+        <div class="ombreEual"> </div>
+        <div class="bordureEual"> </div>
+      </div>
+      <div class="REG" id="EX">
+        <p id="EXtxt">EX</p>
+        <div class="formeEual"> </div>
+        <div class="ombreEual"> </div>
+        <div class="bordureEual"> </div>
+      </div>
+      <div class="REG" id="FX">
+        <p id="FXtxt">FX</p>
+        <div class="formeEual"> </div>
+        <div class="ombreEual"> </div>
+        <div class="bordureEual"> </div>
+      </div>
+      <div class="REG" id="SI">
+        <p id="DItxt">SI</p>
+        <div class="formeEual"> </div>
+        <div class="ombreEual"> </div>
+        <div class="bordureEual"> </div>
+      </div>
+      <div class="REG" id="DI">
+        <p id="SItxt">DI</p>
+        <div class="formeEual"> </div>
+        <div class="ombreEual"> </div>
+        <div class="bordureEual"> </div>
+      </div>
+      <div class="REG" id="Z">
+        <div class="formeFlag"> </div>
+        <div class="ombreFlag"> </div>
+        <div class="bordureFlag"> </div>
+      </div>
+      <div class="REG" id="S">
+        <div class="formeFlag"> </div>
+        <div class="ombreFlag"> </div>
+        <div class="bordureFlag"> </div>
+      </div>
+      <div class="REG" id="R">
+        <div class="formeFlag"> </div>
+        <div class="ombreFlag"> </div>
+        <div class="bordureFlag"> </div>
+      </div>
+      <div class="REG" id="D">
+        <div class="formeFlag"> </div>
+        <div class="ombreFlag"> </div>
+        <div class="bordureFlag"> </div>
+      </div>
+      <div class="glow" id="g2"></div>
+
+
+      <div class="arrow" id="a1"></div>
+      <div class="arrow" id="a2"></div>
+      <div class="arrow" id="a3"></div>
+      <div class="arrow" id="a4"></div>
+      <div class="arrow" id="a5"></div>
+      <div class="arrow" id="a6"></div>
+      <div class="arrow" id="a7"></div>
+      <div class="arrow" id="a8"></div>
+      <div class="arrow" id="a9"></div>
+      <div class="arrow" id="a10"></div>
+      <div class="arrow" id="a11"></div>
+      <div class="arrow" id="a12"></div>
+      <div class="arrow" id="a13"></div>
+      <div class="arrow" id="a14"></div>
+      <div class="arrow" id="a15"></div>
+      <div class="arrow" id="inc"></div>
+      <div class="arrow" id="le"></div>
+      <div class="arrow" id="a16"></div>
+      <div class="arrow" id="a17"></div>
+      <!-- <div class="arrow" id="a18"></div> -->
+      <div class="arrow" id="a19"></div>
+      <div class="arrow" id="a20"></div>
+      <div class="arrow" id="addinst"></div>
+      <div class="arrow" id="subinst"></div>
+      <div class="arrow" id="movinst"></div>
+
+      <p id="inctxt"> INC </p>
+      <p id="letxt"> L/E </p>
+      <p id="START"> START </p>
+      <p id="goback"> Go Back</p>
+      <p id="indZ"> Z </p>
+      <p id="indS"> S </p>
+      <p id="indR"> R </p>
+      <p id="indD"> D </p>
+      <p id="seq"> SEQ </p>
+      <p id="COtxt"> CO </p>
+      <p id="RAMtxt">RAM</p>
+      <p id="RIMtxt">RIM</p>
+      <p id="RItxt">RI</p>
+      <p id="ACCtxt">ACC</p>
+      <p id="EUAL1txt">EUAL2</p>
+      <p id="EUAL2txt">EUAL1</p>
+      <p id="pnt">...
+      </p>
+      <div id="instname"></div>
+
+    </div>
+    <section class="emulator" id="sml">
+      <div class="popup" id="popupid">
+        <img src="tick.png">
+        <h2> Fin Simulation</h2>
+        <button type="button" id="popbtn"> OK </button>
+      </div>
+      <div class="option">
+        <select name="file" id="fileSelect">
+          <option selected disabled>fichier</option>
+          <option value="program_1.txt"> program_1 </option>
+          <option value="program_2.txt"> program_2 </option>
+          <option value="program_3.txt"> program_3 </option>
+          <option value="program_4.txt"> program_4 </option>
+          <option value="program_5.txt"> program_5 </option>
+          <option value="program_6.txt"> program_6 </option>
+        </select>
+        <button type="button" id="compile_id">Assembler</button>
+        <button type="button" id="translate_id">Traduire</button>
+        <button id="run_id">Exécuter</button>
+        <button type="button" id="simulate_id">Simuler</button>
+        <button id="help_id">Aide</button>
 
 
 
+
+      </div>
+      <div class="bas">
+        <div class="upload">
+          <div class="upload_img">
+            <img src="./img/upload.png" alt="#">
           </div>
-          <div class="bas">
-            <div class="upload">
-              <div class="upload_img">
-                <img src="./img/upload.png" alt="#">
-              </div>
-              <div>
-                <button type = "button" class = "btn-warning" id="Importer_fichier"> 
-                  <i class = "fa fa-upload"></i> ouvrir un fichier
-                  <input type="file" id="fileInput" name="fileInput"  title="titre" >
-                  <button type = "button" id="save" class="saveButton">
-                    <i class="fa fa-save"></i> Sauvegarder
-                  </button>
-                  <!--<ion-icon name="cloud-upload-outline"></ion-icon>-->
-              </div>
-            </div>
-            <div class="nbLigne" id="NbLigne"></div>
-             
-            <textarea class="textzone"   value="aha"  name="code1" id="code" placeholder="
-          Ecrivez votre 
-        code assembleur ici " ></textarea>
+          <div>
+            <button type="button" class="btn-warning" id="Importer_fichier">
+              <i class="fa fa-upload"></i> ouvrir un fichier
+              <input type="file" id="fileInput" name="fileInput" title="titre">
+              <button type="button" id="save" class="saveButton">
+                <i class="fa fa-save"></i> Sauvegarder
+              </button>
+              <!--<ion-icon name="cloud-upload-outline"></ion-icon>-->
+          </div>
+        </div>
+        <div class="nbLigne" id="NbLigne"></div>
 
-               <textarea  name="code2" id="code2"  placeholder="
+        <textarea class="textzone" value="aha" name="code1" id="code" placeholder="
+          Ecrivez votre 
+        code assembleur ici "></textarea>
+
+        <textarea name="code2" id="code2" placeholder="
           Ecrivez votre 
         code héxadécimal ici"></textarea>
 
-             <div class="messagediv" id="messageDiv"> 
-            </div>
-
+        <div class="messagediv" id="messageDiv">
+          
         </div>
 
- <!-- Fenêtre modale -->
- <div id="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p id="programContent" style="font-family: 'Courier New', 'monospace'; color: white;"></p>
+      </div>
+
+      <!-- Fenêtre modale -->
+      <div id="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <p id="programContent" style="font-family: 'Courier New', 'monospace'; color: white;"></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+
+
+
+    function Menu(e) {
+      let list = document.getElementById("ttt");
+      if (e.name === 'menu') {
+        e.name = "close";
+        list.style.opacity = '100';
+      } else {
+        e.name = "menu";
+        list.style.opacity = '0';
+      }
+    }
+
+
+    const dataCOel = document.getElementById('dataCO');
+    const dataRAMel = document.getElementById('dataRAM');
+    const dataRIMel = document.getElementById('dataRIM');
+    const dataRIel = document.getElementById('dataRI');
+    const dataACCel = document.getElementById('dataACC');
+    const dataEUAL1el = document.getElementById('dataEUAL2');
+    const dataEUAL2el = document.getElementById('dataEUAL2');
+    const dataREGel = document.getElementById('dataREG');
+    const dataREG1el = document.getElementById('dataREG1');
+    const dataREG2el = document.getElementById('dataREG2');
+    const dataTDAel = document.getElementById('dataTDA');
+    const dataC1el = document.getElementById('dataC1');
+    const dataC2el = document.getElementById('dataC2');
+    const dataC3el = document.getElementById('dataC3');
+    const dataC4el = document.getElementById('dataC4');
+    const dataC5el = document.getElementById('dataC5');
+    const dataDATAel = document.getElementById('dataDATA');
+    //const g2=document.getElementById('g2');
+
+
+
+    function moveData(Bus, delay) {
+      setTimeout(function () {
+        var computedStyle = window.getComputedStyle(Bus);
+        var left = computedStyle.getPropertyValue('left');
+        console.log(left);
+        Bus.style.visibility = 'visible';
+        if (left === '0px') {
+          Bus.style.animation = 'slide-left 3s';
+        }
+        else {
+          console.log('hello world');
+          Bus.style.animation = 'slide-right 3s';
+        }
+      }, delay);
+    }
+
+
+
+    function hideData(Bus, delay) {
+      setTimeout(function () {
+        Bus.style.visibility = 'hidden';
+      }, delay);
+    }
+
+
+
+    function selectElement(Element, delay, string) {
+      setTimeout(function () {
+        delay = 0;
+        if (Element.className === 'dataflux') {
+          moveData(Element, delay);
+          // delay+=3000;
+          // hideData(Element,delay);
+        } else {
+          this.afficherTexteSurElement(Element, string);
+        }
+      }, delay);
+    }
+
+    function afficherTexteSurElement(Element, string) {
+      var previousTextContainer = "";
+      var textContainer = "";
+      switch (Element) {
+        case co:
+          previousTextContainer = document.querySelector(".textContainerCo");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerCo";
+          textContainer.textContent = "@" + string;
+
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+        case ram:
+          previousTextContainer = document.querySelector(".textContainerRam");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerRam";
+          textContainer.textContent = "@" + string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case cop:
+          previousTextContainer = document.querySelector(".textContainerCop");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerCop";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case MA:
+          previousTextContainer = document.querySelector(".textContainerMa");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerMa";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case D:
+          previousTextContainer = document.querySelector(".textContainerD");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerD";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case F:
+          previousTextContainer = document.querySelector(".textContainerF");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerF";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case REG1:
+          previousTextContainer = document.querySelector(".textContainerReg1");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerReg1";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case REG2:
+          previousTextContainer = document.querySelector(".textContainerReg2");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerReg2";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case ax:
+          previousTextContainer = document.querySelector(".textContainerAx");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerAx";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case bx:
+          previousTextContainer = document.querySelector(".textContainerBx");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerBx";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case cx:
+          previousTextContainer = document.querySelector(".textContainerCx");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerCx";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case dx:
+          previousTextContainer = document.querySelector(".textContainerDx");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerDx";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case ex:
+          previousTextContainer = document.querySelector(".textContainerEx");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerEx";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case fx:
+          previousTextContainer = document.querySelector(".textContainerFx");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerFx";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case di:
+          previousTextContainer = document.querySelector(".textContainerDi");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerDi";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case si:
+          previousTextContainer = document.querySelector(".textContainerSi");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerSi";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case ual1:
+          previousTextContainer = document.querySelector(".textContainerEual1");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerEual1";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case ual2:
+          previousTextContainer = document.querySelector(".textContainerEual2");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerEual2";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case acc:
+          previousTextContainer = document.querySelector(".textContainerAcc");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerAcc";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case rim:
+          previousTextContainer = document.querySelector(".textContainerRim");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerRim";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case caseMemoire:
+          previousTextContainer = document.querySelector(".textContainerCaseMemoire");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerCaseMemoire";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+        case caseAdresse:
+          previousTextContainer = document.querySelector(".textContainerCaseAdresse");
+          if (previousTextContainer) {
+            previousTextContainer.parentNode.removeChild(previousTextContainer);
+          }
+          // Create a new textContainer element
+          textContainer = document.createElement("div");
+          textContainer.className = "textContainerCaseAdresse";
+          textContainer.textContent = string;
+          // Append the textContainer above the element
+          Element.parentNode.insertBefore(textContainer, Element);
+          break;
+
+
+      }
+
+
+    }
+
+    var co = document.getElementById("CO");
+    var ram = document.getElementById("RAM");
+    var acc = document.getElementById("ACC");
+    var rim = document.getElementById("Rimcontent");
+    var ri = document.getElementById("RI");
+    var ual1 = document.getElementById("EUAL1");
+    var ual2 = document.getElementById("EUAL2");
+    var ax = document.getElementById("AX");
+    var bx = document.getElementById("BX");
+    var cx = document.getElementById("CX");
+    var dx = document.getElementById("DX");
+    var ex = document.getElementById("EX");
+    var fx = document.getElementById("FX");
+    var si = document.getElementById("SI");
+    var di = document.getElementById("DI");
+    var caseMemoire = document.getElementById("caseMemoire");
+    let instTAB = ['00000001000001', 1, 2, 3, 4];
+    var cop = document.getElementById("COP");
+    var MA = document.getElementById("MA");
+    var F = document.getElementById("F");
+    var D = document.getElementById("DD");
+    var reg1 = document.getElementById("REG1");
+    var reg2 = document.getElementById("REG2");
+
+    function premierePhase(adr, delay) {
+      selectElement(co, delay, adr);
+      //delay += 3000; 
+      selectElement(dataCOel, delay, 0);
+      delay += 3000;
+      selectElement(dataRAMel, delay, 0);
+      delay += 3000;
+      selectElement(ram, delay, adr);
+      delay += 3000;
+      selectElement(caseMemoire, delay, instTAB[adr - 100]);
+      delay += 3000;
+      selectElement(rim, delay, instTAB[adr - 100]);
+      //delay+=3000;
+      selectElement(dataRIMel, delay, 0);
+      return delay;
+    }
+
+
+
+
+    let addinstel = document.getElementById("addinst");
+    let d = 0;
+    function simulation() {
+      var co = document.getElementById("CO");
+      var ram = document.getElementById("RAM");
+      //d=premierePhase(100,d);
+      //d=d+3000;
+      //deuxiemePhase(d);
+      main.coder(contents, d);
+    };
+
+
+
+    function start(e) {
+      if (e.name === 'caret-forward-outline') {
+        e.name = "stop-circle-outline";
+        simulation();
+      }
+      else {
+        e.name = "caret-forward-outline";
+      }
+    }
+
+
+
+
+  </script>
+  <div class="con">
+    <a id="links" href="https://www.esi.dz/"> site de l'école : www.esi.dz </a>
+    <p><i class="fa fa-envelope" style="font-size:36px"></i> feedback: passefeedback@gmail.com</p>
   </div>
-</div>
-       </section>
-
-    </main>
-   
-    <script>
-
-
-
-      function Menu(e){
-        let list = document.getElementById("ttt");
-        if(e.name === 'menu'){
-          e.name = "close";
-          list.style.opacity = '100' ;
-        } else{
-          e.name = "menu" ;
-          list.style.opacity = '0' ;
-        }
-      }
-
-
-const dataCOel=  document.getElementById('dataCO');
-const dataRAMel=  document.getElementById('dataRAM');
-const dataRIMel=  document.getElementById('dataRIM');
-const dataRIel=  document.getElementById('dataRI');
-const dataACCel=  document.getElementById('dataACC');
-const dataEUAL1el=  document.getElementById('dataEUAL2');
-const dataEUAL2el=  document.getElementById('dataEUAL2');
-const dataREGel=  document.getElementById('dataREG');
-const dataREG1el=  document.getElementById('dataREG1');
-const dataREG2el=  document.getElementById('dataREG2');
-const dataTDAel=  document.getElementById('dataTDA');
-const dataC1el=  document.getElementById('dataC1');
-const dataC2el=  document.getElementById('dataC2');
-const dataC3el=  document.getElementById('dataC3');
-const dataC4el=  document.getElementById('dataC4');
-const dataC5el=  document.getElementById('dataC5');
-const dataDATAel=  document.getElementById('dataDATA');
-//const g2=document.getElementById('g2');
-
-
-
-function moveData(Bus,delay){
-    setTimeout(function() {
-      var computedStyle = window.getComputedStyle(Bus);
-    var left = computedStyle.getPropertyValue('left');
-       console.log(left);
-       Bus.style.visibility='visible';
-    if (left === '0px'){ 
-      Bus.style.animation='slide-left 3s';
-    }
-    else {
-      console.log('hello world');
-      Bus.style.animation='slide-right 3s';
-    }
-  }, delay);
-  }
-
-
-
-  function hideData(Bus,delay){
-    setTimeout(function(){
-      Bus.style.visibility='hidden';
-    },delay);
-  }
-
-
-
-function selectElement(Element, delay ,string) {
-  setTimeout(function() {
-    delay=0;
-    if (Element.className==='dataflux'){
-          moveData(Element,delay);
-         // delay+=3000;
-         // hideData(Element,delay);
-    }else{
-      this.afficherTexteSurElement(Element,string) ;
-    }
-  }, delay);
-}
-
-function afficherTexteSurElement(Element,string) {
-  var previousTextContainer = "";
-  var textContainer = "" ;
-  switch (Element) {
-    case co :
-      previousTextContainer = document.querySelector(".textContainerCo");
-      if (previousTextContainer) {
-      previousTextContainer.parentNode.removeChild(previousTextContainer);
-      }
-      // Create a new textContainer element
-      textContainer = document.createElement("div");
-      textContainer.className = "textContainerCo";
-      textContainer.textContent = "@" + string;
-
-      // Append the textContainer above the element
-      Element.parentNode.insertBefore(textContainer, Element);  
-      break;
-      case ram :
-      previousTextContainer = document.querySelector(".textContainerRam");
-      if (previousTextContainer) {
-      previousTextContainer.parentNode.removeChild(previousTextContainer);
-      }
-      // Create a new textContainer element
-      textContainer = document.createElement("div");
-      textContainer.className = "textContainerRam";
-      textContainer.textContent = "@" + string;
-      // Append the textContainer above the element
-      Element.parentNode.insertBefore(textContainer, Element); 
-      break;
-
-      case cop:
-      previousTextContainer = document.querySelector(".textContainerCop");
-      if (previousTextContainer) {
-      previousTextContainer.parentNode.removeChild(previousTextContainer);
-      }
-      // Create a new textContainer element
-      textContainer = document.createElement("div");
-      textContainer.className = "textContainerCop";
-      textContainer.textContent = string;
-      // Append the textContainer above the element
-      Element.parentNode.insertBefore(textContainer, Element); 
-      break;
-
-      case MA: 
-      previousTextContainer = document.querySelector(".textContainerMa");
-      if (previousTextContainer) {
-      previousTextContainer.parentNode.removeChild(previousTextContainer);
-      }
-      // Create a new textContainer element
-      textContainer = document.createElement("div");
-      textContainer.className = "textContainerMa";
-      textContainer.textContent = string;
-      // Append the textContainer above the element
-      Element.parentNode.insertBefore(textContainer, Element); 
-      break;
-
-      case D:
-        previousTextContainer = document.querySelector(".textContainerD");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerD";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case F: 
-        previousTextContainer = document.querySelector(".textContainerF");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerF";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case REG1: 
-        previousTextContainer = document.querySelector(".textContainerReg1");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerReg1";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case REG2: 
-        previousTextContainer = document.querySelector(".textContainerReg2");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerReg2";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case ax: 
-        previousTextContainer = document.querySelector(".textContainerAx");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerAx";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case bx: 
-        previousTextContainer = document.querySelector(".textContainerBx");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerBx";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case cx: 
-        previousTextContainer = document.querySelector(".textContainerCx");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerCx";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case dx: 
-        previousTextContainer = document.querySelector(".textContainerDx");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerDx";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case ex: 
-        previousTextContainer = document.querySelector(".textContainerEx");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerEx";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case fx: 
-        previousTextContainer = document.querySelector(".textContainerFx");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerFx";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case di: 
-        previousTextContainer = document.querySelector(".textContainerDi");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerDi";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case si: 
-        previousTextContainer = document.querySelector(".textContainerSi");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerSi";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case ual1: 
-        previousTextContainer = document.querySelector(".textContainerEual1");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerEual1";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case ual2: 
-        previousTextContainer = document.querySelector(".textContainerEual2");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerEual2";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case acc: 
-        previousTextContainer = document.querySelector(".textContainerAcc");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerAcc";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case rim: 
-        previousTextContainer = document.querySelector(".textContainerRim");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerRim";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case caseMemoire: 
-        previousTextContainer = document.querySelector(".textContainerCaseMemoire");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerCaseMemoire";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-        case caseAdresse: 
-        previousTextContainer = document.querySelector(".textContainerCaseAdresse");
-        if (previousTextContainer) {
-        previousTextContainer.parentNode.removeChild(previousTextContainer);
-        }
-        // Create a new textContainer element
-        textContainer = document.createElement("div");
-        textContainer.className = "textContainerCaseAdresse";
-        textContainer.textContent = string;
-        // Append the textContainer above the element
-        Element.parentNode.insertBefore(textContainer, Element); 
-        break;
-
-
-    }
-
-
-}
-
-var co = document.getElementById("CO");
-var ram = document.getElementById("RAM");
-var acc = document.getElementById("ACC");
-var rim = document.getElementById("Rimcontent");
-var ri = document.getElementById("RI");
-var ual1=document.getElementById("EUAL1");
-var ual2=document.getElementById("EUAL2");
-var ax=document.getElementById("AX");
-var bx=document.getElementById("BX");
-var cx=document.getElementById("CX");
-var dx=document.getElementById("DX");
-var ex=document.getElementById("EX");
-var fx=document.getElementById("FX");
-var si=document.getElementById("SI");
-var di=document.getElementById("DI");
-var caseMemoire = document.getElementById("caseMemoire");
-let instTAB = ['00000001000001',1,2,3,4];
-var cop=document.getElementById("COP");
-var MA=document.getElementById("MA");
-var F=document.getElementById("F");
-var D=document.getElementById("DD");
-var reg1=document.getElementById("REG1");
-var reg2=document.getElementById("REG2");
-
-function premierePhase(adr,delay){
-       selectElement(co, delay , adr);
-       //delay += 3000; 
-       selectElement(dataCOel,delay,0);
-       delay+=3000;
-       selectElement(dataRAMel,delay,0);
-       delay+=3000;
-       selectElement(ram,delay,adr);
-       delay+=3000;
-       selectElement(caseMemoire,delay,instTAB[adr-100]);
-       delay+=3000;
-       selectElement(rim,delay,instTAB[adr-100]);
-       //delay+=3000;
-       selectElement(dataRIMel,delay,0);
-       return delay ;
-} 
-
-
-
-
-let addinstel= document.getElementById("addinst");
-let d=0;
-function simulation(){
-  var co = document.getElementById("CO");
-  var ram = document.getElementById("RAM");
-  //d=premierePhase(100,d);
-  //d=d+3000;
-  //deuxiemePhase(d);
-  main.coder(contents,d);
-};
-
-
-
-function start(e) {
-  if(e.name === 'caret-forward-outline')
-  {
-    e.name = "stop-circle-outline";
-    simulation();
-  }
-  else{
-    e.name = "caret-forward-outline" ;
-  }
-}
-
-
-
-
-    </script>
-    <div class="con">
-     <a id="links" href="https://www.esi.dz/"> site de l'école : www.esi.dz </a>
-    <p><i class="fa fa-envelope" style="font-size:36px" ></i> feedback: passefeedback@gmail.com</p>
-  </div>
-  <script type="module" src="./index.js" ></script>
+  <script type="module" src="./index.js"></script>
 </body>
+
 </html>
