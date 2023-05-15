@@ -3169,7 +3169,8 @@ export var main = {
   },
   
   coder: function (contents) {
-
+    main.instrTab=[] ; 
+    main.dataTab=[] ; 
     const messageDiv= document.getElementById("messageDiv");
     messageDiv.innerHTML = ""; 
     let indice = 0;
@@ -3234,6 +3235,9 @@ export var main = {
     }
    }
 
+   console.log("***  Code Segment *** ");
+      for (let i = 0; i < main.getinstrTab().length; i++) main.getinstrTab()[i].afficher();
+      console.log("********************** ");
 
     console.log("DECODAGE");
     decodage.fonctionDecodage() ; 
@@ -9314,7 +9318,7 @@ ExecuteButton.addEventListener("click", () => {
   const messageDiv= document.getElementById("messageDiv");
   messageDiv.style.background= '#010232';
   messageDiv.innerHTML = ""; 
-  //main.coder(contents);
+  main.coder(contents);
   main.Execute(main.getinstrTab());
   main.afficherAllHTML();
 
