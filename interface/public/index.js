@@ -10144,9 +10144,6 @@ function afficherTexteSurElement(Element,string) {
   var programContent = document.getElementById('programContent');
   var button1 = document.getElementById('Consulter1');
   var button2 = document.getElementById('Consulter2');
-  var button3 = document.getElementById('Consulter3');
-  var button4 = document.getElementById('Consulter4');
-  var button5 = document.getElementById('Consulter5');
   var button6 = document.getElementById('Consulter6');
   var close = document.querySelector('.close');
 
@@ -10160,24 +10157,9 @@ function afficherTexteSurElement(Element,string) {
     programContent.innerHTML = "<br>ORG 100H <br>SET A 10H <br>SET B AH <br>SET C 0H <br>START    <br>MOV AX,A <br>MOV BX,B <br>MOVI CX,0H <br>CMPI BX,0H<br>JE resultZero<br>CMPI AX,0H<br>MOVI EX,0H<br>Bcl: ADD EX,A<br>INC CX<br>CMP CX,BX<br>JNE Bcl<br>JMP fin<br>resultZero: MOVI EX,0H<br>fin: MOV C,EX<br>STOP     <br>";
   });
 
-  button3.addEventListener('click', function() {
-    modal.style.display = 'block';
-    programContent.innerHTML = "Contenu du programme 3";
-  });
-
-  button4.addEventListener('click', function() {
-    modal.style.display = 'block';
-    programContent.innerHTML = "Contenu du programme 4";
-  });
-
-  button5.addEventListener('click', function() {
-    modal.style.display = 'block';
-    programContent.innerHTML = "Contenu du programme 5";
-  });
-
   button6.addEventListener('click', function() {
     modal.style.display = 'block';
-    programContent.innerHTML = "<br>ORG 100H <br>SETZ tab1 3 <br>SETZ tab2 3<br>START    <br>MOVI CX,0H <br>MOVI SI,0H <br>MOVI DI,2H <br>MOVI tab2[SI],5H<br>MOVI tab2[SI+1],6H<br>MOVI tab2[SI+2],7H<br>bcl: MOV AX,tab1[SI]<br>MOV BX,tab2[DI]<br>MOV tab2[DI],AX<br>MOV tab1[SI],BX<br>INC SI<br>DEC DI<br>INC CX<br>CMPI CX,3H<br>JNE bcl<br>STOP";
+    programContent.innerHTML = "<br>ORG 100H <br>SETZ tab1 3 <br>SETZ tab2 3<br>START    <br>MOVI CX,0H <br>MOVI SI,0H <br>MOVI DI,2H <br>MOVI EX,5H<br>MOV tab2[SI],EX<br>MOVI FX,6H<br>MOV tab2[SI+1],FX<br>MOVI DX,7H<br>MOV tab2[SI+2],DX<br>bcl: MOV AX,tab1[SI]<br>MOV BX,tab2[DI]<br>MOV tab2[DI],AX<br>MOV tab1[SI],BX<br>INC SI<br>DEC DI<br>INC CX<br>CMPI CX,3H<br>JNE bcl<br>STOP";
   });
 
   close.addEventListener('click', function() {
