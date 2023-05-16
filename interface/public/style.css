@@ -1056,13 +1056,16 @@ body{
 }
 
 .back {
-  background-color: #3a3a3a;
+  background-color: #000000;
   transform: rotateY(180deg);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 5rem;
+}
+.back:hover{
+  box-shadow: 0 0.1rem 1.4rem 0 white;
 }
 .members{
   display: table;
