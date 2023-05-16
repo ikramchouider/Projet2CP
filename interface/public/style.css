@@ -724,7 +724,7 @@ nav:hover{
   line-height: 2.25rem;
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
-  box-shadow: 0 0.1rem 1.4rem 0 rgb(141, 122, 157);
+  box-shadow: 0 0.1rem 1.4rem 0 rgb(11, 10, 12);
 }
 
 .card:hover {
@@ -734,7 +734,7 @@ nav:hover{
   color: rgb(255 255 255 / var(--tw-text-opacity));
   --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
-  box-shadow: 0 0.1rem 1.4rem 0 rgb(128, 118, 152);
+  box-shadow: 0 0.1rem 1.4rem 0 rgb(144, 132, 172);
   animation: flicker 1s infinite;
 }
 h3 {
@@ -1000,7 +1000,7 @@ details:hover {
 .slide-track{
   display: flex;
   width: calc(500px*10);
-  animation: scroll 8s linear infinite;
+  animation: scroll 10s linear infinite;
 }
 
 .slide{
@@ -1146,7 +1146,7 @@ body{
   color: rgb(255 255 255 / var(--tw-text-opacity));
   --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
-  box-shadow: 0 0.4rem 1.3rem 0  #180441;
+  box-shadow: 0 0.4rem 1.3rem 0  #0b011e;
 }
 select{
   background:none;
@@ -2981,12 +2981,15 @@ ion-icon {
   display: flex;
   justify-content: center;
   align-items: center;
+  transform: scale(0.8);
+
+
 }
 #quiz{
   position: absolute;
   font-size: 50px;
   font-weight: 550;
-  bottom: 220px;
+  bottom: 270px;
   color: white;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   animation: flicker 1s infinite;
@@ -3349,6 +3352,13 @@ position: absolute;
     border-radius: 50%;
     box-shadow: 0 0.1rem 1.4rem 0 rgb(59, 16, 90);
   }
+.card img{
+  width: 100px;
+  margin-top: 50px;
+  margin-left: 35%;
+  border-radius: 5%;
+}
+
   .popup h2{
     font-size: 30px;
     font-weight: 700;
@@ -3378,6 +3388,7 @@ position: absolute;
 
  /* Styles pour la fenêtre modale */
  #modal {
+  align-content: center;
   display: none;
   position: fixed;
   top: 0;
@@ -3390,7 +3401,11 @@ position: absolute;
   padding: 50px;
   box-sizing: border-box;
 }
+ p#programContent{
+  padding: 10%;
+  border-radius: 2rem;
 
+ }
 .modal-content {
   background-color: #3d027d;
   max-width: 800px;
@@ -3398,6 +3413,11 @@ position: absolute;
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+}
+
+#modal :hover{
+  box-shadow: 0 0.1rem 1.4rem 0 white;
 }
 
 .close {
@@ -3411,6 +3431,16 @@ position: absolute;
 
 .close:hover {
   color: #666;
+}
+
+#booody{
+  background: linear-gradient(to bottom, rgb(18, 18, 19) 100%, #1f1f4e 35%, #3f1466 70%,rgb(19, 11, 34) 100%);
+  background-image: linear-gradient(rgb(18, 18, 19) 0%,   rgb(19, 11, 34) 100%);
+}
+
+.mul h3{
+  align-content: center;
+  margin-left: 7%;
 }
 
 /* ----*/ 

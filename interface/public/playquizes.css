@@ -2129,26 +2129,26 @@ ion-icon {
 }
 #cat1{
       position:absolute;
-      left: 400px;
-      bottom: 400px;
+      left: 20%;
+      bottom: 50%;
       font-weight: 700;
 }
 #cat2{
     position:absolute;
-    left: 850px;
-    bottom: 400px;
+    left: 60%;
+    bottom: 50%;
     font-weight: 700;
 }
 #cat3{
     position:absolute;
-    left: 400px;
-    bottom: 200px;
+    left: 20%;
+    bottom: 20%;
     font-weight: 700;
 }
 #cat4{
     position:absolute;
-    left: 850px;
-    bottom: 200px;
+    left: 60%;
+    bottom: 20%;
     font-weight: 700;
 }
 .btttn:hover{
@@ -2168,14 +2168,20 @@ ion-icon {
 .cat1-container{
     align-items: center;
     justify-content:center;
+    transform: scale(0.7);
+top: 100%;
+}
 
+#bigContainer{
+align-items: center;
+justify-content: center;
 }
 #question{
-    position: absolute;
+    /*position: absolute;*/
     font-size: 20px;
     font-weight: 550;
-    top: 100px;
-    left: 50px;
+    margin-top: 2%;
+    margin-left: 5%;
     color: white;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
    
@@ -2227,7 +2233,7 @@ ion-icon {
     background-color: rgb(211, 56, 56);
 }
 #hud{
-  
+  margin-bottom: 5%;
 display: flex;
 justify-content: space-around;
 }
