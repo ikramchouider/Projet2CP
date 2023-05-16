@@ -7519,6 +7519,7 @@ export var mainsimul = {
     let fileLength = lines.length;  
     let nbLigne = 0;                     // file length without  the empty lines 
     for (const line of lines) {
+      
       nbLigne++;
       if (line != "") {
       console.log("********************");
@@ -7564,8 +7565,8 @@ export var mainsimul = {
        
       } else {
         let tab = codingExecute.coderInst(ligne_str, co, this.getDataTab());
-        main.nbMot.push([main.instrTab.length,tab.length]) ; //+co
-        main.instrTab=main.getinstrTab().concat(tab) ;
+        mainsimul.nbMot.push([mainsimul.instrTab.length,tab.length]) ; //+co
+        mainsimul.instrTab=mainsimul.getinstrTab().concat(tab) ;
         co = util.incrementHex(co, tab.length);
       } 
     }
@@ -7580,7 +7581,7 @@ export var mainsimul = {
     console.log("");*/
     console.log("***  Code Segment *** ");
     console.log(mainsimul.getinstrTab().length);
-    for (let i = 0; i < mainsimul.getinstrTab().length; i++) main.getinstrTab()[i].afficher();
+    for (let i = 0; i < mainsimul.getinstrTab().length; i++) mainsimul.getinstrTab()[i].afficher();
     console.log("********************** ") 
     this.Execute(this.getinstrTab());
   /*  main.afficherRegistres() ;
