@@ -3400,7 +3400,7 @@ export var main = {
   },
 
   afficherIndicateursHTML: function (){
-    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>__________________________________________   LES INDICATEURS __________________________________</span></p><br>";
+    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>__________  LES INDICATEURS _________</span></p><br>";
     messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_ZERO: </span>"+"<span style='color: white;'>"+ this.getIndicateurZero() +"</span></p>";
     messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_SIGNE: </span>"+"<span style='color: white;'>"+ this.getIndicateurSigne() +"</span></p>";
     messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> I_RETENUE: </span>"+"<span style='color: white;'>"+ this.getIndicateurRetenue() +"</span></p>";
@@ -3422,7 +3422,7 @@ export var main = {
   },
 
   afficherRegistresHTML: function () {
-    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>_____________________________________  LES REGISTRES ________________________________________</span></p><br>";
+    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>_______ LES REGISTRES _________</span></p><br>";
    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> AX: </span>"+"<span style='color: white;'>"+this.getAX().getContenu() +"</span></p>";
    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> BX: </span>"+"<span style='color: white;'>"+ this.getBX().getContenu() +"</span></p>";
    messageDiv.innerHTML +="<p class='executemsg' > <span style='color: #A32185;'> CX: </span>"+"<span style='color: white;'>"+ this.getCX().getContenu()+"</span></p>";
@@ -3439,14 +3439,14 @@ export var main = {
   
     this.afficherRegistresHTML();
     this.afficherIndicateursHTML();
-    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>________________________________________   LES DONNEES _________________________________________ </span></p><br>";
+    messageDiv.innerHTML +="<p class='executemsg' ><span style='color: white;'>_______  LES DONNEES ________ </span></p><br>";
     console.log("length of data tab  :"+ main.getDataTab().length);
         for (let i = 0; i < main.getDataTab().length; i++){
           main.getDataTab()[i].afficher();
           main.getDataTab()[i].afficherHTML();}
     
         console.log("********************** ");
-        messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>_________________________________________________________________________________________________</span> </p>";
+        messageDiv.innerHTML +="<p class='executemsg' <span style='color: white;'>_______________________________</span> </p>";
         console.log(""); 
     
       },
@@ -10162,22 +10162,22 @@ function afficherTexteSurElement(Element,string) {
 
   button3.addEventListener('click', function() {
     modal.style.display = 'block';
-    programContent.textContent = "Contenu du programme 3";
+    programContent.innerHTML = "Contenu du programme 3";
   });
 
   button4.addEventListener('click', function() {
     modal.style.display = 'block';
-    programContent.textContent = "Contenu du programme 4";
+    programContent.innerHTML = "Contenu du programme 4";
   });
 
   button5.addEventListener('click', function() {
     modal.style.display = 'block';
-    programContent.textContent = "Contenu du programme 5";
+    programContent.innerHTML = "Contenu du programme 5";
   });
 
   button6.addEventListener('click', function() {
     modal.style.display = 'block';
-    programContent.textContent = "Contenu du programme 6";
+    programContent.innerHTML = "<br>ORG 100H <br>SETZ tab1 3 <br>SETZ tab2 3<br>START    <br>MOVI CX,0H <br>MOVI SI,0H <br>MOVI DI,2H <br>MOVI tab2[SI],5H<br>MOVI tab2[SI+1],6H<br>MOVI tab2[SI+2],7H<br>bcl: MOV AX,tab1[SI]<br>MOV BX,tab2[DI]<br>MOV tab2[DI],AX<br>MOV tab1[SI],BX<br>INC SI<br>DEC DI<br>INC CX<br>CMPI CX,3H<br>JNE bcl<br>STOP";
   });
 
   close.addEventListener('click', function() {
