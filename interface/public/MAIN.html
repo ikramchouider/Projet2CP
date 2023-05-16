@@ -848,6 +848,55 @@
           // Append the textContainer above the element
           Element.parentNode.insertBefore(textContainer, Element);
           break;
+          case r: 
+        previousTextContainer = document.querySelector(".textContainerRetenue");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerRetenue";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+        case s:
+          previousTextContainer = document.querySelector(".textContainerSigne");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerSigne";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+         break; 
+         case d1:
+          previousTextContainer = document.querySelector(".textContainerDebordement");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerDebordement";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break;
+        case z:
+          previousTextContainer = document.querySelector(".textContainerZero");
+        if (previousTextContainer) {
+        previousTextContainer.parentNode.removeChild(previousTextContainer);
+        }
+        // Create a new textContainer element
+        textContainer = document.createElement("div");
+        textContainer.className = "textContainerZero";
+        textContainer.textContent = string;
+        // Append the textContainer above the element
+        Element.parentNode.insertBefore(textContainer, Element); 
+        break ;
+
 
 
       }
@@ -878,6 +927,10 @@
     var D = document.getElementById("DD");
     var reg1 = document.getElementById("REG1");
     var reg2 = document.getElementById("REG2");
+    var z=document.getElementById("Z");
+    var s=document.getElementById("S");
+    var r=document.getElementById("R");
+    var d1=document.getElementById("D");
 
     function premierePhase(adr, delay) {
       selectElement(co, delay, adr);
